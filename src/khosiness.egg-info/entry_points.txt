@@ -1,0 +1,2 @@
+[console_scripts]
+kness = khosiness.cli:main

@@ -122,7 +122,7 @@ function createManualTutor() {
     panel.querySelector('.manual-qa-form').hidden = true;
     panel.querySelector('.manual-qa-suggestions').hidden = true;
   } else {
-    addMessage('tutor', 'Ask about this stage. I will use the visible manual page as context and say when it does not answer your question.');
+    addMessage('tutor', 'Ask about this stage. I use this page for concepts and the stage tracker for recorded progress.');
   }
 
   function openPanel() {

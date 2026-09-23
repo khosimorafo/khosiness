@@ -18,6 +18,7 @@ from urllib.parse import urlsplit
 
 MANUAL_ROOT = Path(__file__).resolve().parent
 ANIMATION_ROOT = MANUAL_ROOT.parent / "animations"
+STAGE_TRACKER = MANUAL_ROOT.parent.parent / "STAGE_TRACKER.md"
 HOST = "127.0.0.1"
 PORT = 8765
 MAX_BODY_BYTES = 50_000
@@ -26,6 +27,13 @@ MAX_QUESTION_CHARS = 2_000
 MAX_SELECTED_CHARS = 4_000
 MAX_HISTORY_ITEMS = 6
 REQUEST_LIMIT = threading.BoundedSemaphore(1)
+
+
+def recorded_stage_status() -> str:
+    try:
+        return STAGE_TRACKER.read_text(encoding="utf-8")[:12_000]
+    except OSError:
+        return "(Stage tracker unavailable; do not infer completion from the manual.)"
 
 
 def valid_page(value: object) -> bool:
@@ -70,7 +78,12 @@ def build_prompt(data: dict) -> str:
 
     return (
         "You are a tutor for the khosiness implementation manual. Answer the "
-        "learner's question using the supplied page. Explain the relevant "
+        "learner's question using the supplied page and recorded project status. "
+        "For progress or completion questions, use STAGE_TRACKER.md as the "
+        "canonical record; the manual describes requirements, not whether they "
+        "were completed. Say when a recorded exception or N/A item applies. "
+        "Do not ask the learner to reverify a completed stage merely because "
+        "the manual page alone lacks progress evidence. Explain the relevant "
         "mechanism, ownership boundary, and failure mode plainly. For a quiz, "
         "ask one focused question and wait for the learner's answer. Distinguish "
         "manual plans from behavior already implemented. If the page does not "
@@ -80,6 +93,7 @@ def build_prompt(data: dict) -> str:
         "answer concise in plain text without Markdown formatting, and cite a "
         "heading from the page when useful.\n\n"
         f"PAGE: {page}\n"
+        f"RECORDED PROJECT STATUS (STAGE_TRACKER.md):\n{recorded_stage_status()}\n\n"
         f"PAGE TEXT:\n{context.strip()}\n\n"
         f"SELECTED EXCERPT:\n{selected.strip() or '(none)'}\n\n"
         f"RECENT CONVERSATION:\n{json.dumps(turns, ensure_ascii=False)}\n\n"

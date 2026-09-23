@@ -30,6 +30,9 @@ python docs/manual/manual_qa_server.py
 Then open `http://127.0.0.1:8765/index.html` and navigate to any stage. The
 button sends the current page's text, your question, any selected text, and
 recent questions and answers from that browser tab to the signed-in Codex CLI.
+The local server adds `STAGE_TRACKER.md` to each question so the tutor can
+answer progress questions from the recorded stage status rather than guessing
+from a manual page. The tracker is read afresh for each question.
 Codex must be installed and
 `codex login status` must report that you are signed in. The CLI is run from an
 empty temporary directory with a read-only sandbox. This blocks writes but

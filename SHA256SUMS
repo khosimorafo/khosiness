@@ -4,12 +4,12 @@
 6f664579b10722f842d3beca21aafba5032ed065fef8e202942f6ff5338eb4d7  ./CURRENT_STATE.md
 271974b84f788f44a2ea1c9c5a7c9fe108e529a08cca8fe0ff741211d79f41fb  ./HANDOFF_MANIFEST.md
 72fb06600dba1bfda7110d5cc88a50e40163f32eb8bb69a3681d76130c7b1498  ./PROJECT_HISTORY.md
-63cd90947460e461646ffd34d70d5038406b8fb0f0df5c8b94eedd19f52ceb3a  ./docs/manual/README.md
+ca78c879f36718231c8d0dec011cc7af0419a1c19002ba3cc0544afb6e60dc66  ./docs/manual/README.md
 f47caa93d05452af41786a0c291ce2d7df0260d85c7421527a6e4911baf37e7a  ./docs/manual/assets/manual-qa.css
-392493018ca5a2dd787b4b8f2621350c00ea3d27bf2b40f52c0a17e538132796  ./docs/manual/assets/manual.js
+1021530eb9e0456196497c5ca0dace42afa41ae96bb9d2749a3f443fb0adff47  ./docs/manual/assets/manual.js
 bb87ce7a03c05407dc5a696bd61c3c8b6113768aad264a02e27ac50f1ef787f1  ./docs/manual/assets/style.css
 e9547b08634309de3247beac567de8a03bc981bc2a326614ada3d683e51ba137  ./docs/manual/index.html
-624d7a61704c74a375887b0e85b3feb93fc0cdac8d86d2e5e37b28ee6efc3929  ./docs/manual/manual_qa_server.py
+c61b4403c74e942fc231082a41122ae5e538ba3e7f395245f8a5d37bfd734096  ./docs/manual/manual_qa_server.py
 d7c752490fd9189639a18b127802043bf7ed123d0ead6c340cc453082bab09db  ./docs/manual/pages/part-ii-personal-harness.html
 71fdf7203bfcefd193ae4e29f2c62d6bb88b6c10d82b6560ef2b704df19635aa  ./docs/manual/pages/project-setup.html
 60f3c07a58baee1c2e8b005326c60013e34b94bd883b4a03678f3f3690d8dd3f  ./docs/manual/pages/step-00-mental-model.html

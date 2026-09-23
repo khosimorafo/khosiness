@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>khosiness — Harness Engineering From Scratch — khosiness</title>
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+<div class="site">
+  <aside class="sidebar">
+    <div class="brand">
+      <a href="index.html">khosiness — Harness Engineering From Scratch</a>
+      <p>Personal agentic operating harness · Python + VS Code + Codex</p>
+    </div>
+    <div class="nav-title">Manual map</div>
+    <nav class="nav">
+      <a href="index.html" class="current-page">Overview</a>
+<div class="phase-nav-label">Phase I · Build khosiness</div>
+<a href="pages/project-setup.html" class="">Setup. Project Setup</a>
+<a href="pages/step-00-mental-model.html" class="">0. The Mental Model</a>
+<a href="pages/step-01-task-contract.html" class="">1. Define the Task Contract</a>
+<a href="pages/step-02-model-adapter.html" class="">2. Create the Model Adapter</a>
+<a href="pages/step-03-event-log.html" class="">3. Build the Event Log</a>
+<a href="pages/step-04-agent-loop.html" class="">4. Implement the Agent Loop</a>
+<a href="pages/step-05-tool-system.html" class="">5. Build the Tool System</a>
+<a href="pages/step-06-context-engineering.html" class="">6. Engineer the Context</a>
+<a href="pages/step-07-repository-navigation.html" class="">7. Repository Navigation</a>
+<a href="pages/step-08-shell-sandbox.html" class="">8. Shell Execution and Sandbox</a>
+<a href="pages/step-09-policy-approvals.html" class="">9. Policy and Human Approval</a>
+<a href="pages/step-10-state-recovery.html" class="">10. State, Checkpoints and Recovery</a>
+<a href="pages/step-11-memory.html" class="">11. Memory</a>
+<a href="pages/step-12-context-compaction.html" class="">12. Context Compaction</a>
+<a href="pages/step-13-skills.html" class="">13. Skills and Progressive Disclosure</a>
+<a href="pages/step-14-subagents.html" class="">14. Subagents</a>
+<a href="pages/step-15-evaluation.html" class="">15. Evaluation</a>
+<a href="pages/step-16-learning-loop.html" class="">16. The Harness Learning Loop</a>
+<a href="pages/step-17-final-architecture.html" class="">17. Assemble the First-Generation Architecture</a>
+<a href="pages/step-18-twelve-week-plan.html" class="">18. 12-Week Build Plan — Complete Phase I</a>
+<div class="phase-nav-label">Part II · Personal khosiness</div>
+<a href="pages/part-ii-personal-harness.html" class="">19. Building the Personal Harness</a>
+    </nav>
+  </aside>
+  <main class="content">
+    <header class="hero"><div class="eyebrow">Implementation manual</div><h1>khosiness — Harness Engineering From Scratch</h1><p>A first-principles build manual for constructing khosiness: a deeply personal agentic operating harness for one software engineer. Phase I builds the substrate; Part II evolves it into a continuously improving extension of the engineer. The shorthand/CLI name is kness.</p></header><div class="wrap"><section class="card"><h2>How to use the khosiness manual</h2><p class="lead">Phase I takes you from an empty Python repository to a measurable, recoverable agent harness. Work through it in order. Do not advance because the prose is finished; advance when the stage's code checkpoint, tests, trace inspection and exit criteria are all true.</p><div class="callout"><strong>Learning rule:</strong> type the important code yourself. The objective is to understand the mechanism well enough that you can later recognize it inside Codex, Claude Code, OpenHands, LangGraph or another harness.</div><div class="callout"><strong>Project identity:</strong> the project and harness are named <code>khosiness</code>; the shorthand and command name is <code>kness</code>.</div></section><section class="card phase-map-card">
+<h2>The khosiness development path</h2>
+<div class="phase-map">
+<div>
+<b>Phase I</b>
+<strong>Build the substrate</strong>
+<span>Setup → task contracts → model adapter → events → loop → tools → context → sandbox → policy → recovery → memory → skills → subagents → evals.</span>
+</div>
+<div>
+<b>Part II</b>
+<strong>Build the personal harness</strong>
+<span>Personal operating model → long-term engineering memory → skill development → metacognition → work reach → earned autonomy → bounded driving.</span>
+</div>
+</div>
+</section><section class="card"><h2>Detailed build pages</h2><div class="index-grid"><a class="tile" href="pages/project-setup.html">
+<b>SETUP</b>
+<strong>Project Setup</strong>
+<span>Create the repository, virtual environment, package layout, test runner and baseline Git commit.</span>
+</a><a class="tile" href="pages/step-00-mental-model.html"><b>STEP 0</b><strong>The Mental Model</strong><span>Understand the harness as the control system around the model before writing implementation code.</span></a><a class="tile" href="pages/step-01-task-contract.html"><b>STEP 1</b><strong>Define the Task Contract</strong><span>Make every run a bounded unit of work with an objective, workspace, constraints, success criteria and limits.</span></a><a class="tile" href="pages/step-02-model-adapter.html"><b>STEP 2</b><strong>Create the Model Adapter</strong><span>Hide provider-specific APIs behind one harness-owned request and response contract.</span></a><a class="tile" href="pages/step-03-event-log.html"><b>STEP 3</b><strong>Build the Event Log</strong><span>Create an append-only factual record so runs can later be inspected, replayed, evaluated and recovered.</span></a><a class="tile" href="pages/step-04-agent-loop.html"><b>STEP 4</b><strong>Implement the Agent Loop</strong><span>Build the irreducible observe → decide → act → record cycle.</span></a><a class="tile" href="pages/step-05-tool-system.html"><b>STEP 5</b><strong>Build the Tool System</strong><span>Turn capabilities into validated, bounded contracts instead of arbitrary Python calls.</span></a><a class="tile" href="pages/step-06-context-engineering.html"><b>STEP 6</b><strong>Engineer the Context</strong><span>Treat context as a selected working set, not a transcript dump.</span></a><a class="tile" href="pages/step-07-repository-navigation.html"><b>STEP 7</b><strong>Repository Navigation</strong><span>Teach the harness to inspect real codebases with evidence while keeping retrieval bounded.</span></a><a class="tile" href="pages/step-08-shell-sandbox.html"><b>STEP 8</b><strong>Shell Execution and Sandbox</strong><span>Add execution capability while treating the runtime as a security boundary.</span></a><a class="tile" href="pages/step-09-policy-approvals.html"><b>STEP 9</b><strong>Policy and Human Approval</strong><span>Separate technical capability from authorization using deterministic policy.</span></a><a class="tile" href="pages/step-10-state-recovery.html"><b>STEP 10</b><strong>State, Checkpoints and Recovery</strong><span>Make a run survive process termination without losing its place or repeating side effects.</span></a><a class="tile" href="pages/step-11-memory.html"><b>STEP 11</b><strong>Memory</strong><span>Add cross-run knowledge using explicit memory types and bounded retrieval.</span></a><a class="tile" href="pages/step-12-context-compaction.html"><b>STEP 12</b><strong>Context Compaction</strong><span>Bound active context while preserving raw history and unresolved work.</span></a><a class="tile" href="pages/step-13-skills.html"><b>STEP 13</b><strong>Skills and Progressive Disclosure</strong><span>Package procedural expertise and load its full instructions only when relevant.</span></a><a class="tile" href="pages/step-14-subagents.html"><b>STEP 14</b><strong>Subagents</strong><span>Add bounded delegation primarily as context isolation, not as a collection of personas.</span></a><a class="tile" href="pages/step-15-evaluation.html"><b>STEP 15</b><strong>Evaluation</strong><span>Turn the harness into a measurable system using stable benchmarks and failure classification.</span></a><a class="tile" href="pages/step-16-learning-loop.html"><b>STEP 16</b><strong>The Harness Learning Loop</strong><span>Use repeated failures to form one hypothesis, change one system variable, and measure the result.</span></a><a class="tile" href="pages/step-17-final-architecture.html"><b>STEP 17</b><strong>Assemble the First-Generation Architecture</strong><span>Document and refine boundaries after the components have earned their existence through implementation.</span></a><a class="tile" href="pages/step-18-twelve-week-plan.html"><b>STEP 18</b><strong>12-Week Build Plan</strong><span>Use a disciplined sequence so each new abstraction solves a failure you have already experienced.</span></a><a class="tile future-tile" href="pages/part-ii-personal-harness.html">
+<b>PART II</b>
+<strong>Building the Personal Harness</strong>
+<span>Evolve khosiness from a generic agent substrate into a continuously improving extension of one engineer.</span>
+</a></div></section><div class="footer">khosiness — Harness Engineering From Scratch · shorthand: kness · build deliberately, measure everything, earn autonomy.</div></div>
+  </main>
+</div>
+<script src="assets/manual.js"></script>
+</body>
+</html>

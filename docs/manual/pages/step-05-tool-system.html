@@ -1,0 +1,457 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>5. Build the Tool System — khosiness</title>
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<div class="site">
+  <aside class="sidebar">
+    <div class="brand">
+      <a href="../index.html">khosiness — Harness Engineering From Scratch</a>
+      <p>Personal agentic operating harness · Python + VS Code + Codex</p>
+    </div>
+    <div class="nav-title">Manual map</div>
+    <nav class="nav">
+      <a href="../index.html" class="">Overview</a>
+<div class="phase-nav-label">Phase I · Build khosiness</div>
+<a href="project-setup.html" class="">Setup. Project Setup</a>
+<a href="step-00-mental-model.html" class="">0. The Mental Model</a>
+<a href="step-01-task-contract.html" class="">1. Define the Task Contract</a>
+<a href="step-02-model-adapter.html" class="">2. Create the Model Adapter</a>
+<a href="step-03-event-log.html" class="">3. Build the Event Log</a>
+<a href="step-04-agent-loop.html" class="">4. Implement the Agent Loop</a>
+<a href="step-05-tool-system.html" class="current-page">5. Build the Tool System</a>
+<a href="step-06-context-engineering.html" class="">6. Engineer the Context</a>
+<a href="step-07-repository-navigation.html" class="">7. Repository Navigation</a>
+<a href="step-08-shell-sandbox.html" class="">8. Shell Execution and Sandbox</a>
+<a href="step-09-policy-approvals.html" class="">9. Policy and Human Approval</a>
+<a href="step-10-state-recovery.html" class="">10. State, Checkpoints and Recovery</a>
+<a href="step-11-memory.html" class="">11. Memory</a>
+<a href="step-12-context-compaction.html" class="">12. Context Compaction</a>
+<a href="step-13-skills.html" class="">13. Skills and Progressive Disclosure</a>
+<a href="step-14-subagents.html" class="">14. Subagents</a>
+<a href="step-15-evaluation.html" class="">15. Evaluation</a>
+<a href="step-16-learning-loop.html" class="">16. The Harness Learning Loop</a>
+<a href="step-17-final-architecture.html" class="">17. Assemble the First-Generation Architecture</a>
+<a href="step-18-twelve-week-plan.html" class="">18. 12-Week Build Plan — Complete Phase I</a>
+<div class="phase-nav-label">Part II · Personal khosiness</div>
+<a href="part-ii-personal-harness.html" class="">19. Building the Personal Harness</a>
+    </nav>
+  </aside>
+  <main class="content">
+    <div class="detail-layout"><div class="detail-main"><header class="hero"><div class="eyebrow">Step 5</div><h1>5. Build the Tool System</h1><p>Turn capabilities into validated, bounded contracts instead of arbitrary Python calls.</p></header><div class="wrap"><div class="pager"><a href="step-04-agent-loop.html">← 4. Implement the Agent Loop</a><a href="step-06-context-engineering.html">6. Engineer the Context →</a></div><section class="card"><h2>Conceptual objective</h2><p class="lead">Turn capabilities into validated, bounded contracts instead of arbitrary Python calls.</p><div class="callout">At this stage you are constructing the irreducible harness core. Prefer deterministic code and fake-model tests. Do not introduce abstractions that solve problems you have not yet encountered.</div><h3>Files to create or modify</h3><div class="files"><code>src/khosiness/tools/base.py</code><code>src/khosiness/tools/registry.py</code><code>src/khosiness/tools/filesystem.py</code><code>tests/test_tools.py</code></div></section><section class="card"><h2>Implementation sequence</h2><div class="step"><div class="badge">1</div><div><h3>Define ToolResult.</h3><p>Implement this as the smallest version that makes the responsibility concrete. Keep provider/framework details outside the core boundary, add an event where the action changes run state, and make failure observable rather than silent.</p></div></div><div class="step"><div class="badge">2</div><div><h3>Define Tool with name, description, schema, risk and execute().</h3><p>Implement this as the smallest version that makes the responsibility concrete. Keep provider/framework details outside the core boundary, add an event where the action changes run state, and make failure observable rather than silent.</p></div></div><div class="step"><div class="badge">3</div><div><h3>Build a registry that rejects unknown tools.</h3><p>Implement this as the smallest version that makes the responsibility concrete. Keep provider/framework details outside the core boundary, add an event where the action changes run state, and make failure observable rather than silent.</p></div></div><div class="step"><div class="badge">4</div><div><h3>Implement list_directory, search_files and read_file.</h3><p>Implement this as the smallest version that makes the responsibility concrete. Keep provider/framework details outside the core boundary, add an event where the action changes run state, and make failure observable rather than silent.</p></div></div><div class="step"><div class="badge">5</div><div><h3>Constrain all paths to the task workspace.</h3><p>Implement this as the smallest version that makes the responsibility concrete. Keep provider/framework details outside the core boundary, add an event where the action changes run state, and make failure observable rather than silent.</p></div></div></section><section class="card"><h2>Starter implementation</h2><div class="callout warn"><strong>Do not paste blindly.</strong> Type this in VS Code, make it run, then explain every line before you add another layer.</div><pre><code>from pydantic import BaseModel, Field
+from abc import ABC, abstractmethod
+
+class ToolResult(BaseModel):
+    ok: bool
+    content: str
+    metadata: dict = Field(default_factory=dict)
+
+class Tool(ABC):
+    name: str
+    description: str
+    risk: str = "read_only"
+
+    @abstractmethod
+    def schema(self) -&gt; dict: ...
+
+    @abstractmethod
+    def execute(self, arguments: dict) -&gt; ToolResult: ...</code></pre></section><section class="card"><h2>Tests to perform</h2><ol><li>Unknown tool gives structured error.</li><li>Path traversal outside workspace is denied.</li><li>Missing file gives structured error.</li><li>Search output is bounded.</li><li>Line-range reads return only requested lines.</li></ol><div class="callout green"><strong>Deliberate-failure rule:</strong> after the happy path works, deliberately trigger at least one failure and inspect the returned result, state change and event trace.</div></section><section class="card"><h2>What to inspect before moving on</h2><ul class="checks"><li>The component has one clear responsibility.</li><li>Failure is explicit and testable.</li><li>The event log shows the important transition.</li><li>No provider/framework object has leaked across an architectural boundary without a reason.</li><li>You can explain what problem this step solves without reading the code.</li></ul></section><section class="card"><h2>Suggested commit</h2><pre><code>git add .
+git commit -m "step 5: build the tool system"</code></pre><p>Tagging each stage separately makes later architectural comparison much easier.</p></section>
+<section class="card stage-checkpoint">
+<div class="checkpoint-kicker">Stage release checkpoint</div>
+<h2>End-state file contents</h2>
+<p class="lead">
+            Stop here and compare your repository with this checkpoint.
+            These are the <strong>complete contents</strong> of every file created
+            or modified in this stage—not fragments. Your implementation may
+            differ stylistically, but its contracts, tests and behavior should
+            be equivalent before you continue.
+          </p>
+<div class="snapshot-files">
+<details class="snapshot-file" open="">
+<summary>
+<code>src/khosiness/tools/base.py</code>
+<span>complete file</span>
+</summary>
+<div class="snapshot-body">
+<button class="copy-code" type="button">Copy file</button>
+<pre><code>from abc import ABC, abstractmethod
+
+from pydantic import BaseModel, Field
+
+
+class ToolResult(BaseModel):
+    ok: bool
+    content: str
+    metadata: dict = Field(default_factory=dict)
+
+
+class Tool(ABC):
+    name: str
+    description: str
+    risk: str = "read_only"
+
+    @abstractmethod
+    def schema(self) -&gt; dict:
+        ...
+
+    @abstractmethod
+    def execute(self, arguments: dict) -&gt; ToolResult:
+        ...</code></pre>
+</div>
+</details>
+<details class="snapshot-file">
+<summary>
+<code>src/khosiness/tools/registry.py</code>
+<span>complete file</span>
+</summary>
+<div class="snapshot-body">
+<button class="copy-code" type="button">Copy file</button>
+<pre><code>from khosiness.models.base import ToolCall
+
+from .base import Tool, ToolResult
+
+
+class ToolRegistry:
+    def __init__(self):
+        self._tools: dict[str, Tool] = {}
+
+    def register(self, tool: Tool) -&gt; None:
+        if tool.name in self._tools:
+            raise ValueError(f"duplicate tool: {tool.name}")
+        self._tools[tool.name] = tool
+
+    def schemas(self) -&gt; list[dict]:
+        return [tool.schema() for tool in self._tools.values()]
+
+    def execute(self, call: ToolCall) -&gt; ToolResult:
+        tool = self._tools.get(call.name)
+
+        if tool is None:
+            return ToolResult(
+                ok=False,
+                content=f"Unknown tool: {call.name}",
+            )
+
+        try:
+            return tool.execute(call.arguments)
+        except Exception as exc:
+            return ToolResult(
+                ok=False,
+                content=f"{type(exc).__name__}: {exc}",
+            )</code></pre>
+</div>
+</details>
+<details class="snapshot-file">
+<summary>
+<code>src/khosiness/tools/filesystem.py</code>
+<span>complete file</span>
+</summary>
+<div class="snapshot-body">
+<button class="copy-code" type="button">Copy file</button>
+<pre><code>from pathlib import Path
+
+from .base import Tool, ToolResult
+
+
+def safe_path(workspace: Path, relative_path: str) -&gt; Path:
+    workspace = workspace.resolve()
+    candidate = (workspace / relative_path).resolve()
+
+    if not candidate.is_relative_to(workspace):
+        raise ValueError("path escapes workspace")
+
+    return candidate
+
+
+class ListDirectoryTool(Tool):
+    name = "list_directory"
+    description = "List files and directories inside the workspace."
+
+    def __init__(self, workspace: Path):
+        self.workspace = workspace.resolve()
+
+    def schema(self) -&gt; dict:
+        return {
+            "name": self.name,
+            "description": self.description,
+            "parameters": {
+                "type": "object",
+                "properties": {
+                    "path": {"type": "string"},
+                },
+                "required": ["path"],
+            },
+        }
+
+    def execute(self, arguments: dict) -&gt; ToolResult:
+        path = safe_path(self.workspace, arguments["path"])
+        if not path.is_dir():
+            raise ValueError(f"not a directory: {arguments['path']}")
+
+        entries = sorted(
+            item.name + ("/" if item.is_dir() else "")
+            for item in path.iterdir()
+        )
+        return ToolResult(
+            ok=True,
+            content="\n".join(entries),
+            metadata={"count": len(entries)},
+        )
+
+
+class ReadFileTool(Tool):
+    name = "read_file"
+    description = "Read a UTF-8 text file inside the workspace."
+
+    def __init__(self, workspace: Path):
+        self.workspace = workspace.resolve()
+
+    def schema(self) -&gt; dict:
+        return {
+            "name": self.name,
+            "description": self.description,
+            "parameters": {
+                "type": "object",
+                "properties": {
+                    "path": {"type": "string"},
+                },
+                "required": ["path"],
+            },
+        }
+
+    def execute(self, arguments: dict) -&gt; ToolResult:
+        path = safe_path(self.workspace, arguments["path"])
+        if not path.is_file():
+            raise ValueError(f"not a file: {arguments['path']}")
+
+        text = path.read_text(encoding="utf-8")
+        return ToolResult(
+            ok=True,
+            content=text[:20_000],
+            metadata={
+                "characters": len(text),
+                "truncated": len(text) &gt; 20_000,
+            },
+        )
+
+
+class SearchFilesTool(Tool):
+    name = "search_files"
+    description = "Search UTF-8 text files inside the workspace."
+
+    def __init__(self, workspace: Path):
+        self.workspace = workspace.resolve()
+
+    def schema(self) -&gt; dict:
+        return {
+            "name": self.name,
+            "description": self.description,
+            "parameters": {
+                "type": "object",
+                "properties": {
+                    "query": {"type": "string"},
+                    "path": {"type": "string"},
+                },
+                "required": ["query", "path"],
+            },
+        }
+
+    def execute(self, arguments: dict) -&gt; ToolResult:
+        root = safe_path(self.workspace, arguments["path"])
+        query = arguments["query"]
+        matches: list[str] = []
+
+        for path in root.rglob("*"):
+            if not path.is_file():
+                continue
+            try:
+                lines = path.read_text(
+                    encoding="utf-8"
+                ).splitlines()
+            except UnicodeDecodeError:
+                continue
+
+            for line_number, line in enumerate(lines, start=1):
+                if query in line:
+                    relative = path.relative_to(self.workspace)
+                    matches.append(
+                        f"{relative}:{line_number}:{line.strip()}"
+                    )
+                    if len(matches) &gt;= 100:
+                        return ToolResult(
+                            ok=True,
+                            content="\n".join(matches),
+                            metadata={"truncated": True},
+                        )
+
+        return ToolResult(
+            ok=True,
+            content="\n".join(matches),
+            metadata={"truncated": False},
+        )</code></pre>
+</div>
+</details>
+<details class="snapshot-file">
+<summary>
+<code>tests/test_tools.py</code>
+<span>complete file</span>
+</summary>
+<div class="snapshot-body">
+<button class="copy-code" type="button">Copy file</button>
+<pre><code>from khosiness.models.base import ToolCall
+from khosiness.tools.filesystem import (
+    ListDirectoryTool,
+    ReadFileTool,
+    SearchFilesTool,
+)
+from khosiness.tools.registry import ToolRegistry
+
+
+def test_registry_rejects_duplicate_tool(tmp_path):
+    registry = ToolRegistry()
+    tool = ReadFileTool(tmp_path)
+    registry.register(tool)
+
+    try:
+        registry.register(tool)
+        assert False, "expected duplicate registration to fail"
+    except ValueError:
+        pass
+
+
+def test_unknown_tool_returns_structured_error():
+    registry = ToolRegistry()
+
+    result = registry.execute(
+        ToolCall(
+            id="1",
+            name="missing",
+            arguments={},
+        )
+    )
+
+    assert result.ok is False
+    assert "Unknown tool" in result.content
+
+
+def test_read_file(tmp_path):
+    (tmp_path / "hello.txt").write_text(
+        "hello",
+        encoding="utf-8",
+    )
+    tool = ReadFileTool(tmp_path)
+
+    result = tool.execute({"path": "hello.txt"})
+
+    assert result.ok is True
+    assert result.content == "hello"
+
+
+def test_read_file_cannot_escape_workspace(tmp_path):
+    tool = ReadFileTool(tmp_path)
+
+    try:
+        tool.execute({"path": "../outside.txt"})
+        assert False, "expected path escape to fail"
+    except ValueError as exc:
+        assert "escapes workspace" in str(exc)
+
+
+def test_list_directory(tmp_path):
+    (tmp_path / "a.txt").write_text("a", encoding="utf-8")
+    (tmp_path / "folder").mkdir()
+
+    result = ListDirectoryTool(tmp_path).execute({"path": "."})
+
+    assert result.content.splitlines() == [
+        "a.txt",
+        "folder/",
+    ]
+
+
+def test_search_files(tmp_path):
+    (tmp_path / "config.py").write_text(
+        "RETRY_COUNT = 3\n",
+        encoding="utf-8",
+    )
+
+    result = SearchFilesTool(tmp_path).execute(
+        {"query": "RETRY", "path": "."}
+    )
+
+    assert "config.py:1:RETRY_COUNT = 3" in result.content</code></pre>
+</div>
+</details>
+</div>
+</section>
+<section class="card validation-gate">
+<div class="checkpoint-kicker">Do not advance until this passes</div>
+<h2>Validation gate</h2>
+<p>
+            Run these checks from the repository root. A green unit test suite
+            is necessary but not sufficient; finish with the manual inspection
+            below so you also understand the behavior you just built.
+          </p>
+<div class="validation-table-wrap">
+<table class="validation-table">
+<thead>
+<tr>
+<th>Check</th>
+<th>Command</th>
+<th>Expected result</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Run tool tests</td>
+<td><pre class="command-pre"><code>pytest tests/test_tools.py -q</code></pre></td>
+<td>6 tests pass.</td>
+</tr>
+<tr>
+<td>Run all tests</td>
+<td><pre class="command-pre"><code>pytest -q</code></pre></td>
+<td>All accumulated tests pass.</td>
+</tr>
+<tr>
+<td>Check path escape protection</td>
+<td><pre class="command-pre"><code>pytest tests/test_tools.py::test_read_file_cannot_escape_workspace -q</code></pre></td>
+<td>The escape attempt is rejected.</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="callout green">
+<strong>Manual understanding check:</strong>
+            Call `SearchFilesTool` manually against a small repository. Inspect whether its output is evidence-sized rather than a full-file dump.
+          </div>
+<div class="callout checkpoint-pass">
+<strong>Stage passes only when:</strong>
+            the stage-specific tests pass, the complete accumulated suite passes,
+            the expected manual behavior is observed, and you can explain why
+            each changed file exists.
+          </div>
+</section>
+<div class="pager"><a href="step-04-agent-loop.html">← 4. Implement the Agent Loop</a><a href="step-06-context-engineering.html">6. Engineer the Context →</a></div><div class="footer">khosiness — Harness Engineering From Scratch · shorthand: kness · build deliberately, measure everything, earn autonomy.</div></div></div><aside aria-label="Developing project tree" class="project-tree-panel">
+<div class="project-tree-card">
+<div class="tree-kicker">Developing project</div>
+<h2>Project tree</h2>
+<p class="tree-help">Yellow marks the folders and files created or modified in this stage.</p>
+<div class="tree-box">
+<div class="tree-row tree-root">
+<span class="tree-icon">▾</span>
+<span class="tree-label">khosiness/</span>
+</div>
+<div class="tree-row" style="--depth:0"><span class="tree-icon">▾</span><span class="tree-label">benchmarks/</span></div><div class="tree-row" style="--depth:1"><span class="tree-icon">•</span><span class="tree-label">.gitkeep</span></div><div class="tree-row" style="--depth:1"><span class="tree-icon">•</span><span class="tree-label">tasks.json</span></div><div class="tree-row" style="--depth:0"><span class="tree-icon">▾</span><span class="tree-label">docs/</span></div><div class="tree-row" style="--depth:1"><span class="tree-icon">•</span><span class="tree-label">architecture.md</span></div><div class="tree-row affected" style="--depth:0"><span class="tree-icon">▾</span><span class="tree-label">src/</span></div><div class="tree-row affected" style="--depth:1"><span class="tree-icon">▾</span><span class="tree-label">harness/</span></div><div class="tree-row" style="--depth:2"><span class="tree-icon">▾</span><span class="tree-label">models/</span></div><div class="tree-row" style="--depth:3"><span class="tree-icon">•</span><span class="tree-label">base.py</span></div><div class="tree-row" style="--depth:3"><span class="tree-icon">•</span><span class="tree-label">fake.py</span></div><div class="tree-row" style="--depth:3"><span class="tree-icon">•</span><span class="tree-label">provider.py</span></div><div class="tree-row affected" style="--depth:2"><span class="tree-icon">▾</span><span class="tree-label">tools/</span></div><div class="tree-row affected" style="--depth:3"><span class="tree-icon">•</span><span class="tree-label">base.py</span></div><div class="tree-row affected" style="--depth:3"><span class="tree-icon">•</span><span class="tree-label">filesystem.py</span></div><div class="tree-row affected" style="--depth:3"><span class="tree-icon">•</span><span class="tree-label">registry.py</span></div><div class="tree-row" style="--depth:2"><span class="tree-icon">•</span><span class="tree-label">__init__.py</span></div><div class="tree-row" style="--depth:2"><span class="tree-icon">•</span><span class="tree-label">event_store.py</span></div><div class="tree-row" style="--depth:2"><span class="tree-icon">•</span><span class="tree-label">events.py</span></div><div class="tree-row" style="--depth:2"><span class="tree-icon">•</span><span class="tree-label">loop.py</span></div><div class="tree-row" style="--depth:2"><span class="tree-icon">•</span><span class="tree-label">state.py</span></div><div class="tree-row" style="--depth:2"><span class="tree-icon">•</span><span class="tree-label">task.py</span></div><div class="tree-row affected" style="--depth:0"><span class="tree-icon">▾</span><span class="tree-label">tests/</span></div><div class="tree-row" style="--depth:1"><span class="tree-icon">•</span><span class="tree-label">__init__.py</span></div><div class="tree-row" style="--depth:1"><span class="tree-icon">•</span><span class="tree-label">test_event_store.py</span></div><div class="tree-row" style="--depth:1"><span class="tree-icon">•</span><span class="tree-label">test_loop.py</span></div><div class="tree-row" style="--depth:1"><span class="tree-icon">•</span><span class="tree-label">test_model_adapter.py</span></div><div class="tree-row" style="--depth:1"><span class="tree-icon">•</span><span class="tree-label">test_task.py</span></div><div class="tree-row affected" style="--depth:1"><span class="tree-icon">•</span><span class="tree-label">test_tools.py</span></div><div class="tree-row" style="--depth:0"><span class="tree-icon">•</span><span class="tree-label">.gitignore</span></div><div class="tree-row" style="--depth:0"><span class="tree-icon">•</span><span class="tree-label">pyproject.toml</span></div><div class="tree-row" style="--depth:0"><span class="tree-icon">•</span><span class="tree-label">README.md</span></div>
+</div>
+</div>
+</aside></div>
+  </main>
+</div>
+<script src="../assets/manual.js"></script>
+</body>
+</html>

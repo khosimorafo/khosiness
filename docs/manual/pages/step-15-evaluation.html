@@ -1,0 +1,357 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>15. Evaluation — khosiness</title>
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<div class="site">
+  <aside class="sidebar">
+    <div class="brand">
+      <a href="../index.html">khosiness — Harness Engineering From Scratch</a>
+      <p>Personal agentic operating harness · Python + VS Code + Codex</p>
+    </div>
+    <div class="nav-title">Manual map</div>
+    <nav class="nav">
+      <a href="../index.html" class="">Overview</a>
+<div class="phase-nav-label">Phase I · Build khosiness</div>
+<a href="project-setup.html" class="">Setup. Project Setup</a>
+<a href="step-00-mental-model.html" class="">0. The Mental Model</a>
+<a href="step-01-task-contract.html" class="">1. Define the Task Contract</a>
+<a href="step-02-model-adapter.html" class="">2. Create the Model Adapter</a>
+<a href="step-03-event-log.html" class="">3. Build the Event Log</a>
+<a href="step-04-agent-loop.html" class="">4. Implement the Agent Loop</a>
+<a href="step-05-tool-system.html" class="">5. Build the Tool System</a>
+<a href="step-06-context-engineering.html" class="">6. Engineer the Context</a>
+<a href="step-07-repository-navigation.html" class="">7. Repository Navigation</a>
+<a href="step-08-shell-sandbox.html" class="">8. Shell Execution and Sandbox</a>
+<a href="step-09-policy-approvals.html" class="">9. Policy and Human Approval</a>
+<a href="step-10-state-recovery.html" class="">10. State, Checkpoints and Recovery</a>
+<a href="step-11-memory.html" class="">11. Memory</a>
+<a href="step-12-context-compaction.html" class="">12. Context Compaction</a>
+<a href="step-13-skills.html" class="">13. Skills and Progressive Disclosure</a>
+<a href="step-14-subagents.html" class="">14. Subagents</a>
+<a href="step-15-evaluation.html" class="current-page">15. Evaluation</a>
+<a href="step-16-learning-loop.html" class="">16. The Harness Learning Loop</a>
+<a href="step-17-final-architecture.html" class="">17. Assemble the First-Generation Architecture</a>
+<a href="step-18-twelve-week-plan.html" class="">18. 12-Week Build Plan — Complete Phase I</a>
+<div class="phase-nav-label">Part II · Personal khosiness</div>
+<a href="part-ii-personal-harness.html" class="">19. Building the Personal Harness</a>
+    </nav>
+  </aside>
+  <main class="content">
+    <div class="detail-layout"><div class="detail-main"><header class="hero"><div class="eyebrow">Step 15</div><h1>15. Evaluation</h1><p>Turn the harness into a measurable system using stable benchmarks and failure classification.</p></header><div class="wrap"><div class="pager"><a href="step-14-subagents.html">← 14. Subagents</a><a href="step-16-learning-loop.html">16. The Harness Learning Loop →</a></div><section class="card"><h2>Conceptual objective</h2><p class="lead">Turn the harness into a measurable system using stable benchmarks and failure classification.</p><div class="callout">This stage turns the harness into an engineering system: measurable, comparable and improvable through controlled experiments rather than intuition.</div><h3>Files to create or modify</h3><div class="files"><code>src/khosiness/evals/metrics.py</code><code>src/khosiness/evals/runner.py</code><code>benchmarks/eval_tasks.json</code><code>tests/test_evals.py</code></div></section><section class="card"><h2>Implementation sequence</h2><div class="step"><div class="badge">1</div><div><h3>Create benchmark records with graders.</h3><p>Implement this as the smallest version that makes the responsibility concrete. Keep provider/framework details outside the core boundary, add an event where the action changes run state, and make failure observable rather than silent.</p></div></div><div class="step"><div class="badge">2</div><div><h3>Capture success, steps, tool calls, failures, tokens, wall time and human interventions.</h3><p>Implement this as the smallest version that makes the responsibility concrete. Keep provider/framework details outside the core boundary, add an event where the action changes run state, and make failure observable rather than silent.</p></div></div><div class="step"><div class="badge">3</div><div><h3>Prefer code-based graders where possible.</h3><p>Implement this as the smallest version that makes the responsibility concrete. Keep provider/framework details outside the core boundary, add an event where the action changes run state, and make failure observable rather than silent.</p></div></div><div class="step"><div class="badge">4</div><div><h3>Assign a failure class to failed runs.</h3><p>Implement this as the smallest version that makes the responsibility concrete. Keep provider/framework details outside the core boundary, add an event where the action changes run state, and make failure observable rather than silent.</p></div></div></section><section class="card"><h2>Starter implementation</h2><div class="callout warn"><strong>Do not paste blindly.</strong> Type this in VS Code, make it run, then explain every line before you add another layer.</div><pre><code>class EvalResult(BaseModel):
+    task_id: str
+    success: bool
+    steps: int
+    tool_calls: int
+    failed_tool_calls: int
+    input_tokens: int | None
+    output_tokens: int | None
+    wall_ms: int
+    human_interventions: int
+    failure_class: str | None
+    run_id: str</code></pre></section><section class="card"><h2>Tests to perform</h2><ol><li>Fake-model evals are deterministic.</li><li>Every real eval retains its run ID.</li><li>Metrics aggregate successful and failed runs.</li><li>Manually inspect sample traces.</li></ol><div class="callout green"><strong>Deliberate-failure rule:</strong> after the happy path works, deliberately trigger at least one failure and inspect the returned result, state change and event trace.</div></section><section class="card"><h2>What to inspect before moving on</h2><ul class="checks"><li>The component has one clear responsibility.</li><li>Failure is explicit and testable.</li><li>The event log shows the important transition.</li><li>No provider/framework object has leaked across an architectural boundary without a reason.</li><li>You can explain what problem this step solves without reading the code.</li></ul></section><section class="card"><h2>Suggested commit</h2><pre><code>git add .
+git commit -m "step 15: evaluation"</code></pre><p>Tagging each stage separately makes later architectural comparison much easier.</p></section>
+<section class="card stage-checkpoint">
+<div class="checkpoint-kicker">Stage release checkpoint</div>
+<h2>End-state file contents</h2>
+<p class="lead">
+            Stop here and compare your repository with this checkpoint.
+            These are the <strong>complete contents</strong> of every file created
+            or modified in this stage—not fragments. Your implementation may
+            differ stylistically, but its contracts, tests and behavior should
+            be equivalent before you continue.
+          </p>
+<div class="snapshot-files">
+<details class="snapshot-file" open="">
+<summary>
+<code>src/khosiness/evals/metrics.py</code>
+<span>complete file</span>
+</summary>
+<div class="snapshot-body">
+<button class="copy-code" type="button">Copy file</button>
+<pre><code>from pydantic import BaseModel
+
+
+class EvalResult(BaseModel):
+    task_id: str
+    success: bool
+    steps: int
+    tool_calls: int
+    failed_tool_calls: int
+    input_tokens: int | None = None
+    output_tokens: int | None = None
+    wall_ms: int
+    human_interventions: int = 0
+    failure_class: str | None = None
+    run_id: str
+
+
+class EvalSummary(BaseModel):
+    tasks: int
+    successes: int
+    success_rate: float
+    total_steps: int
+    total_tool_calls: int
+
+
+def summarize(
+    results: list[EvalResult],
+) -&gt; EvalSummary:
+    tasks = len(results)
+    successes = sum(
+        1 for result in results
+        if result.success
+    )
+
+    return EvalSummary(
+        tasks=tasks,
+        successes=successes,
+        success_rate=(
+            successes / tasks
+            if tasks
+            else 0.0
+        ),
+        total_steps=sum(
+            result.steps for result in results
+        ),
+        total_tool_calls=sum(
+            result.tool_calls
+            for result in results
+        ),
+    )</code></pre>
+</div>
+</details>
+<details class="snapshot-file">
+<summary>
+<code>src/khosiness/evals/runner.py</code>
+<span>complete file</span>
+</summary>
+<div class="snapshot-body">
+<button class="copy-code" type="button">Copy file</button>
+<pre><code>from collections.abc import Callable
+from time import perf_counter
+
+from .metrics import EvalResult
+
+
+def run_eval(
+    *,
+    task_id: str,
+    execute: Callable[[], object],
+    grade: Callable[[object], bool],
+    metrics_from_run: Callable[
+        [object],
+        dict,
+    ],
+) -&gt; EvalResult:
+    started = perf_counter()
+    run = execute()
+    success = grade(run)
+    metrics = metrics_from_run(run)
+
+    return EvalResult(
+        task_id=task_id,
+        success=success,
+        steps=metrics["steps"],
+        tool_calls=metrics["tool_calls"],
+        failed_tool_calls=metrics[
+            "failed_tool_calls"
+        ],
+        input_tokens=metrics.get(
+            "input_tokens"
+        ),
+        output_tokens=metrics.get(
+            "output_tokens"
+        ),
+        wall_ms=int(
+            (perf_counter() - started) * 1000
+        ),
+        human_interventions=metrics.get(
+            "human_interventions",
+            0,
+        ),
+        failure_class=metrics.get(
+            "failure_class"
+        ),
+        run_id=metrics["run_id"],
+    )</code></pre>
+</div>
+</details>
+<details class="snapshot-file">
+<summary>
+<code>benchmarks/eval_tasks.json</code>
+<span>complete file</span>
+</summary>
+<div class="snapshot-body">
+<button class="copy-code" type="button">Copy file</button>
+<pre><code>[
+  {
+    "id": "retry-config",
+    "required_answer_fragments": [
+      "src/db/config.py",
+      "DB_RETRY_COUNT",
+      "3"
+    ]
+  },
+  {
+    "id": "entrypoint",
+    "required_answer_fragments": [
+      "main"
+    ]
+  }
+]</code></pre>
+</div>
+</details>
+<details class="snapshot-file">
+<summary>
+<code>tests/test_evals.py</code>
+<span>complete file</span>
+</summary>
+<div class="snapshot-body">
+<button class="copy-code" type="button">Copy file</button>
+<pre><code>from types import SimpleNamespace
+
+from khosiness.evals.metrics import (
+    EvalResult,
+    summarize,
+)
+from khosiness.evals.runner import run_eval
+
+
+def test_summary_calculates_success_rate():
+    results = [
+        EvalResult(
+            task_id="a",
+            success=True,
+            steps=2,
+            tool_calls=3,
+            failed_tool_calls=0,
+            wall_ms=10,
+            run_id="r1",
+        ),
+        EvalResult(
+            task_id="b",
+            success=False,
+            steps=4,
+            tool_calls=5,
+            failed_tool_calls=1,
+            wall_ms=20,
+            run_id="r2",
+            failure_class="missing_context",
+        ),
+    ]
+
+    summary = summarize(results)
+
+    assert summary.tasks == 2
+    assert summary.successes == 1
+    assert summary.success_rate == 0.5
+    assert summary.total_steps == 6
+
+
+def test_eval_runner_combines_execution_grading_and_metrics():
+    def execute():
+        return SimpleNamespace(
+            answer="DB_RETRY_COUNT = 3",
+        )
+
+    def grade(run):
+        return "DB_RETRY_COUNT" in run.answer
+
+    def metrics(run):
+        return {
+            "steps": 2,
+            "tool_calls": 1,
+            "failed_tool_calls": 0,
+            "run_id": "r1",
+        }
+
+    result = run_eval(
+        task_id="retry-config",
+        execute=execute,
+        grade=grade,
+        metrics_from_run=metrics,
+    )
+
+    assert result.success is True
+    assert result.steps == 2
+    assert result.run_id == "r1"
+
+
+def test_empty_summary_is_defined():
+    summary = summarize([])
+    assert summary.success_rate == 0.0</code></pre>
+</div>
+</details>
+</div>
+</section>
+<section class="card validation-gate">
+<div class="checkpoint-kicker">Do not advance until this passes</div>
+<h2>Validation gate</h2>
+<p>
+            Run these checks from the repository root. A green unit test suite
+            is necessary but not sufficient; finish with the manual inspection
+            below so you also understand the behavior you just built.
+          </p>
+<div class="validation-table-wrap">
+<table class="validation-table">
+<thead>
+<tr>
+<th>Check</th>
+<th>Command</th>
+<th>Expected result</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Run evaluation tests</td>
+<td><pre class="command-pre"><code>pytest tests/test_evals.py -q</code></pre></td>
+<td>3 tests pass.</td>
+</tr>
+<tr>
+<td>Run all tests</td>
+<td><pre class="command-pre"><code>pytest -q</code></pre></td>
+<td>All accumulated tests pass.</td>
+</tr>
+<tr>
+<td>Validate benchmark JSON</td>
+<td><pre class="command-pre"><code>python -m json.tool benchmarks/eval_tasks.json &gt; /dev/null</code></pre></td>
+<td>Command exits successfully.</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="callout green">
+<strong>Manual understanding check:</strong>
+            For one failed benchmark, open the run trace before changing code. Classify whether the failure came from reasoning, context, tool design, runtime, policy, memory, completion or looping.
+          </div>
+<div class="callout checkpoint-pass">
+<strong>Stage passes only when:</strong>
+            the stage-specific tests pass, the complete accumulated suite passes,
+            the expected manual behavior is observed, and you can explain why
+            each changed file exists.
+          </div>
+</section>
+<div class="pager"><a href="step-14-subagents.html">← 14. Subagents</a><a href="step-16-learning-loop.html">16. The Harness Learning Loop →</a></div><div class="footer">khosiness — Harness Engineering From Scratch · shorthand: kness · build deliberately, measure everything, earn autonomy.</div></div></div><aside aria-label="Developing project tree" class="project-tree-panel">
+<div class="project-tree-card">
+<div class="tree-kicker">Developing project</div>
+<h2>Project tree</h2>
+<p class="tree-help">Yellow marks the folders and files created or modified in this stage.</p>
+<div class="tree-box">
+<div class="tree-row tree-root">
+<span class="tree-icon">▾</span>
+<span class="tree-label">khosiness/</span>
+</div>
+<div class="tree-row affected" style="--depth:0"><span class="tree-icon">▾</span><span class="tree-label">benchmarks/</span></div><div class="tree-row" style="--depth:1"><span class="tree-icon">•</span><span class="tree-label">.gitkeep</span></div><div class="tree-row affected" style="--depth:1"><span class="tree-icon">•</span><span class="tree-label">eval_tasks.json</span></div><div class="tree-row" style="--depth:1"><span class="tree-icon">•</span><span class="tree-label">repo_tasks.json</span></div><div class="tree-row" style="--depth:1"><span class="tree-icon">•</span><span class="tree-label">tasks.json</span></div><div class="tree-row" style="--depth:0"><span class="tree-icon">▾</span><span class="tree-label">docs/</span></div><div class="tree-row" style="--depth:1"><span class="tree-icon">•</span><span class="tree-label">architecture.md</span></div><div class="tree-row" style="--depth:0"><span class="tree-icon">▾</span><span class="tree-label">skills/</span></div><div class="tree-row" style="--depth:1"><span class="tree-icon">▾</span><span class="tree-label">python-debugging/</span></div><div class="tree-row" style="--depth:2"><span class="tree-icon">•</span><span class="tree-label">SKILL.md</span></div><div class="tree-row" style="--depth:1"><span class="tree-icon">▾</span><span class="tree-label">repository-analysis/</span></div><div class="tree-row" style="--depth:2"><span class="tree-icon">•</span><span class="tree-label">SKILL.md</span></div><div class="tree-row affected" style="--depth:0"><span class="tree-icon">▾</span><span class="tree-label">src/</span></div><div class="tree-row affected" style="--depth:1"><span class="tree-icon">▾</span><span class="tree-label">harness/</span></div><div class="tree-row" style="--depth:2"><span class="tree-icon">▾</span><span class="tree-label">agents/</span></div><div class="tree-row" style="--depth:3"><span class="tree-icon">•</span><span class="tree-label">request.py</span></div><div class="tree-row" style="--depth:3"><span class="tree-icon">•</span><span class="tree-label">spawn.py</span></div><div class="tree-row" style="--depth:2"><span class="tree-icon">▾</span><span class="tree-label">context/</span></div><div class="tree-row" style="--depth:3"><span class="tree-icon">•</span><span class="tree-label">builder.py</span></div><div class="tree-row" style="--depth:3"><span class="tree-icon">•</span><span class="tree-label">compaction.py</span></div><div class="tree-row affected" style="--depth:2"><span class="tree-icon">▾</span><span class="tree-label">evals/</span></div><div class="tree-row affected" style="--depth:3"><span class="tree-icon">•</span><span class="tree-label">metrics.py</span></div><div class="tree-row affected" style="--depth:3"><span class="tree-icon">•</span><span class="tree-label">runner.py</span></div><div class="tree-row" style="--depth:2"><span class="tree-icon">▾</span><span class="tree-label">memory/</span></div><div class="tree-row" style="--depth:3"><span class="tree-icon">•</span><span class="tree-label">retrieval.py</span></div><div class="tree-row" style="--depth:3"><span class="tree-icon">•</span><span class="tree-label">schema.py</span></div><div class="tree-row" style="--depth:3"><span class="tree-icon">•</span><span class="tree-label">store.py</span></div><div class="tree-row" style="--depth:2"><span class="tree-icon">▾</span><span class="tree-label">models/</span></div><div class="tree-row" style="--depth:3"><span class="tree-icon">•</span><span class="tree-label">base.py</span></div><div class="tree-row" style="--depth:3"><span class="tree-icon">•</span><span class="tree-label">fake.py</span></div><div class="tree-row" style="--depth:3"><span class="tree-icon">•</span><span class="tree-label">provider.py</span></div><div class="tree-row" style="--depth:2"><span class="tree-icon">▾</span><span class="tree-label">policy/</span></div><div class="tree-row" style="--depth:3"><span class="tree-icon">•</span><span class="tree-label">approval.py</span></div><div class="tree-row" style="--depth:3"><span class="tree-icon">•</span><span class="tree-label">engine.py</span></div><div class="tree-row" style="--depth:3"><span class="tree-icon">•</span><span class="tree-label">risk.py</span></div><div class="tree-row" style="--depth:2"><span class="tree-icon">▾</span><span class="tree-label">sandbox/</span></div><div class="tree-row" style="--depth:3"><span class="tree-icon">•</span><span class="tree-label">base.py</span></div><div class="tree-row" style="--depth:3"><span class="tree-icon">•</span><span class="tree-label">local.py</span></div><div class="tree-row" style="--depth:2"><span class="tree-icon">▾</span><span class="tree-label">skills/</span></div><div class="tree-row" style="--depth:3"><span class="tree-icon">•</span><span class="tree-label">catalog.py</span></div><div class="tree-row" style="--depth:3"><span class="tree-icon">•</span><span class="tree-label">loader.py</span></div><div class="tree-row" style="--depth:2"><span class="tree-icon">▾</span><span class="tree-label">tools/</span></div><div class="tree-row" style="--depth:3"><span class="tree-icon">•</span><span class="tree-label">base.py</span></div><div class="tree-row" style="--depth:3"><span class="tree-icon">•</span><span class="tree-label">filesystem.py</span></div><div class="tree-row" style="--depth:3"><span class="tree-icon">•</span><span class="tree-label">registry.py</span></div><div class="tree-row" style="--depth:3"><span class="tree-icon">•</span><span class="tree-label">shell.py</span></div><div class="tree-row" style="--depth:2"><span class="tree-icon">•</span><span class="tree-label">__init__.py</span></div><div class="tree-row" style="--depth:2"><span class="tree-icon">•</span><span class="tree-label">checkpoint.py</span></div><div class="tree-row" style="--depth:2"><span class="tree-icon">•</span><span class="tree-label">event_store.py</span></div><div class="tree-row" style="--depth:2"><span class="tree-icon">•</span><span class="tree-label">events.py</span></div><div class="tree-row" style="--depth:2"><span class="tree-icon">•</span><span class="tree-label">loop.py</span></div><div class="tree-row" style="--depth:2"><span class="tree-icon">•</span><span class="tree-label">resume.py</span></div><div class="tree-row" style="--depth:2"><span class="tree-icon">•</span><span class="tree-label">state.py</span></div><div class="tree-row" style="--depth:2"><span class="tree-icon">•</span><span class="tree-label">task.py</span></div><div class="tree-row affected" style="--depth:0"><span class="tree-icon">▾</span><span class="tree-label">tests/</span></div><div class="tree-row" style="--depth:1"><span class="tree-icon">•</span><span class="tree-label">__init__.py</span></div><div class="tree-row" style="--depth:1"><span class="tree-icon">•</span><span class="tree-label">test_compaction.py</span></div><div class="tree-row" style="--depth:1"><span class="tree-icon">•</span><span class="tree-label">test_context_builder.py</span></div><div class="tree-row affected" style="--depth:1"><span class="tree-icon">•</span><span class="tree-label">test_evals.py</span></div><div class="tree-row" style="--depth:1"><span class="tree-icon">•</span><span class="tree-label">test_event_store.py</span></div><div class="tree-row" style="--depth:1"><span class="tree-icon">•</span><span class="tree-label">test_loop.py</span></div><div class="tree-row" style="--depth:1"><span class="tree-icon">•</span><span class="tree-label">test_memory.py</span></div><div class="tree-row" style="--depth:1"><span class="tree-icon">•</span><span class="tree-label">test_model_adapter.py</span></div><div class="tree-row" style="--depth:1"><span class="tree-icon">•</span><span class="tree-label">test_policy.py</span></div><div class="tree-row" style="--depth:1"><span class="tree-icon">•</span><span class="tree-label">test_recovery.py</span></div><div class="tree-row" style="--depth:1"><span class="tree-icon">•</span><span class="tree-label">test_repository_tasks.py</span></div><div class="tree-row" style="--depth:1"><span class="tree-icon">•</span><span class="tree-label">test_shell.py</span></div><div class="tree-row" style="--depth:1"><span class="tree-icon">•</span><span class="tree-label">test_skills.py</span></div><div class="tree-row" style="--depth:1"><span class="tree-icon">•</span><span class="tree-label">test_subagents.py</span></div><div class="tree-row" style="--depth:1"><span class="tree-icon">•</span><span class="tree-label">test_task.py</span></div><div class="tree-row" style="--depth:1"><span class="tree-icon">•</span><span class="tree-label">test_tools.py</span></div><div class="tree-row" style="--depth:0"><span class="tree-icon">•</span><span class="tree-label">.gitignore</span></div><div class="tree-row" style="--depth:0"><span class="tree-icon">•</span><span class="tree-label">pyproject.toml</span></div><div class="tree-row" style="--depth:0"><span class="tree-icon">•</span><span class="tree-label">README.md</span></div>
+</div>
+</div>
+</aside></div>
+  </main>
+</div>
+<script src="../assets/manual.js"></script>
+</body>
+</html>

@@ -1,0 +1,321 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>2. Create the Model Adapter — khosiness</title>
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<div class="site">
+  <aside class="sidebar">
+    <div class="brand">
+      <a href="../index.html">khosiness — Harness Engineering From Scratch</a>
+      <p>Personal agentic operating harness · Python + VS Code + Codex</p>
+    </div>
+    <div class="nav-title">Manual map</div>
+    <nav class="nav">
+      <a href="../index.html" class="">Overview</a>
+<div class="phase-nav-label">Phase I · Build khosiness</div>
+<a href="project-setup.html" class="">Setup. Project Setup</a>
+<a href="step-00-mental-model.html" class="">0. The Mental Model</a>
+<a href="step-01-task-contract.html" class="">1. Define the Task Contract</a>
+<a href="step-02-model-adapter.html" class="current-page">2. Create the Model Adapter</a>
+<a href="step-03-event-log.html" class="">3. Build the Event Log</a>
+<a href="step-04-agent-loop.html" class="">4. Implement the Agent Loop</a>
+<a href="step-05-tool-system.html" class="">5. Build the Tool System</a>
+<a href="step-06-context-engineering.html" class="">6. Engineer the Context</a>
+<a href="step-07-repository-navigation.html" class="">7. Repository Navigation</a>
+<a href="step-08-shell-sandbox.html" class="">8. Shell Execution and Sandbox</a>
+<a href="step-09-policy-approvals.html" class="">9. Policy and Human Approval</a>
+<a href="step-10-state-recovery.html" class="">10. State, Checkpoints and Recovery</a>
+<a href="step-11-memory.html" class="">11. Memory</a>
+<a href="step-12-context-compaction.html" class="">12. Context Compaction</a>
+<a href="step-13-skills.html" class="">13. Skills and Progressive Disclosure</a>
+<a href="step-14-subagents.html" class="">14. Subagents</a>
+<a href="step-15-evaluation.html" class="">15. Evaluation</a>
+<a href="step-16-learning-loop.html" class="">16. The Harness Learning Loop</a>
+<a href="step-17-final-architecture.html" class="">17. Assemble the First-Generation Architecture</a>
+<a href="step-18-twelve-week-plan.html" class="">18. 12-Week Build Plan — Complete Phase I</a>
+<div class="phase-nav-label">Part II · Personal khosiness</div>
+<a href="part-ii-personal-harness.html" class="">19. Building the Personal Harness</a>
+    </nav>
+  </aside>
+  <main class="content">
+    <div class="detail-layout"><div class="detail-main"><header class="hero"><div class="eyebrow">Step 2</div><h1>2. Create the Model Adapter</h1><p>Hide provider-specific APIs behind one harness-owned request and response contract.</p></header><div class="wrap"><div class="pager"><a href="step-01-task-contract.html">← 1. Define the Task Contract</a><a href="step-03-event-log.html">3. Build the Event Log →</a></div><section class="card"><h2>Conceptual objective</h2><p class="lead">Hide provider-specific APIs behind one harness-owned request and response contract.</p><div class="callout">At this stage you are constructing the irreducible harness core. Prefer deterministic code and fake-model tests. Do not introduce abstractions that solve problems you have not yet encountered.</div><h3>Files to create or modify</h3><div class="files"><code>src/khosiness/models/base.py</code><code>src/khosiness/models/fake.py</code><code>src/khosiness/models/provider.py</code><code>tests/test_model_adapter.py</code></div></section><section class="card"><h2>Implementation sequence</h2><div class="step"><div class="badge">1</div><div><h3>Define ToolCall and ModelResponse.</h3><p>Implement this as the smallest version that makes the responsibility concrete. Keep provider/framework details outside the core boundary, add an event where the action changes run state, and make failure observable rather than silent.</p></div></div><div class="step"><div class="badge">2</div><div><h3>Define a ModelAdapter protocol.</h3><p>Implement this as the smallest version that makes the responsibility concrete. Keep provider/framework details outside the core boundary, add an event where the action changes run state, and make failure observable rather than silent.</p></div></div><div class="step"><div class="badge">3</div><div><h3>Build a deterministic FakeModel before a real provider.</h3><p>Implement this as the smallest version that makes the responsibility concrete. Keep provider/framework details outside the core boundary, add an event where the action changes run state, and make failure observable rather than silent.</p></div></div><div class="step"><div class="badge">4</div><div><h3>Confine SDK translation to provider.py.</h3><p>Implement this as the smallest version that makes the responsibility concrete. Keep provider/framework details outside the core boundary, add an event where the action changes run state, and make failure observable rather than silent.</p></div></div></section><section class="card"><h2>Starter implementation</h2><div class="callout warn"><strong>Do not paste blindly.</strong> Type this in VS Code, make it run, then explain every line before you add another layer.</div><pre><code>from typing import Protocol
+from pydantic import BaseModel, Field
+
+class ToolCall(BaseModel):
+    id: str
+    name: str
+    arguments: dict
+
+class ModelResponse(BaseModel):
+    text: str | None = None
+    tool_calls: list[ToolCall] = Field(default_factory=list)
+    stop_reason: str | None = None
+    input_tokens: int | None = None
+    output_tokens: int | None = None
+
+class ModelAdapter(Protocol):
+    def generate(self, messages: list[dict], tools: list[dict]) -&gt; ModelResponse: ...</code></pre></section><section class="card"><h2>Tests to perform</h2><ol><li>Fake model returns queued text.</li><li>Fake model returns structured tool calls.</li><li>Real provider smoke test is optional/skippable when credentials are absent.</li></ol><div class="callout green"><strong>Deliberate-failure rule:</strong> after the happy path works, deliberately trigger at least one failure and inspect the returned result, state change and event trace.</div></section><section class="card"><h2>What to inspect before moving on</h2><ul class="checks"><li>The component has one clear responsibility.</li><li>Failure is explicit and testable.</li><li>The event log shows the important transition.</li><li>No provider/framework object has leaked across an architectural boundary without a reason.</li><li>You can explain what problem this step solves without reading the code.</li></ul></section><section class="card"><h2>Suggested commit</h2><pre><code>git add .
+git commit -m "step 2: create the model adapter"</code></pre><p>Tagging each stage separately makes later architectural comparison much easier.</p></section>
+<section class="card stage-checkpoint">
+<div class="checkpoint-kicker">Stage release checkpoint</div>
+<h2>End-state file contents</h2>
+<p class="lead">
+            Stop here and compare your repository with this checkpoint.
+            These are the <strong>complete contents</strong> of every file created
+            or modified in this stage—not fragments. Your implementation may
+            differ stylistically, but its contracts, tests and behavior should
+            be equivalent before you continue.
+          </p>
+<div class="snapshot-files">
+<details class="snapshot-file" open="">
+<summary>
+<code>src/khosiness/models/base.py</code>
+<span>complete file</span>
+</summary>
+<div class="snapshot-body">
+<button class="copy-code" type="button">Copy file</button>
+<pre><code>from typing import Protocol
+
+from pydantic import BaseModel, Field
+
+
+class ToolCall(BaseModel):
+    id: str
+    name: str
+    arguments: dict
+
+
+class ModelResponse(BaseModel):
+    text: str | None = None
+    tool_calls: list[ToolCall] = Field(default_factory=list)
+    stop_reason: str | None = None
+    input_tokens: int | None = None
+    output_tokens: int | None = None
+
+
+class ModelAdapter(Protocol):
+    def generate(
+        self,
+        messages: list[dict],
+        tools: list[dict],
+    ) -&gt; ModelResponse:
+        """Return a provider-neutral model response."""
+        ...</code></pre>
+</div>
+</details>
+<details class="snapshot-file">
+<summary>
+<code>src/khosiness/models/fake.py</code>
+<span>complete file</span>
+</summary>
+<div class="snapshot-body">
+<button class="copy-code" type="button">Copy file</button>
+<pre><code>from collections import deque
+
+from .base import ModelResponse
+
+
+class FakeModel:
+    """Deterministic model adapter for unit tests."""
+
+    def __init__(self, responses: list[ModelResponse]):
+        self.responses = deque(responses)
+        self.calls: list[dict] = []
+
+    def generate(
+        self,
+        messages: list[dict],
+        tools: list[dict],
+    ) -&gt; ModelResponse:
+        self.calls.append(
+            {
+                "messages": messages,
+                "tools": tools,
+            }
+        )
+
+        if not self.responses:
+            raise RuntimeError("FakeModel has no queued response")
+
+        return self.responses.popleft()</code></pre>
+</div>
+</details>
+<details class="snapshot-file">
+<summary>
+<code>src/khosiness/models/provider.py</code>
+<span>complete file</span>
+</summary>
+<div class="snapshot-body">
+<button class="copy-code" type="button">Copy file</button>
+<pre><code>from collections.abc import Callable
+
+from .base import ModelResponse
+
+
+class CallableProviderAdapter:
+    """A thin adapter around any provider-specific transport function.
+
+    The transport is responsible for talking to the provider SDK and returning
+    a dictionary that conforms to ModelResponse. Keeping the SDK-specific
+    conversion here prevents provider objects from leaking into the harness.
+    """
+
+    def __init__(
+        self,
+        transport: Callable[[list[dict], list[dict]], dict],
+    ):
+        self._transport = transport
+
+    def generate(
+        self,
+        messages: list[dict],
+        tools: list[dict],
+    ) -&gt; ModelResponse:
+        raw = self._transport(messages, tools)
+        return ModelResponse.model_validate(raw)</code></pre>
+</div>
+</details>
+<details class="snapshot-file">
+<summary>
+<code>tests/test_model_adapter.py</code>
+<span>complete file</span>
+</summary>
+<div class="snapshot-body">
+<button class="copy-code" type="button">Copy file</button>
+<pre><code>import pytest
+
+from khosiness.models.base import ModelResponse, ToolCall
+from khosiness.models.fake import FakeModel
+from khosiness.models.provider import CallableProviderAdapter
+
+
+def test_fake_model_returns_queued_response():
+    fake = FakeModel([ModelResponse(text="done")])
+
+    result = fake.generate(
+        messages=[{"role": "user", "content": "hello"}],
+        tools=[],
+    )
+
+    assert result.text == "done"
+    assert len(fake.calls) == 1
+
+
+def test_fake_model_preserves_tool_call_structure():
+    fake = FakeModel(
+        [
+            ModelResponse(
+                tool_calls=[
+                    ToolCall(
+                        id="call-1",
+                        name="read_file",
+                        arguments={"path": "README.md"},
+                    )
+                ]
+            )
+        ]
+    )
+
+    result = fake.generate(messages=[], tools=[])
+
+    assert result.tool_calls[0].name == "read_file"
+    assert result.tool_calls[0].arguments == {"path": "README.md"}
+
+
+def test_fake_model_fails_when_queue_is_empty():
+    fake = FakeModel([])
+
+    with pytest.raises(RuntimeError, match="no queued response"):
+        fake.generate(messages=[], tools=[])
+
+
+def test_callable_provider_normalizes_dictionary():
+    def transport(messages, tools):
+        return {
+            "text": "provider answer",
+            "tool_calls": [],
+            "stop_reason": "end",
+            "input_tokens": 10,
+            "output_tokens": 3,
+        }
+
+    adapter = CallableProviderAdapter(transport)
+    result = adapter.generate(messages=[], tools=[])
+
+    assert isinstance(result, ModelResponse)
+    assert result.text == "provider answer"
+    assert result.input_tokens == 10</code></pre>
+</div>
+</details>
+</div>
+</section>
+<section class="card validation-gate">
+<div class="checkpoint-kicker">Do not advance until this passes</div>
+<h2>Validation gate</h2>
+<p>
+            Run these checks from the repository root. A green unit test suite
+            is necessary but not sufficient; finish with the manual inspection
+            below so you also understand the behavior you just built.
+          </p>
+<div class="validation-table-wrap">
+<table class="validation-table">
+<thead>
+<tr>
+<th>Check</th>
+<th>Command</th>
+<th>Expected result</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Run adapter tests</td>
+<td><pre class="command-pre"><code>pytest tests/test_model_adapter.py -q</code></pre></td>
+<td>4 tests pass.</td>
+</tr>
+<tr>
+<td>Run all tests</td>
+<td><pre class="command-pre"><code>pytest -q</code></pre></td>
+<td>All accumulated tests pass.</td>
+</tr>
+<tr>
+<td>Prove provider isolation</td>
+<td><pre class="command-pre"><code>grep -R "openai\|anthropic" -n src/khosiness --exclude-dir=__pycache__ || true</code></pre></td>
+<td>No provider SDK should appear in core harness modules at this stage.</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="callout green">
+<strong>Manual understanding check:</strong>
+            Open `FakeModel.calls` in a debugger after a test. Confirm the harness can inspect exactly what messages and tool schemas would have been sent to a real provider.
+          </div>
+<div class="callout checkpoint-pass">
+<strong>Stage passes only when:</strong>
+            the stage-specific tests pass, the complete accumulated suite passes,
+            the expected manual behavior is observed, and you can explain why
+            each changed file exists.
+          </div>
+</section>
+<div class="pager"><a href="step-01-task-contract.html">← 1. Define the Task Contract</a><a href="step-03-event-log.html">3. Build the Event Log →</a></div><div class="footer">khosiness — Harness Engineering From Scratch · shorthand: kness · build deliberately, measure everything, earn autonomy.</div></div></div><aside aria-label="Developing project tree" class="project-tree-panel">
+<div class="project-tree-card">
+<div class="tree-kicker">Developing project</div>
+<h2>Project tree</h2>
+<p class="tree-help">Yellow marks the folders and files created or modified in this stage.</p>
+<div class="tree-box">
+<div class="tree-row tree-root">
+<span class="tree-icon">▾</span>
+<span class="tree-label">khosiness/</span>
+</div>
+<div class="tree-row" style="--depth:0"><span class="tree-icon">▾</span><span class="tree-label">benchmarks/</span></div><div class="tree-row" style="--depth:1"><span class="tree-icon">•</span><span class="tree-label">.gitkeep</span></div><div class="tree-row" style="--depth:1"><span class="tree-icon">•</span><span class="tree-label">tasks.json</span></div><div class="tree-row" style="--depth:0"><span class="tree-icon">▾</span><span class="tree-label">docs/</span></div><div class="tree-row" style="--depth:1"><span class="tree-icon">•</span><span class="tree-label">architecture.md</span></div><div class="tree-row affected" style="--depth:0"><span class="tree-icon">▾</span><span class="tree-label">src/</span></div><div class="tree-row affected" style="--depth:1"><span class="tree-icon">▾</span><span class="tree-label">harness/</span></div><div class="tree-row affected" style="--depth:2"><span class="tree-icon">▾</span><span class="tree-label">models/</span></div><div class="tree-row affected" style="--depth:3"><span class="tree-icon">•</span><span class="tree-label">base.py</span></div><div class="tree-row affected" style="--depth:3"><span class="tree-icon">•</span><span class="tree-label">fake.py</span></div><div class="tree-row affected" style="--depth:3"><span class="tree-icon">•</span><span class="tree-label">provider.py</span></div><div class="tree-row" style="--depth:2"><span class="tree-icon">•</span><span class="tree-label">__init__.py</span></div><div class="tree-row" style="--depth:2"><span class="tree-icon">•</span><span class="tree-label">task.py</span></div><div class="tree-row affected" style="--depth:0"><span class="tree-icon">▾</span><span class="tree-label">tests/</span></div><div class="tree-row" style="--depth:1"><span class="tree-icon">•</span><span class="tree-label">__init__.py</span></div><div class="tree-row affected" style="--depth:1"><span class="tree-icon">•</span><span class="tree-label">test_model_adapter.py</span></div><div class="tree-row" style="--depth:1"><span class="tree-icon">•</span><span class="tree-label">test_task.py</span></div><div class="tree-row" style="--depth:0"><span class="tree-icon">•</span><span class="tree-label">.gitignore</span></div><div class="tree-row" style="--depth:0"><span class="tree-icon">•</span><span class="tree-label">pyproject.toml</span></div><div class="tree-row" style="--depth:0"><span class="tree-icon">•</span><span class="tree-label">README.md</span></div>
+</div>
+</div>
+</aside></div>
+  </main>
+</div>
+<script src="../assets/manual.js"></script>
+</body>
+</html>

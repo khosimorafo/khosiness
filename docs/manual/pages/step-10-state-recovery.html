@@ -1,0 +1,356 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>10. State, Checkpoints and Recovery — khosiness</title>
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<div class="site">
+  <aside class="sidebar">
+    <div class="brand">
+      <a href="../index.html">khosiness — Harness Engineering From Scratch</a>
+      <p>Personal agentic operating harness · Python + VS Code + Codex</p>
+    </div>
+    <div class="nav-title">Manual map</div>
+    <nav class="nav">
+      <a href="../index.html" class="">Overview</a>
+<div class="phase-nav-label">Phase I · Build khosiness</div>
+<a href="project-setup.html" class="">Setup. Project Setup</a>
+<a href="step-00-mental-model.html" class="">0. The Mental Model</a>
+<a href="step-01-task-contract.html" class="">1. Define the Task Contract</a>
+<a href="step-02-model-adapter.html" class="">2. Create the Model Adapter</a>
+<a href="step-03-event-log.html" class="">3. Build the Event Log</a>
+<a href="step-04-agent-loop.html" class="">4. Implement the Agent Loop</a>
+<a href="step-05-tool-system.html" class="">5. Build the Tool System</a>
+<a href="step-06-context-engineering.html" class="">6. Engineer the Context</a>
+<a href="step-07-repository-navigation.html" class="">7. Repository Navigation</a>
+<a href="step-08-shell-sandbox.html" class="">8. Shell Execution and Sandbox</a>
+<a href="step-09-policy-approvals.html" class="">9. Policy and Human Approval</a>
+<a href="step-10-state-recovery.html" class="current-page">10. State, Checkpoints and Recovery</a>
+<a href="step-11-memory.html" class="">11. Memory</a>
+<a href="step-12-context-compaction.html" class="">12. Context Compaction</a>
+<a href="step-13-skills.html" class="">13. Skills and Progressive Disclosure</a>
+<a href="step-14-subagents.html" class="">14. Subagents</a>
+<a href="step-15-evaluation.html" class="">15. Evaluation</a>
+<a href="step-16-learning-loop.html" class="">16. The Harness Learning Loop</a>
+<a href="step-17-final-architecture.html" class="">17. Assemble the First-Generation Architecture</a>
+<a href="step-18-twelve-week-plan.html" class="">18. 12-Week Build Plan — Complete Phase I</a>
+<div class="phase-nav-label">Part II · Personal khosiness</div>
+<a href="part-ii-personal-harness.html" class="">19. Building the Personal Harness</a>
+    </nav>
+  </aside>
+  <main class="content">
+    <div class="detail-layout"><div class="detail-main"><header class="hero"><div class="eyebrow">Step 10</div><h1>10. State, Checkpoints and Recovery</h1><p>Make a run survive process termination without losing its place or repeating side effects.</p></header><div class="wrap"><div class="pager"><a href="step-09-policy-approvals.html">← 9. Policy and Human Approval</a><a href="step-11-memory.html">11. Memory →</a></div><section class="card"><h2>Conceptual objective</h2><p class="lead">Make a run survive process termination without losing its place or repeating side effects.</p><div class="callout">This stage strengthens control over information and side effects. The central question is no longer only “can the model do it?” but “under exactly what conditions may it do it, and can the run survive failure?”</div><h3>Files to create or modify</h3><div class="files"><code>src/khosiness/state.py</code><code>src/khosiness/checkpoint.py</code><code>src/khosiness/resume.py</code><code>tests/test_recovery.py</code></div></section><section class="card"><h2>Implementation sequence</h2><div class="step"><div class="badge">1</div><div><h3>Expand RunState beyond transcript history.</h3><p>Implement this as the smallest version that makes the responsibility concrete. Keep provider/framework details outside the core boundary, add an event where the action changes run state, and make failure observable rather than silent.</p></div></div><div class="step"><div class="badge">2</div><div><h3>Write checkpoints atomically.</h3><p>Implement this as the smallest version that makes the responsibility concrete. Keep provider/framework details outside the core boundary, add an event where the action changes run state, and make failure observable rather than silent.</p></div></div><div class="step"><div class="badge">3</div><div><h3>Checkpoint after tool/model/approval transitions.</h3><p>Implement this as the smallest version that makes the responsibility concrete. Keep provider/framework details outside the core boundary, add an event where the action changes run state, and make failure observable rather than silent.</p></div></div><div class="step"><div class="badge">4</div><div><h3>Resume by run ID.</h3><p>Implement this as the smallest version that makes the responsibility concrete. Keep provider/framework details outside the core boundary, add an event where the action changes run state, and make failure observable rather than silent.</p></div></div><div class="step"><div class="badge">5</div><div><h3>Treat already-completed side effects as idempotency concerns.</h3><p>Implement this as the smallest version that makes the responsibility concrete. Keep provider/framework details outside the core boundary, add an event where the action changes run state, and make failure observable rather than silent.</p></div></div></section><section class="card"><h2>Starter implementation</h2><div class="callout warn"><strong>Do not paste blindly.</strong> Type this in VS Code, make it run, then explain every line before you add another layer.</div><pre><code>import os
+from pathlib import Path
+
+def save_checkpoint(state, path: Path):
+    tmp = path.with_suffix(".tmp")
+    tmp.write_text(state.model_dump_json(indent=2), encoding="utf-8")
+    os.replace(tmp, path)
+
+def resume_run(run_dir, dependencies):
+    task = Task.model_validate_json((run_dir / "task.json").read_text())
+    state = RunState.model_validate_json((run_dir / "state.json").read_text())
+    return run(task=task, state=state, **dependencies)</code></pre></section><section class="card"><h2>Tests to perform</h2><ol><li>Kill after a tool result and resume.</li><li>Temporary checkpoint corruption does not destroy the last committed state.</li><li>Completed run does not execute again on resume.</li></ol><div class="callout green"><strong>Deliberate-failure rule:</strong> after the happy path works, deliberately trigger at least one failure and inspect the returned result, state change and event trace.</div></section><section class="card"><h2>What to inspect before moving on</h2><ul class="checks"><li>The component has one clear responsibility.</li><li>Failure is explicit and testable.</li><li>The event log shows the important transition.</li><li>No provider/framework object has leaked across an architectural boundary without a reason.</li><li>You can explain what problem this step solves without reading the code.</li></ul></section><section class="card"><h2>Suggested commit</h2><pre><code>git add .
+git commit -m "step 10: state, checkpoints and recovery"</code></pre><p>Tagging each stage separately makes later architectural comparison much easier.</p></section>
+<section class="card stage-checkpoint">
+<div class="checkpoint-kicker">Stage release checkpoint</div>
+<h2>End-state file contents</h2>
+<p class="lead">
+            Stop here and compare your repository with this checkpoint.
+            These are the <strong>complete contents</strong> of every file created
+            or modified in this stage—not fragments. Your implementation may
+            differ stylistically, but its contracts, tests and behavior should
+            be equivalent before you continue.
+          </p>
+<div class="snapshot-files">
+<details class="snapshot-file" open="">
+<summary>
+<code>src/khosiness/state.py</code>
+<span>complete file</span>
+</summary>
+<div class="snapshot-body">
+<button class="copy-code" type="button">Copy file</button>
+<pre><code>from pydantic import BaseModel, Field
+
+
+class RunState(BaseModel):
+    run_id: str
+    status: str = "running"
+    step: int = 0
+
+    current_plan: list[str] = Field(default_factory=list)
+    completed_work: list[str] = Field(default_factory=list)
+    observations: list[dict] = Field(default_factory=list)
+    pending_actions: list[dict] = Field(default_factory=list)
+    artifacts: list[str] = Field(default_factory=list)
+
+    finished: bool = False
+    final_answer: str | None = None</code></pre>
+</div>
+</details>
+<details class="snapshot-file">
+<summary>
+<code>src/khosiness/checkpoint.py</code>
+<span>complete file</span>
+</summary>
+<div class="snapshot-body">
+<button class="copy-code" type="button">Copy file</button>
+<pre><code>import os
+from pathlib import Path
+
+from .state import RunState
+
+
+def save_checkpoint(
+    state: RunState,
+    path: Path,
+) -&gt; None:
+    """Atomically replace the committed state snapshot."""
+
+    path.parent.mkdir(parents=True, exist_ok=True)
+    temporary = path.with_suffix(
+        path.suffix + ".tmp"
+    )
+
+    temporary.write_text(
+        state.model_dump_json(indent=2),
+        encoding="utf-8",
+    )
+
+    os.replace(temporary, path)
+
+
+def load_checkpoint(path: Path) -&gt; RunState:
+    return RunState.model_validate_json(
+        path.read_text(encoding="utf-8")
+    )</code></pre>
+</div>
+</details>
+<details class="snapshot-file">
+<summary>
+<code>src/khosiness/resume.py</code>
+<span>complete file</span>
+</summary>
+<div class="snapshot-body">
+<button class="copy-code" type="button">Copy file</button>
+<pre><code>from pathlib import Path
+
+from .checkpoint import load_checkpoint
+from .task import Task
+
+
+def load_run(run_dir: Path) -&gt; tuple[Task, object]:
+    task = Task.model_validate_json(
+        (run_dir / "task.json").read_text(
+            encoding="utf-8"
+        )
+    )
+    state = load_checkpoint(
+        run_dir / "state.json"
+    )
+    return task, state
+
+
+def resume_run(
+    run_dir: Path,
+    runner,
+    **dependencies,
+):
+    task, state = load_run(run_dir)
+
+    if state.finished:
+        return state
+
+    return runner(
+        task=task,
+        state=state,
+        **dependencies,
+    )</code></pre>
+</div>
+</details>
+<details class="snapshot-file">
+<summary>
+<code>tests/test_recovery.py</code>
+<span>complete file</span>
+</summary>
+<div class="snapshot-body">
+<button class="copy-code" type="button">Copy file</button>
+<pre><code>from khosiness.checkpoint import (
+    load_checkpoint,
+    save_checkpoint,
+)
+from khosiness.resume import resume_run
+from khosiness.state import RunState
+from khosiness.task import Task
+
+
+def test_checkpoint_round_trip(tmp_path):
+    path = tmp_path / "state.json"
+    state = RunState(
+        run_id="r1",
+        step=4,
+        observations=[{"x": 1}],
+    )
+
+    save_checkpoint(state, path)
+    restored = load_checkpoint(path)
+
+    assert restored == state
+
+
+def test_checkpoint_replaces_previous_state(tmp_path):
+    path = tmp_path / "state.json"
+
+    save_checkpoint(
+        RunState(run_id="r1", step=1),
+        path,
+    )
+    save_checkpoint(
+        RunState(run_id="r1", step=2),
+        path,
+    )
+
+    assert load_checkpoint(path).step == 2
+
+
+def test_resume_does_not_rerun_finished_state(tmp_path):
+    run_dir = tmp_path / "run"
+    run_dir.mkdir()
+
+    task = Task(
+        id="t1",
+        objective="x",
+        workspace=tmp_path,
+    )
+    (run_dir / "task.json").write_text(
+        task.model_dump_json(),
+        encoding="utf-8",
+    )
+    save_checkpoint(
+        RunState(
+            run_id="r1",
+            finished=True,
+            final_answer="done",
+        ),
+        run_dir / "state.json",
+    )
+
+    called = False
+
+    def runner(**kwargs):
+        nonlocal called
+        called = True
+
+    state = resume_run(
+        run_dir,
+        runner,
+    )
+
+    assert called is False
+    assert state.final_answer == "done"
+
+
+def test_resume_passes_unfinished_state_to_runner(tmp_path):
+    run_dir = tmp_path / "run"
+    run_dir.mkdir()
+
+    task = Task(
+        id="t1",
+        objective="x",
+        workspace=tmp_path,
+    )
+    (run_dir / "task.json").write_text(
+        task.model_dump_json(),
+        encoding="utf-8",
+    )
+    save_checkpoint(
+        RunState(
+            run_id="r1",
+            step=3,
+        ),
+        run_dir / "state.json",
+    )
+
+    def runner(*, task, state, **kwargs):
+        state.step += 1
+        return state
+
+    state = resume_run(
+        run_dir,
+        runner,
+    )
+
+    assert state.step == 4</code></pre>
+</div>
+</details>
+</div>
+</section>
+<section class="card validation-gate">
+<div class="checkpoint-kicker">Do not advance until this passes</div>
+<h2>Validation gate</h2>
+<p>
+            Run these checks from the repository root. A green unit test suite
+            is necessary but not sufficient; finish with the manual inspection
+            below so you also understand the behavior you just built.
+          </p>
+<div class="validation-table-wrap">
+<table class="validation-table">
+<thead>
+<tr>
+<th>Check</th>
+<th>Command</th>
+<th>Expected result</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Run recovery tests</td>
+<td><pre class="command-pre"><code>pytest tests/test_recovery.py -q</code></pre></td>
+<td>4 tests pass.</td>
+</tr>
+<tr>
+<td>Run all tests</td>
+<td><pre class="command-pre"><code>pytest -q</code></pre></td>
+<td>All accumulated tests pass.</td>
+</tr>
+<tr>
+<td>Check no temporary checkpoint remains</td>
+<td><pre class="command-pre"><code>find . -name "*.tmp" -path "*state.json*" -print</code></pre></td>
+<td>Normally prints nothing after successful checkpoint writes.</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="callout green">
+<strong>Manual understanding check:</strong>
+            Create a checkpoint at step 3, close the Python process, reopen a REPL and load it. The important sensation is that run continuity now exists independently of process memory.
+          </div>
+<div class="callout checkpoint-pass">
+<strong>Stage passes only when:</strong>
+            the stage-specific tests pass, the complete accumulated suite passes,
+            the expected manual behavior is observed, and you can explain why
+            each changed file exists.
+          </div>
+</section>
+<div class="pager"><a href="step-09-policy-approvals.html">← 9. Policy and Human Approval</a><a href="step-11-memory.html">11. Memory →</a></div><div class="footer">khosiness — Harness Engineering From Scratch · shorthand: kness · build deliberately, measure everything, earn autonomy.</div></div></div><aside aria-label="Developing project tree" class="project-tree-panel">
+<div class="project-tree-card">
+<div class="tree-kicker">Developing project</div>
+<h2>Project tree</h2>
+<p class="tree-help">Yellow marks the folders and files created or modified in this stage.</p>
+<div class="tree-box">
+<div class="tree-row tree-root">
+<span class="tree-icon">▾</span>
+<span class="tree-label">khosiness/</span>
+</div>
+<div class="tree-row" style="--depth:0"><span class="tree-icon">▾</span><span class="tree-label">benchmarks/</span></div><div class="tree-row" style="--depth:1"><span class="tree-icon">•</span><span class="tree-label">.gitkeep</span></div><div class="tree-row" style="--depth:1"><span class="tree-icon">•</span><span class="tree-label">repo_tasks.json</span></div><div class="tree-row" style="--depth:1"><span class="tree-icon">•</span><span class="tree-label">tasks.json</span></div><div class="tree-row" style="--depth:0"><span class="tree-icon">▾</span><span class="tree-label">docs/</span></div><div class="tree-row" style="--depth:1"><span class="tree-icon">•</span><span class="tree-label">architecture.md</span></div><div class="tree-row affected" style="--depth:0"><span class="tree-icon">▾</span><span class="tree-label">src/</span></div><div class="tree-row affected" style="--depth:1"><span class="tree-icon">▾</span><span class="tree-label">harness/</span></div><div class="tree-row" style="--depth:2"><span class="tree-icon">▾</span><span class="tree-label">context/</span></div><div class="tree-row" style="--depth:3"><span class="tree-icon">•</span><span class="tree-label">builder.py</span></div><div class="tree-row" style="--depth:2"><span class="tree-icon">▾</span><span class="tree-label">models/</span></div><div class="tree-row" style="--depth:3"><span class="tree-icon">•</span><span class="tree-label">base.py</span></div><div class="tree-row" style="--depth:3"><span class="tree-icon">•</span><span class="tree-label">fake.py</span></div><div class="tree-row" style="--depth:3"><span class="tree-icon">•</span><span class="tree-label">provider.py</span></div><div class="tree-row" style="--depth:2"><span class="tree-icon">▾</span><span class="tree-label">policy/</span></div><div class="tree-row" style="--depth:3"><span class="tree-icon">•</span><span class="tree-label">approval.py</span></div><div class="tree-row" style="--depth:3"><span class="tree-icon">•</span><span class="tree-label">engine.py</span></div><div class="tree-row" style="--depth:3"><span class="tree-icon">•</span><span class="tree-label">risk.py</span></div><div class="tree-row" style="--depth:2"><span class="tree-icon">▾</span><span class="tree-label">sandbox/</span></div><div class="tree-row" style="--depth:3"><span class="tree-icon">•</span><span class="tree-label">base.py</span></div><div class="tree-row" style="--depth:3"><span class="tree-icon">•</span><span class="tree-label">local.py</span></div><div class="tree-row" style="--depth:2"><span class="tree-icon">▾</span><span class="tree-label">tools/</span></div><div class="tree-row" style="--depth:3"><span class="tree-icon">•</span><span class="tree-label">base.py</span></div><div class="tree-row" style="--depth:3"><span class="tree-icon">•</span><span class="tree-label">filesystem.py</span></div><div class="tree-row" style="--depth:3"><span class="tree-icon">•</span><span class="tree-label">registry.py</span></div><div class="tree-row" style="--depth:3"><span class="tree-icon">•</span><span class="tree-label">shell.py</span></div><div class="tree-row" style="--depth:2"><span class="tree-icon">•</span><span class="tree-label">__init__.py</span></div><div class="tree-row affected" style="--depth:2"><span class="tree-icon">•</span><span class="tree-label">checkpoint.py</span></div><div class="tree-row" style="--depth:2"><span class="tree-icon">•</span><span class="tree-label">event_store.py</span></div><div class="tree-row" style="--depth:2"><span class="tree-icon">•</span><span class="tree-label">events.py</span></div><div class="tree-row" style="--depth:2"><span class="tree-icon">•</span><span class="tree-label">loop.py</span></div><div class="tree-row affected" style="--depth:2"><span class="tree-icon">•</span><span class="tree-label">resume.py</span></div><div class="tree-row affected" style="--depth:2"><span class="tree-icon">•</span><span class="tree-label">state.py</span></div><div class="tree-row" style="--depth:2"><span class="tree-icon">•</span><span class="tree-label">task.py</span></div><div class="tree-row affected" style="--depth:0"><span class="tree-icon">▾</span><span class="tree-label">tests/</span></div><div class="tree-row" style="--depth:1"><span class="tree-icon">•</span><span class="tree-label">__init__.py</span></div><div class="tree-row" style="--depth:1"><span class="tree-icon">•</span><span class="tree-label">test_context_builder.py</span></div><div class="tree-row" style="--depth:1"><span class="tree-icon">•</span><span class="tree-label">test_event_store.py</span></div><div class="tree-row" style="--depth:1"><span class="tree-icon">•</span><span class="tree-label">test_loop.py</span></div><div class="tree-row" style="--depth:1"><span class="tree-icon">•</span><span class="tree-label">test_model_adapter.py</span></div><div class="tree-row" style="--depth:1"><span class="tree-icon">•</span><span class="tree-label">test_policy.py</span></div><div class="tree-row affected" style="--depth:1"><span class="tree-icon">•</span><span class="tree-label">test_recovery.py</span></div><div class="tree-row" style="--depth:1"><span class="tree-icon">•</span><span class="tree-label">test_repository_tasks.py</span></div><div class="tree-row" style="--depth:1"><span class="tree-icon">•</span><span class="tree-label">test_shell.py</span></div><div class="tree-row" style="--depth:1"><span class="tree-icon">•</span><span class="tree-label">test_task.py</span></div><div class="tree-row" style="--depth:1"><span class="tree-icon">•</span><span class="tree-label">test_tools.py</span></div><div class="tree-row" style="--depth:0"><span class="tree-icon">•</span><span class="tree-label">.gitignore</span></div><div class="tree-row" style="--depth:0"><span class="tree-icon">•</span><span class="tree-label">pyproject.toml</span></div><div class="tree-row" style="--depth:0"><span class="tree-icon">•</span><span class="tree-label">README.md</span></div>
+</div>
+</div>
+</aside></div>
+  </main>
+</div>
+<script src="../assets/manual.js"></script>
+</body>
+</html>

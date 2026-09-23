@@ -1,0 +1,283 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>12. Context Compaction — khosiness</title>
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<div class="site">
+  <aside class="sidebar">
+    <div class="brand">
+      <a href="../index.html">khosiness — Harness Engineering From Scratch</a>
+      <p>Personal agentic operating harness · Python + VS Code + Codex</p>
+    </div>
+    <div class="nav-title">Manual map</div>
+    <nav class="nav">
+      <a href="../index.html" class="">Overview</a>
+<div class="phase-nav-label">Phase I · Build khosiness</div>
+<a href="project-setup.html" class="">Setup. Project Setup</a>
+<a href="step-00-mental-model.html" class="">0. The Mental Model</a>
+<a href="step-01-task-contract.html" class="">1. Define the Task Contract</a>
+<a href="step-02-model-adapter.html" class="">2. Create the Model Adapter</a>
+<a href="step-03-event-log.html" class="">3. Build the Event Log</a>
+<a href="step-04-agent-loop.html" class="">4. Implement the Agent Loop</a>
+<a href="step-05-tool-system.html" class="">5. Build the Tool System</a>
+<a href="step-06-context-engineering.html" class="">6. Engineer the Context</a>
+<a href="step-07-repository-navigation.html" class="">7. Repository Navigation</a>
+<a href="step-08-shell-sandbox.html" class="">8. Shell Execution and Sandbox</a>
+<a href="step-09-policy-approvals.html" class="">9. Policy and Human Approval</a>
+<a href="step-10-state-recovery.html" class="">10. State, Checkpoints and Recovery</a>
+<a href="step-11-memory.html" class="">11. Memory</a>
+<a href="step-12-context-compaction.html" class="current-page">12. Context Compaction</a>
+<a href="step-13-skills.html" class="">13. Skills and Progressive Disclosure</a>
+<a href="step-14-subagents.html" class="">14. Subagents</a>
+<a href="step-15-evaluation.html" class="">15. Evaluation</a>
+<a href="step-16-learning-loop.html" class="">16. The Harness Learning Loop</a>
+<a href="step-17-final-architecture.html" class="">17. Assemble the First-Generation Architecture</a>
+<a href="step-18-twelve-week-plan.html" class="">18. 12-Week Build Plan — Complete Phase I</a>
+<div class="phase-nav-label">Part II · Personal khosiness</div>
+<a href="part-ii-personal-harness.html" class="">19. Building the Personal Harness</a>
+    </nav>
+  </aside>
+  <main class="content">
+    <div class="detail-layout"><div class="detail-main"><header class="hero"><div class="eyebrow">Step 12</div><h1>12. Context Compaction</h1><p>Bound active context while preserving raw history and unresolved work.</p></header><div class="wrap"><div class="pager"><a href="step-11-memory.html">← 11. Memory</a><a href="step-13-skills.html">13. Skills and Progressive Disclosure →</a></div><section class="card"><h2>Conceptual objective</h2><p class="lead">Bound active context while preserving raw history and unresolved work.</p><div class="callout">This stage adds continuity and modular expertise. Keep storage, retrieval and context injection separate so that long-lived knowledge does not silently become prompt clutter.</div><h3>Files to create or modify</h3><div class="files"><code>src/khosiness/context/compaction.py</code><code>tests/test_compaction.py</code></div></section><section class="card"><h2>Implementation sequence</h2><div class="step"><div class="badge">1</div><div><h3>Choose a simple trigger such as message/character count.</h3><p>Implement this as the smallest version that makes the responsibility concrete. Keep provider/framework details outside the core boundary, add an event where the action changes run state, and make failure observable rather than silent.</p></div></div><div class="step"><div class="badge">2</div><div><h3>Summarize decisions, evidence, unresolved questions and active plan.</h3><p>Implement this as the smallest version that makes the responsibility concrete. Keep provider/framework details outside the core boundary, add an event where the action changes run state, and make failure observable rather than silent.</p></div></div><div class="step"><div class="badge">3</div><div><h3>Keep recent observations verbatim.</h3><p>Implement this as the smallest version that makes the responsibility concrete. Keep provider/framework details outside the core boundary, add an event where the action changes run state, and make failure observable rather than silent.</p></div></div><div class="step"><div class="badge">4</div><div><h3>Keep raw events untouched.</h3><p>Implement this as the smallest version that makes the responsibility concrete. Keep provider/framework details outside the core boundary, add an event where the action changes run state, and make failure observable rather than silent.</p></div></div></section><section class="card"><h2>Starter implementation</h2><div class="callout warn"><strong>Do not paste blindly.</strong> Type this in VS Code, make it run, then explain every line before you add another layer.</div><pre><code>class Compaction(BaseModel):
+    through_step: int
+    summary: str
+    decisions: list[str]
+    evidence: list[str]
+    unresolved: list[str]
+
+if context_stats.characters &gt; 60000:
+    compacted = compact(state.observations[:-6])
+    state.compactions.append(compacted)
+    state.observations = state.observations[-6:]</code></pre></section><section class="card"><h2>Tests to perform</h2><ol><li>Thirty synthetic observations trigger compaction.</li><li>Hard constraints survive unchanged.</li><li>Unresolved questions survive.</li><li>Raw event history remains complete.</li></ol><div class="callout green"><strong>Deliberate-failure rule:</strong> after the happy path works, deliberately trigger at least one failure and inspect the returned result, state change and event trace.</div></section><section class="card"><h2>What to inspect before moving on</h2><ul class="checks"><li>The component has one clear responsibility.</li><li>Failure is explicit and testable.</li><li>The event log shows the important transition.</li><li>No provider/framework object has leaked across an architectural boundary without a reason.</li><li>You can explain what problem this step solves without reading the code.</li></ul></section><section class="card"><h2>Suggested commit</h2><pre><code>git add .
+git commit -m "step 12: context compaction"</code></pre><p>Tagging each stage separately makes later architectural comparison much easier.</p></section>
+<section class="card stage-checkpoint">
+<div class="checkpoint-kicker">Stage release checkpoint</div>
+<h2>End-state file contents</h2>
+<p class="lead">
+            Stop here and compare your repository with this checkpoint.
+            These are the <strong>complete contents</strong> of every file created
+            or modified in this stage—not fragments. Your implementation may
+            differ stylistically, but its contracts, tests and behavior should
+            be equivalent before you continue.
+          </p>
+<div class="snapshot-files">
+<details class="snapshot-file" open="">
+<summary>
+<code>src/khosiness/context/compaction.py</code>
+<span>complete file</span>
+</summary>
+<div class="snapshot-body">
+<button class="copy-code" type="button">Copy file</button>
+<pre><code>from pydantic import BaseModel, Field
+
+from khosiness.state import RunState
+
+
+class Compaction(BaseModel):
+    through_step: int
+    summary: str
+    decisions: list[str] = Field(
+        default_factory=list
+    )
+    evidence: list[str] = Field(
+        default_factory=list
+    )
+    unresolved: list[str] = Field(
+        default_factory=list
+    )
+
+
+def should_compact(
+    *,
+    context_characters: int,
+    threshold: int = 60_000,
+) -&gt; bool:
+    return context_characters &gt; threshold
+
+
+def deterministic_compact(
+    state: RunState,
+    keep_recent: int = 6,
+) -&gt; tuple[Compaction, list[dict]]:
+    """A deliberately simple compactor for learning.
+
+    It preserves recent observations verbatim and records how
+    many older observations were summarized. Later you can
+    replace the summary strategy with a model-assisted one.
+    """
+
+    if keep_recent &lt; 1:
+        raise ValueError(
+            "keep_recent must be &gt;= 1"
+        )
+
+    old = state.observations[:-keep_recent]
+    recent = state.observations[-keep_recent:]
+
+    compaction = Compaction(
+        through_step=state.step,
+        summary=(
+            f"{len(old)} older observations "
+            "were compacted. Inspect the event log "
+            "for the original evidence."
+        ),
+        decisions=list(state.completed_work),
+        evidence=[
+            observation["tool"]
+            for observation in old
+            if "tool" in observation
+        ],
+        unresolved=list(state.pending_actions),
+    )
+
+    return compaction, recent</code></pre>
+</div>
+</details>
+<details class="snapshot-file">
+<summary>
+<code>tests/test_compaction.py</code>
+<span>complete file</span>
+</summary>
+<div class="snapshot-body">
+<button class="copy-code" type="button">Copy file</button>
+<pre><code>import pytest
+
+from khosiness.context.compaction import (
+    deterministic_compact,
+    should_compact,
+)
+from khosiness.state import RunState
+
+
+def test_compaction_threshold():
+    assert should_compact(
+        context_characters=60_001,
+        threshold=60_000,
+    )
+    assert not should_compact(
+        context_characters=60_000,
+        threshold=60_000,
+    )
+
+
+def test_compactor_preserves_recent_observations():
+    state = RunState(
+        run_id="r1",
+        step=30,
+        observations=[
+            {"tool": f"tool-{index}"}
+            for index in range(10)
+        ],
+    )
+
+    compacted, recent = deterministic_compact(
+        state,
+        keep_recent=3,
+    )
+
+    assert len(recent) == 3
+    assert recent[0]["tool"] == "tool-7"
+    assert "7 older observations" in compacted.summary
+
+
+def test_compactor_carries_decisions_and_pending_work():
+    state = RunState(
+        run_id="r1",
+        completed_work=["selected config.py"],
+        pending_actions=[{"action": "run tests"}],
+        observations=[{"tool": "search"}],
+    )
+
+    compacted, _ = deterministic_compact(
+        state,
+        keep_recent=1,
+    )
+
+    assert compacted.decisions == [
+        "selected config.py"
+    ]
+    assert compacted.unresolved == [
+        {"action": "run tests"}
+    ]
+
+
+def test_keep_recent_must_be_positive():
+    with pytest.raises(ValueError):
+        deterministic_compact(
+            RunState(run_id="r1"),
+            keep_recent=0,
+        )</code></pre>
+</div>
+</details>
+</div>
+</section>
+<section class="card validation-gate">
+<div class="checkpoint-kicker">Do not advance until this passes</div>
+<h2>Validation gate</h2>
+<p>
+            Run these checks from the repository root. A green unit test suite
+            is necessary but not sufficient; finish with the manual inspection
+            below so you also understand the behavior you just built.
+          </p>
+<div class="validation-table-wrap">
+<table class="validation-table">
+<thead>
+<tr>
+<th>Check</th>
+<th>Command</th>
+<th>Expected result</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Run compaction tests</td>
+<td><pre class="command-pre"><code>pytest tests/test_compaction.py -q</code></pre></td>
+<td>4 tests pass.</td>
+</tr>
+<tr>
+<td>Run all tests</td>
+<td><pre class="command-pre"><code>pytest -q</code></pre></td>
+<td>All accumulated tests pass.</td>
+</tr>
+<tr>
+<td>Check raw event history remains untouched</td>
+<td><pre class="command-pre"><code>git diff -- src/khosiness/event_store.py src/khosiness/events.py</code></pre></td>
+<td>No compaction-stage change should delete or mutate the append-only history design.</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="callout green">
+<strong>Manual understanding check:</strong>
+            The compactor is intentionally unsophisticated. The learning objective is architectural: context may be compressed while history remains authoritative and retrievable.
+          </div>
+<div class="callout checkpoint-pass">
+<strong>Stage passes only when:</strong>
+            the stage-specific tests pass, the complete accumulated suite passes,
+            the expected manual behavior is observed, and you can explain why
+            each changed file exists.
+          </div>
+</section>
+<div class="pager"><a href="step-11-memory.html">← 11. Memory</a><a href="step-13-skills.html">13. Skills and Progressive Disclosure →</a></div><div class="footer">khosiness — Harness Engineering From Scratch · shorthand: kness · build deliberately, measure everything, earn autonomy.</div></div></div><aside aria-label="Developing project tree" class="project-tree-panel">
+<div class="project-tree-card">
+<div class="tree-kicker">Developing project</div>
+<h2>Project tree</h2>
+<p class="tree-help">Yellow marks the folders and files created or modified in this stage.</p>
+<div class="tree-box">
+<div class="tree-row tree-root">
+<span class="tree-icon">▾</span>
+<span class="tree-label">khosiness/</span>
+</div>
+<div class="tree-row" style="--depth:0"><span class="tree-icon">▾</span><span class="tree-label">benchmarks/</span></div><div class="tree-row" style="--depth:1"><span class="tree-icon">•</span><span class="tree-label">.gitkeep</span></div><div class="tree-row" style="--depth:1"><span class="tree-icon">•</span><span class="tree-label">repo_tasks.json</span></div><div class="tree-row" style="--depth:1"><span class="tree-icon">•</span><span class="tree-label">tasks.json</span></div><div class="tree-row" style="--depth:0"><span class="tree-icon">▾</span><span class="tree-label">docs/</span></div><div class="tree-row" style="--depth:1"><span class="tree-icon">•</span><span class="tree-label">architecture.md</span></div><div class="tree-row affected" style="--depth:0"><span class="tree-icon">▾</span><span class="tree-label">src/</span></div><div class="tree-row affected" style="--depth:1"><span class="tree-icon">▾</span><span class="tree-label">harness/</span></div><div class="tree-row affected" style="--depth:2"><span class="tree-icon">▾</span><span class="tree-label">context/</span></div><div class="tree-row" style="--depth:3"><span class="tree-icon">•</span><span class="tree-label">builder.py</span></div><div class="tree-row affected" style="--depth:3"><span class="tree-icon">•</span><span class="tree-label">compaction.py</span></div><div class="tree-row" style="--depth:2"><span class="tree-icon">▾</span><span class="tree-label">memory/</span></div><div class="tree-row" style="--depth:3"><span class="tree-icon">•</span><span class="tree-label">retrieval.py</span></div><div class="tree-row" style="--depth:3"><span class="tree-icon">•</span><span class="tree-label">schema.py</span></div><div class="tree-row" style="--depth:3"><span class="tree-icon">•</span><span class="tree-label">store.py</span></div><div class="tree-row" style="--depth:2"><span class="tree-icon">▾</span><span class="tree-label">models/</span></div><div class="tree-row" style="--depth:3"><span class="tree-icon">•</span><span class="tree-label">base.py</span></div><div class="tree-row" style="--depth:3"><span class="tree-icon">•</span><span class="tree-label">fake.py</span></div><div class="tree-row" style="--depth:3"><span class="tree-icon">•</span><span class="tree-label">provider.py</span></div><div class="tree-row" style="--depth:2"><span class="tree-icon">▾</span><span class="tree-label">policy/</span></div><div class="tree-row" style="--depth:3"><span class="tree-icon">•</span><span class="tree-label">approval.py</span></div><div class="tree-row" style="--depth:3"><span class="tree-icon">•</span><span class="tree-label">engine.py</span></div><div class="tree-row" style="--depth:3"><span class="tree-icon">•</span><span class="tree-label">risk.py</span></div><div class="tree-row" style="--depth:2"><span class="tree-icon">▾</span><span class="tree-label">sandbox/</span></div><div class="tree-row" style="--depth:3"><span class="tree-icon">•</span><span class="tree-label">base.py</span></div><div class="tree-row" style="--depth:3"><span class="tree-icon">•</span><span class="tree-label">local.py</span></div><div class="tree-row" style="--depth:2"><span class="tree-icon">▾</span><span class="tree-label">tools/</span></div><div class="tree-row" style="--depth:3"><span class="tree-icon">•</span><span class="tree-label">base.py</span></div><div class="tree-row" style="--depth:3"><span class="tree-icon">•</span><span class="tree-label">filesystem.py</span></div><div class="tree-row" style="--depth:3"><span class="tree-icon">•</span><span class="tree-label">registry.py</span></div><div class="tree-row" style="--depth:3"><span class="tree-icon">•</span><span class="tree-label">shell.py</span></div><div class="tree-row" style="--depth:2"><span class="tree-icon">•</span><span class="tree-label">__init__.py</span></div><div class="tree-row" style="--depth:2"><span class="tree-icon">•</span><span class="tree-label">checkpoint.py</span></div><div class="tree-row" style="--depth:2"><span class="tree-icon">•</span><span class="tree-label">event_store.py</span></div><div class="tree-row" style="--depth:2"><span class="tree-icon">•</span><span class="tree-label">events.py</span></div><div class="tree-row" style="--depth:2"><span class="tree-icon">•</span><span class="tree-label">loop.py</span></div><div class="tree-row" style="--depth:2"><span class="tree-icon">•</span><span class="tree-label">resume.py</span></div><div class="tree-row" style="--depth:2"><span class="tree-icon">•</span><span class="tree-label">state.py</span></div><div class="tree-row" style="--depth:2"><span class="tree-icon">•</span><span class="tree-label">task.py</span></div><div class="tree-row affected" style="--depth:0"><span class="tree-icon">▾</span><span class="tree-label">tests/</span></div><div class="tree-row" style="--depth:1"><span class="tree-icon">•</span><span class="tree-label">__init__.py</span></div><div class="tree-row affected" style="--depth:1"><span class="tree-icon">•</span><span class="tree-label">test_compaction.py</span></div><div class="tree-row" style="--depth:1"><span class="tree-icon">•</span><span class="tree-label">test_context_builder.py</span></div><div class="tree-row" style="--depth:1"><span class="tree-icon">•</span><span class="tree-label">test_event_store.py</span></div><div class="tree-row" style="--depth:1"><span class="tree-icon">•</span><span class="tree-label">test_loop.py</span></div><div class="tree-row" style="--depth:1"><span class="tree-icon">•</span><span class="tree-label">test_memory.py</span></div><div class="tree-row" style="--depth:1"><span class="tree-icon">•</span><span class="tree-label">test_model_adapter.py</span></div><div class="tree-row" style="--depth:1"><span class="tree-icon">•</span><span class="tree-label">test_policy.py</span></div><div class="tree-row" style="--depth:1"><span class="tree-icon">•</span><span class="tree-label">test_recovery.py</span></div><div class="tree-row" style="--depth:1"><span class="tree-icon">•</span><span class="tree-label">test_repository_tasks.py</span></div><div class="tree-row" style="--depth:1"><span class="tree-icon">•</span><span class="tree-label">test_shell.py</span></div><div class="tree-row" style="--depth:1"><span class="tree-icon">•</span><span class="tree-label">test_task.py</span></div><div class="tree-row" style="--depth:1"><span class="tree-icon">•</span><span class="tree-label">test_tools.py</span></div><div class="tree-row" style="--depth:0"><span class="tree-icon">•</span><span class="tree-label">.gitignore</span></div><div class="tree-row" style="--depth:0"><span class="tree-icon">•</span><span class="tree-label">pyproject.toml</span></div><div class="tree-row" style="--depth:0"><span class="tree-icon">•</span><span class="tree-label">README.md</span></div>
+</div>
+</div>
+</aside></div>
+  </main>
+</div>
+<script src="../assets/manual.js"></script>
+</body>
+</html>

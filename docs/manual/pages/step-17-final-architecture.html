@@ -1,0 +1,251 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>17. Assemble the First-Generation Architecture — khosiness</title>
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<div class="site">
+  <aside class="sidebar">
+    <div class="brand">
+      <a href="../index.html">khosiness — Harness Engineering From Scratch</a>
+      <p>Personal agentic operating harness · Python + VS Code + Codex</p>
+    </div>
+    <div class="nav-title">Manual map</div>
+    <nav class="nav">
+      <a href="../index.html" class="">Overview</a>
+<div class="phase-nav-label">Phase I · Build khosiness</div>
+<a href="project-setup.html" class="">Setup. Project Setup</a>
+<a href="step-00-mental-model.html" class="">0. The Mental Model</a>
+<a href="step-01-task-contract.html" class="">1. Define the Task Contract</a>
+<a href="step-02-model-adapter.html" class="">2. Create the Model Adapter</a>
+<a href="step-03-event-log.html" class="">3. Build the Event Log</a>
+<a href="step-04-agent-loop.html" class="">4. Implement the Agent Loop</a>
+<a href="step-05-tool-system.html" class="">5. Build the Tool System</a>
+<a href="step-06-context-engineering.html" class="">6. Engineer the Context</a>
+<a href="step-07-repository-navigation.html" class="">7. Repository Navigation</a>
+<a href="step-08-shell-sandbox.html" class="">8. Shell Execution and Sandbox</a>
+<a href="step-09-policy-approvals.html" class="">9. Policy and Human Approval</a>
+<a href="step-10-state-recovery.html" class="">10. State, Checkpoints and Recovery</a>
+<a href="step-11-memory.html" class="">11. Memory</a>
+<a href="step-12-context-compaction.html" class="">12. Context Compaction</a>
+<a href="step-13-skills.html" class="">13. Skills and Progressive Disclosure</a>
+<a href="step-14-subagents.html" class="">14. Subagents</a>
+<a href="step-15-evaluation.html" class="">15. Evaluation</a>
+<a href="step-16-learning-loop.html" class="">16. The Harness Learning Loop</a>
+<a href="step-17-final-architecture.html" class="current-page">17. Assemble the First-Generation Architecture</a>
+<a href="step-18-twelve-week-plan.html" class="">18. 12-Week Build Plan — Complete Phase I</a>
+<div class="phase-nav-label">Part II · Personal khosiness</div>
+<a href="part-ii-personal-harness.html" class="">19. Building the Personal Harness</a>
+    </nav>
+  </aside>
+  <main class="content">
+    <div class="detail-layout"><div class="detail-main"><header class="hero"><div class="eyebrow">Step 17</div><h1>17. Assemble the First-Generation Architecture</h1><p>Document and refine boundaries after the components have earned their existence through implementation.</p></header><div class="wrap"><div class="pager"><a href="step-16-learning-loop.html">← 16. The Harness Learning Loop</a><a href="step-18-twelve-week-plan.html">18. 12-Week Build Plan →</a></div><section class="card"><h2>Conceptual objective</h2><p class="lead">Document and refine boundaries after the components have earned their existence through implementation.</p><div class="callout">This stage turns the harness into an engineering system: measurable, comparable and improvable through controlled experiments rather than intuition.</div><h3>Files to create or modify</h3><div class="files"><code>docs/architecture.md</code><code>docs/component-contracts.md</code></div></section><section class="card"><h2>Implementation sequence</h2><div class="step"><div class="badge">1</div><div><h3>Draw actual dependency direction.</h3><p>Implement this as the smallest version that makes the responsibility concrete. Keep provider/framework details outside the core boundary, add an event where the action changes run state, and make failure observable rather than silent.</p></div></div><div class="step"><div class="badge">2</div><div><h3>Document which component owns completion, retries, redaction, permissions and memory promotion.</h3><p>Implement this as the smallest version that makes the responsibility concrete. Keep provider/framework details outside the core boundary, add an event where the action changes run state, and make failure observable rather than silent.</p></div></div><div class="step"><div class="badge">3</div><div><h3>Remove provider leakage.</h3><p>Implement this as the smallest version that makes the responsibility concrete. Keep provider/framework details outside the core boundary, add an event where the action changes run state, and make failure observable rather than silent.</p></div></div><div class="step"><div class="badge">4</div><div><h3>Refactor only proven coupling pain.</h3><p>Implement this as the smallest version that makes the responsibility concrete. Keep provider/framework details outside the core boundary, add an event where the action changes run state, and make failure observable rather than silent.</p></div></div></section><section class="card"><h2>Starter implementation</h2><div class="callout warn"><strong>Do not paste blindly.</strong> Type this in VS Code, make it run, then explain every line before you add another layer.</div><pre><code>CLI
+ └─ RunService
+     ├─ AgentLoop
+     │   ├─ ContextBuilder
+     │   ├─ ModelAdapter
+     │   ├─ ToolRegistry
+     │   ├─ PolicyEngine
+     │   └─ CheckpointStore
+     ├─ EventStore
+     ├─ MemoryStore
+     └─ EvalHooks
+
+ToolRegistry → Sandbox / Filesystem / Search
+ContextBuilder → Task / State / Memory / Skills</code></pre></section><section class="card"><h2>Tests to perform</h2><ol><li>Replace real model with FakeModel without changing loop.</li><li>Replace memory backend without changing tools.</li><li>Run read-only mode with shell unregistered.</li><li>Check for circular imports.</li></ol><div class="callout green"><strong>Deliberate-failure rule:</strong> after the happy path works, deliberately trigger at least one failure and inspect the returned result, state change and event trace.</div></section><section class="card"><h2>What to inspect before moving on</h2><ul class="checks"><li>The component has one clear responsibility.</li><li>Failure is explicit and testable.</li><li>The event log shows the important transition.</li><li>No provider/framework object has leaked across an architectural boundary without a reason.</li><li>You can explain what problem this step solves without reading the code.</li></ul></section><section class="card"><h2>Suggested commit</h2><pre><code>git add .
+git commit -m "step 17: assemble the first-generation architecture"</code></pre><p>Tagging each stage separately makes later architectural comparison much easier.</p></section>
+<section class="card stage-checkpoint">
+<div class="checkpoint-kicker">Stage release checkpoint</div>
+<h2>End-state file contents</h2>
+<p class="lead">
+            Stop here and compare your repository with this checkpoint.
+            These are the <strong>complete contents</strong> of every file created
+            or modified in this stage—not fragments. Your implementation may
+            differ stylistically, but its contracts, tests and behavior should
+            be equivalent before you continue.
+          </p>
+<div class="snapshot-files">
+<details class="snapshot-file" open="">
+<summary>
+<code>docs/architecture.md</code>
+<span>complete file</span>
+</summary>
+<div class="snapshot-body">
+<button class="copy-code" type="button">Copy file</button>
+<pre><code># First-Generation Harness Architecture
+
+```text
+Task
+ |
+ v
+Agent Loop
+ |----&gt; Context Builder
+ |         |----&gt; Run State
+ |         |----&gt; Memory Retrieval
+ |         `----&gt; Skill Catalog
+ |
+ |----&gt; Model Adapter
+ |
+ `----&gt; Tool Registry
+           |
+           v
+       Policy Gate
+           |
+           v
+       Tool / Sandbox
+
+Every meaningful transition
+           |
+           v
+        Event Log
+           |
+           +----&gt; Checkpoints
+           `----&gt; Evaluations
+```
+
+## Dependency direction
+
+High-level orchestration depends on interfaces and data contracts.
+
+Provider SDKs, shell execution, SQLite and filesystem details remain behind
+their adapters.
+
+## Core ownership
+
+- Task owns the requested unit of work.
+- ContextBuilder owns model-visible information selection.
+- ModelAdapter owns provider translation.
+- ToolRegistry owns capability discovery and dispatch.
+- PolicyEngine owns deterministic authorization decisions.
+- Sandbox owns process execution constraints.
+- RunState owns current-run continuity.
+- EventStore owns append-only factual history.
+- MemoryStore owns selected cross-run knowledge.
+- SkillLoader owns progressively disclosed procedures.
+- SubagentSpawner owns bounded delegation.
+- Evaluation code owns repeatable measurement.</code></pre>
+</div>
+</details>
+<details class="snapshot-file">
+<summary>
+<code>docs/component-contracts.md</code>
+<span>complete file</span>
+</summary>
+<div class="snapshot-body">
+<button class="copy-code" type="button">Copy file</button>
+<pre><code># Component Contracts
+
+## Task
+Validated objective, workspace, constraints, success criteria and step budget.
+
+## ModelAdapter
+Input: messages + tool schemas.
+Output: provider-neutral ModelResponse.
+
+## Tool
+Input: validated structured arguments.
+Output: ToolResult.
+Tools never decide their own authorization policy.
+
+## PolicyEngine
+Input: Action.
+Output: allow, ask or deny.
+
+## Sandbox
+Input: ExecRequest.
+Output: ExecResult.
+The sandbox owns timeout, cwd, environment and process boundaries.
+
+## EventStore
+Append-only storage of factual runtime transitions.
+
+## RunState
+Serializable state required to continue the current run.
+
+## MemoryStore
+Cross-run durable knowledge with explicit type, source and status.
+
+## ContextBuilder
+Selects a bounded subset of available information for the next model turn.
+
+## SkillLoader
+Discovers compact skill metadata and loads full procedures on demand.
+
+## SubagentSpawner
+Creates a child run with its own bounded objective, context and permissions.
+
+## Eval Runner
+Executes fixed benchmark tasks and produces comparable metrics.</code></pre>
+</div>
+</details>
+</div>
+</section>
+<section class="card validation-gate">
+<div class="checkpoint-kicker">Do not advance until this passes</div>
+<h2>Validation gate</h2>
+<p>
+            Run these checks from the repository root. A green unit test suite
+            is necessary but not sufficient; finish with the manual inspection
+            below so you also understand the behavior you just built.
+          </p>
+<div class="validation-table-wrap">
+<table class="validation-table">
+<thead>
+<tr>
+<th>Check</th>
+<th>Command</th>
+<th>Expected result</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Run the complete test suite</td>
+<td><pre class="command-pre"><code>pytest -q</code></pre></td>
+<td>Every test accumulated through Step 16 passes.</td>
+</tr>
+<tr>
+<td>Check architecture docs</td>
+<td><pre class="command-pre"><code>test -f docs/architecture.md &amp;&amp; test -f docs/component-contracts.md</code></pre></td>
+<td>Command exits successfully.</td>
+</tr>
+<tr>
+<td>Check for accidental provider coupling</td>
+<td><pre class="command-pre"><code>grep -R "openai\|anthropic" -n src/khosiness --exclude-dir=__pycache__ || true</code></pre></td>
+<td>Only intentionally provider-specific adapter code should ever contain such imports.</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="callout green">
+<strong>Manual understanding check:</strong>
+            Pick any external dependency—model provider, SQLite, filesystem, subprocess—and trace where its implementation details stop. If they leak through several unrelated modules, you have found coupling worth correcting.
+          </div>
+<div class="callout checkpoint-pass">
+<strong>Stage passes only when:</strong>
+            the stage-specific tests pass, the complete accumulated suite passes,
+            the expected manual behavior is observed, and you can explain why
+            each changed file exists.
+          </div>
+</section>
+<div class="pager"><a href="step-16-learning-loop.html">← 16. The Harness Learning Loop</a><a href="step-18-twelve-week-plan.html">18. 12-Week Build Plan →</a></div><div class="footer">khosiness — Harness Engineering From Scratch · shorthand: kness · build deliberately, measure everything, earn autonomy.</div></div></div><aside aria-label="Developing project tree" class="project-tree-panel">
+<div class="project-tree-card">
+<div class="tree-kicker">Developing project</div>
+<h2>Project tree</h2>
+<p class="tree-help">Yellow marks the folders and files created or modified in this stage.</p>
+<div class="tree-box">
+<div class="tree-row tree-root">
+<span class="tree-icon">▾</span>
+<span class="tree-label">khosiness/</span>
+</div>
+<div class="tree-row" style="--depth:0"><span class="tree-icon">▾</span><span class="tree-label">benchmarks/</span></div><div class="tree-row" style="--depth:1"><span class="tree-icon">•</span><span class="tree-label">.gitkeep</span></div><div class="tree-row" style="--depth:1"><span class="tree-icon">•</span><span class="tree-label">eval_tasks.json</span></div><div class="tree-row" style="--depth:1"><span class="tree-icon">•</span><span class="tree-label">repo_tasks.json</span></div><div class="tree-row" style="--depth:1"><span class="tree-icon">•</span><span class="tree-label">tasks.json</span></div><div class="tree-row affected" style="--depth:0"><span class="tree-icon">▾</span><span class="tree-label">docs/</span></div><div class="tree-row" style="--depth:1"><span class="tree-icon">▾</span><span class="tree-label">decisions/</span></div><div class="tree-row" style="--depth:2"><span class="tree-icon">•</span><span class="tree-label">EXP-001.md</span></div><div class="tree-row affected" style="--depth:1"><span class="tree-icon">•</span><span class="tree-label">architecture.md</span></div><div class="tree-row affected" style="--depth:1"><span class="tree-icon">•</span><span class="tree-label">component-contracts.md</span></div><div class="tree-row" style="--depth:0"><span class="tree-icon">▾</span><span class="tree-label">experiments/</span></div><div class="tree-row" style="--depth:1"><span class="tree-icon">▾</span><span class="tree-label">results/</span></div><div class="tree-row" style="--depth:2"><span class="tree-icon">•</span><span class="tree-label">exp-001.json</span></div><div class="tree-row" style="--depth:1"><span class="tree-icon">•</span><span class="tree-label">README.md</span></div><div class="tree-row" style="--depth:0"><span class="tree-icon">▾</span><span class="tree-label">skills/</span></div><div class="tree-row" style="--depth:1"><span class="tree-icon">▾</span><span class="tree-label">python-debugging/</span></div><div class="tree-row" style="--depth:2"><span class="tree-icon">•</span><span class="tree-label">SKILL.md</span></div><div class="tree-row" style="--depth:1"><span class="tree-icon">▾</span><span class="tree-label">repository-analysis/</span></div><div class="tree-row" style="--depth:2"><span class="tree-icon">•</span><span class="tree-label">SKILL.md</span></div><div class="tree-row" style="--depth:0"><span class="tree-icon">▾</span><span class="tree-label">src/</span></div><div class="tree-row" style="--depth:1"><span class="tree-icon">▾</span><span class="tree-label">harness/</span></div><div class="tree-row" style="--depth:2"><span class="tree-icon">▾</span><span class="tree-label">agents/</span></div><div class="tree-row" style="--depth:3"><span class="tree-icon">•</span><span class="tree-label">request.py</span></div><div class="tree-row" style="--depth:3"><span class="tree-icon">•</span><span class="tree-label">spawn.py</span></div><div class="tree-row" style="--depth:2"><span class="tree-icon">▾</span><span class="tree-label">context/</span></div><div class="tree-row" style="--depth:3"><span class="tree-icon">•</span><span class="tree-label">builder.py</span></div><div class="tree-row" style="--depth:3"><span class="tree-icon">•</span><span class="tree-label">compaction.py</span></div><div class="tree-row" style="--depth:2"><span class="tree-icon">▾</span><span class="tree-label">evals/</span></div><div class="tree-row" style="--depth:3"><span class="tree-icon">•</span><span class="tree-label">metrics.py</span></div><div class="tree-row" style="--depth:3"><span class="tree-icon">•</span><span class="tree-label">runner.py</span></div><div class="tree-row" style="--depth:2"><span class="tree-icon">▾</span><span class="tree-label">memory/</span></div><div class="tree-row" style="--depth:3"><span class="tree-icon">•</span><span class="tree-label">retrieval.py</span></div><div class="tree-row" style="--depth:3"><span class="tree-icon">•</span><span class="tree-label">schema.py</span></div><div class="tree-row" style="--depth:3"><span class="tree-icon">•</span><span class="tree-label">store.py</span></div><div class="tree-row" style="--depth:2"><span class="tree-icon">▾</span><span class="tree-label">models/</span></div><div class="tree-row" style="--depth:3"><span class="tree-icon">•</span><span class="tree-label">base.py</span></div><div class="tree-row" style="--depth:3"><span class="tree-icon">•</span><span class="tree-label">fake.py</span></div><div class="tree-row" style="--depth:3"><span class="tree-icon">•</span><span class="tree-label">provider.py</span></div><div class="tree-row" style="--depth:2"><span class="tree-icon">▾</span><span class="tree-label">policy/</span></div><div class="tree-row" style="--depth:3"><span class="tree-icon">•</span><span class="tree-label">approval.py</span></div><div class="tree-row" style="--depth:3"><span class="tree-icon">•</span><span class="tree-label">engine.py</span></div><div class="tree-row" style="--depth:3"><span class="tree-icon">•</span><span class="tree-label">risk.py</span></div><div class="tree-row" style="--depth:2"><span class="tree-icon">▾</span><span class="tree-label">sandbox/</span></div><div class="tree-row" style="--depth:3"><span class="tree-icon">•</span><span class="tree-label">base.py</span></div><div class="tree-row" style="--depth:3"><span class="tree-icon">•</span><span class="tree-label">local.py</span></div><div class="tree-row" style="--depth:2"><span class="tree-icon">▾</span><span class="tree-label">skills/</span></div><div class="tree-row" style="--depth:3"><span class="tree-icon">•</span><span class="tree-label">catalog.py</span></div><div class="tree-row" style="--depth:3"><span class="tree-icon">•</span><span class="tree-label">loader.py</span></div><div class="tree-row" style="--depth:2"><span class="tree-icon">▾</span><span class="tree-label">tools/</span></div><div class="tree-row" style="--depth:3"><span class="tree-icon">•</span><span class="tree-label">base.py</span></div><div class="tree-row" style="--depth:3"><span class="tree-icon">•</span><span class="tree-label">filesystem.py</span></div><div class="tree-row" style="--depth:3"><span class="tree-icon">•</span><span class="tree-label">registry.py</span></div><div class="tree-row" style="--depth:3"><span class="tree-icon">•</span><span class="tree-label">shell.py</span></div><div class="tree-row" style="--depth:2"><span class="tree-icon">•</span><span class="tree-label">__init__.py</span></div><div class="tree-row" style="--depth:2"><span class="tree-icon">•</span><span class="tree-label">checkpoint.py</span></div><div class="tree-row" style="--depth:2"><span class="tree-icon">•</span><span class="tree-label">event_store.py</span></div><div class="tree-row" style="--depth:2"><span class="tree-icon">•</span><span class="tree-label">events.py</span></div><div class="tree-row" style="--depth:2"><span class="tree-icon">•</span><span class="tree-label">loop.py</span></div><div class="tree-row" style="--depth:2"><span class="tree-icon">•</span><span class="tree-label">resume.py</span></div><div class="tree-row" style="--depth:2"><span class="tree-icon">•</span><span class="tree-label">state.py</span></div><div class="tree-row" style="--depth:2"><span class="tree-icon">•</span><span class="tree-label">task.py</span></div><div class="tree-row" style="--depth:0"><span class="tree-icon">▾</span><span class="tree-label">tests/</span></div><div class="tree-row" style="--depth:1"><span class="tree-icon">•</span><span class="tree-label">__init__.py</span></div><div class="tree-row" style="--depth:1"><span class="tree-icon">•</span><span class="tree-label">test_compaction.py</span></div><div class="tree-row" style="--depth:1"><span class="tree-icon">•</span><span class="tree-label">test_context_builder.py</span></div><div class="tree-row" style="--depth:1"><span class="tree-icon">•</span><span class="tree-label">test_evals.py</span></div><div class="tree-row" style="--depth:1"><span class="tree-icon">•</span><span class="tree-label">test_event_store.py</span></div><div class="tree-row" style="--depth:1"><span class="tree-icon">•</span><span class="tree-label">test_loop.py</span></div><div class="tree-row" style="--depth:1"><span class="tree-icon">•</span><span class="tree-label">test_memory.py</span></div><div class="tree-row" style="--depth:1"><span class="tree-icon">•</span><span class="tree-label">test_model_adapter.py</span></div><div class="tree-row" style="--depth:1"><span class="tree-icon">•</span><span class="tree-label">test_policy.py</span></div><div class="tree-row" style="--depth:1"><span class="tree-icon">•</span><span class="tree-label">test_recovery.py</span></div><div class="tree-row" style="--depth:1"><span class="tree-icon">•</span><span class="tree-label">test_repository_tasks.py</span></div><div class="tree-row" style="--depth:1"><span class="tree-icon">•</span><span class="tree-label">test_shell.py</span></div><div class="tree-row" style="--depth:1"><span class="tree-icon">•</span><span class="tree-label">test_skills.py</span></div><div class="tree-row" style="--depth:1"><span class="tree-icon">•</span><span class="tree-label">test_subagents.py</span></div><div class="tree-row" style="--depth:1"><span class="tree-icon">•</span><span class="tree-label">test_task.py</span></div><div class="tree-row" style="--depth:1"><span class="tree-icon">•</span><span class="tree-label">test_tools.py</span></div><div class="tree-row" style="--depth:0"><span class="tree-icon">•</span><span class="tree-label">.gitignore</span></div><div class="tree-row" style="--depth:0"><span class="tree-icon">•</span><span class="tree-label">pyproject.toml</span></div><div class="tree-row" style="--depth:0"><span class="tree-icon">•</span><span class="tree-label">README.md</span></div>
+</div>
+</div>
+</aside></div>
+  </main>
+</div>
+<script src="../assets/manual.js"></script>
+</body>
+</html>

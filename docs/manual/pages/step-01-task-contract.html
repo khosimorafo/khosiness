@@ -1,0 +1,343 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>1. Define the Task Contract — khosiness</title>
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<div class="site">
+  <aside class="sidebar">
+    <div class="brand">
+      <a href="../index.html">khosiness — Harness Engineering From Scratch</a>
+      <p>Personal agentic operating harness · Python + VS Code + Codex</p>
+    </div>
+    <div class="nav-title">Manual map</div>
+    <nav class="nav">
+      <a href="../index.html" class="">Overview</a>
+<div class="phase-nav-label">Phase I · Build khosiness</div>
+<a href="project-setup.html" class="">Setup. Project Setup</a>
+<a href="step-00-mental-model.html" class="">0. The Mental Model</a>
+<a href="step-01-task-contract.html" class="current-page">1. Define the Task Contract</a>
+<a href="step-02-model-adapter.html" class="">2. Create the Model Adapter</a>
+<a href="step-03-event-log.html" class="">3. Build the Event Log</a>
+<a href="step-04-agent-loop.html" class="">4. Implement the Agent Loop</a>
+<a href="step-05-tool-system.html" class="">5. Build the Tool System</a>
+<a href="step-06-context-engineering.html" class="">6. Engineer the Context</a>
+<a href="step-07-repository-navigation.html" class="">7. Repository Navigation</a>
+<a href="step-08-shell-sandbox.html" class="">8. Shell Execution and Sandbox</a>
+<a href="step-09-policy-approvals.html" class="">9. Policy and Human Approval</a>
+<a href="step-10-state-recovery.html" class="">10. State, Checkpoints and Recovery</a>
+<a href="step-11-memory.html" class="">11. Memory</a>
+<a href="step-12-context-compaction.html" class="">12. Context Compaction</a>
+<a href="step-13-skills.html" class="">13. Skills and Progressive Disclosure</a>
+<a href="step-14-subagents.html" class="">14. Subagents</a>
+<a href="step-15-evaluation.html" class="">15. Evaluation</a>
+<a href="step-16-learning-loop.html" class="">16. The Harness Learning Loop</a>
+<a href="step-17-final-architecture.html" class="">17. Assemble the First-Generation Architecture</a>
+<a href="step-18-twelve-week-plan.html" class="">18. 12-Week Build Plan — Complete Phase I</a>
+<div class="phase-nav-label">Part II · Personal khosiness</div>
+<a href="part-ii-personal-harness.html" class="">19. Building the Personal Harness</a>
+    </nav>
+  </aside>
+  <main class="content">
+    <div class="detail-layout"><div class="detail-main"><header class="hero"><div class="eyebrow">Step 1</div><h1>1. Define the Task Contract</h1><p>Make every run a bounded unit of work with an objective, workspace, constraints, success criteria and limits.</p></header><div class="wrap"><div class="pager"><a href="step-00-mental-model.html">← 0. The Mental Model</a><a href="step-02-model-adapter.html">2. Create the Model Adapter →</a></div><section class="card"><h2>Conceptual objective</h2><p class="lead">Make every run a bounded unit of work with an objective, workspace, constraints, success criteria and limits.</p><div class="callout">At this stage you are constructing the irreducible harness core. Prefer deterministic code and fake-model tests. Do not introduce abstractions that solve problems you have not yet encountered.</div><h3>Files to create or modify</h3><div class="files"><code>src/khosiness/task.py</code><code>tests/test_task.py</code><code>benchmarks/tasks.json</code></div></section><section class="card"><h2>Implementation sequence</h2><div class="step"><div class="badge">1</div><div><h3>Create a validated Task model.</h3><p>Implement this as the smallest version that makes the responsibility concrete. Keep provider/framework details outside the core boundary, add an event where the action changes run state, and make failure observable rather than silent.</p></div></div><div class="step"><div class="badge">2</div><div><h3>Reject nonexistent workspaces before a model call.</h3><p>Implement this as the smallest version that makes the responsibility concrete. Keep provider/framework details outside the core boundary, add an event where the action changes run state, and make failure observable rather than silent.</p></div></div><div class="step"><div class="badge">3</div><div><h3>Serialize tasks to JSON.</h3><p>Implement this as the smallest version that makes the responsibility concrete. Keep provider/framework details outside the core boundary, add an event where the action changes run state, and make failure observable rather than silent.</p></div></div><div class="step"><div class="badge">4</div><div><h3>Create at least ten benchmark tasks now, before the harness becomes sophisticated.</h3><p>Implement this as the smallest version that makes the responsibility concrete. Keep provider/framework details outside the core boundary, add an event where the action changes run state, and make failure observable rather than silent.</p></div></div></section><section class="card"><h2>Starter implementation</h2><div class="callout warn"><strong>Do not paste blindly.</strong> Type this in VS Code, make it run, then explain every line before you add another layer.</div><pre><code>from pathlib import Path
+from pydantic import BaseModel, Field, field_validator
+
+class Task(BaseModel):
+    id: str
+    objective: str
+    workspace: Path
+    constraints: list[str] = Field(default_factory=list)
+    success_criteria: list[str] = Field(default_factory=list)
+    max_steps: int = 30
+
+    @field_validator("workspace")
+    @classmethod
+    def existing_workspace(cls, value: Path) -&gt; Path:
+        value = value.expanduser().resolve()
+        if not value.exists():
+            raise ValueError(f"workspace does not exist: {value}")
+        return value</code></pre></section><section class="card"><h2>Tests to perform</h2><ol><li>Valid workspace is accepted.</li><li>Missing workspace raises before model use.</li><li>max_steps &lt; 1 is rejected.</li><li>Task round-trips through JSON.</li></ol><div class="callout green"><strong>Deliberate-failure rule:</strong> after the happy path works, deliberately trigger at least one failure and inspect the returned result, state change and event trace.</div></section><section class="card"><h2>What to inspect before moving on</h2><ul class="checks"><li>The component has one clear responsibility.</li><li>Failure is explicit and testable.</li><li>The event log shows the important transition.</li><li>No provider/framework object has leaked across an architectural boundary without a reason.</li><li>You can explain what problem this step solves without reading the code.</li></ul></section><section class="card"><h2>Suggested commit</h2><pre><code>git add .
+git commit -m "step 1: define the task contract"</code></pre><p>Tagging each stage separately makes later architectural comparison much easier.</p></section>
+<section class="card stage-checkpoint">
+<div class="checkpoint-kicker">Stage release checkpoint</div>
+<h2>End-state file contents</h2>
+<p class="lead">
+            Stop here and compare your repository with this checkpoint.
+            These are the <strong>complete contents</strong> of every file created
+            or modified in this stage—not fragments. Your implementation may
+            differ stylistically, but its contracts, tests and behavior should
+            be equivalent before you continue.
+          </p>
+<div class="snapshot-files">
+<details class="snapshot-file" open="">
+<summary>
+<code>src/khosiness/task.py</code>
+<span>complete file</span>
+</summary>
+<div class="snapshot-body">
+<button class="copy-code" type="button">Copy file</button>
+<pre><code>from pathlib import Path
+
+from pydantic import BaseModel, Field, field_validator
+
+
+class Task(BaseModel):
+    """A bounded unit of work executed by the harness."""
+
+    id: str
+    objective: str
+    workspace: Path
+    constraints: list[str] = Field(default_factory=list)
+    success_criteria: list[str] = Field(default_factory=list)
+    max_steps: int = 30
+
+    @field_validator("objective")
+    @classmethod
+    def objective_must_not_be_blank(cls, value: str) -&gt; str:
+        value = value.strip()
+        if not value:
+            raise ValueError("objective must not be blank")
+        return value
+
+    @field_validator("workspace")
+    @classmethod
+    def workspace_must_exist(cls, value: Path) -&gt; Path:
+        value = value.expanduser().resolve()
+        if not value.exists():
+            raise ValueError(f"workspace does not exist: {value}")
+        if not value.is_dir():
+            raise ValueError(f"workspace is not a directory: {value}")
+        return value
+
+    @field_validator("max_steps")
+    @classmethod
+    def max_steps_must_be_positive(cls, value: int) -&gt; int:
+        if value &lt; 1:
+            raise ValueError("max_steps must be &gt;= 1")
+        return value</code></pre>
+</div>
+</details>
+<details class="snapshot-file">
+<summary>
+<code>tests/test_task.py</code>
+<span>complete file</span>
+</summary>
+<div class="snapshot-body">
+<button class="copy-code" type="button">Copy file</button>
+<pre><code>from pathlib import Path
+
+import pytest
+
+from khosiness.task import Task
+
+
+def test_task_accepts_existing_workspace(tmp_path: Path):
+    task = Task(
+        id="task-1",
+        objective="Find retry configuration",
+        workspace=tmp_path,
+        max_steps=5,
+    )
+
+    assert task.workspace == tmp_path.resolve()
+    assert task.objective == "Find retry configuration"
+
+
+def test_task_rejects_missing_workspace(tmp_path: Path):
+    with pytest.raises(ValueError, match="workspace does not exist"):
+        Task(
+            id="task-1",
+            objective="Find retry configuration",
+            workspace=tmp_path / "missing",
+        )
+
+
+def test_task_rejects_file_as_workspace(tmp_path: Path):
+    file_path = tmp_path / "not-a-directory"
+    file_path.write_text("x", encoding="utf-8")
+
+    with pytest.raises(ValueError, match="workspace is not a directory"):
+        Task(
+            id="task-1",
+            objective="x",
+            workspace=file_path,
+        )
+
+
+def test_task_rejects_blank_objective(tmp_path: Path):
+    with pytest.raises(ValueError, match="objective must not be blank"):
+        Task(id="task-1", objective="   ", workspace=tmp_path)
+
+
+def test_task_rejects_zero_steps(tmp_path: Path):
+    with pytest.raises(ValueError, match="max_steps"):
+        Task(
+            id="task-1",
+            objective="x",
+            workspace=tmp_path,
+            max_steps=0,
+        )
+
+
+def test_task_round_trip_json(tmp_path: Path):
+    task = Task(
+        id="task-1",
+        objective="Find retry configuration",
+        workspace=tmp_path,
+        constraints=["Do not modify files"],
+        success_criteria=["Name the defining file"],
+        max_steps=8,
+    )
+
+    restored = Task.model_validate_json(task.model_dump_json())
+
+    assert restored == task</code></pre>
+</div>
+</details>
+<details class="snapshot-file">
+<summary>
+<code>benchmarks/tasks.json</code>
+<span>complete file</span>
+</summary>
+<div class="snapshot-body">
+<button class="copy-code" type="button">Copy file</button>
+<pre><code>[
+  {
+    "id": "locate-retry-config",
+    "objective": "Find where database connection retries are configured.",
+    "constraints": ["Do not modify files."],
+    "success_criteria": ["Name the defining file.", "Name the retry setting."]
+  },
+  {
+    "id": "explain-config-flow",
+    "objective": "Explain how application configuration reaches the database layer.",
+    "constraints": ["Use repository evidence.", "Do not modify files."],
+    "success_criteria": ["Identify the main files involved."]
+  },
+  {
+    "id": "trace-create-session",
+    "objective": "Find every project-owned caller of create_session().",
+    "constraints": ["Do not modify files."],
+    "success_criteria": ["List the caller files."]
+  },
+  {
+    "id": "diagnose-test",
+    "objective": "Explain why the supplied failing unit test fails.",
+    "constraints": ["Do not change code."],
+    "success_criteria": ["Identify the likely root cause."]
+  },
+  {
+    "id": "propose-only",
+    "objective": "Propose a fix for the configuration bug.",
+    "constraints": ["Do not modify files.", "Do not execute commands."],
+    "success_criteria": ["Describe the smallest proposed change."]
+  },
+  {
+    "id": "locate-entrypoint",
+    "objective": "Locate the application's primary entry point.",
+    "constraints": ["Do not modify files."],
+    "success_criteria": ["Name the file and callable."]
+  },
+  {
+    "id": "trace-auth",
+    "objective": "Trace how authentication is enforced for an incoming request.",
+    "constraints": ["Do not modify files."],
+    "success_criteria": ["Identify the enforcing component."]
+  },
+  {
+    "id": "find-env",
+    "objective": "Identify all environment variables used by the application.",
+    "constraints": ["Do not modify files."],
+    "success_criteria": ["Return the variable names and source files."]
+  },
+  {
+    "id": "explain-storage",
+    "objective": "Explain the storage layer's public interface.",
+    "constraints": ["Do not modify files."],
+    "success_criteria": ["Name the public methods."]
+  },
+  {
+    "id": "locate-timeout",
+    "objective": "Find where request timeouts are configured.",
+    "constraints": ["Do not modify files."],
+    "success_criteria": ["Name the file, setting and value."]
+  }
+]</code></pre>
+</div>
+</details>
+</div>
+</section>
+<section class="card validation-gate">
+<div class="checkpoint-kicker">Do not advance until this passes</div>
+<h2>Validation gate</h2>
+<p>
+            Run these checks from the repository root. A green unit test suite
+            is necessary but not sufficient; finish with the manual inspection
+            below so you also understand the behavior you just built.
+          </p>
+<div class="validation-table-wrap">
+<table class="validation-table">
+<thead>
+<tr>
+<th>Check</th>
+<th>Command</th>
+<th>Expected result</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Run the stage tests</td>
+<td><pre class="command-pre"><code>pytest tests/test_task.py -q</code></pre></td>
+<td>6 tests pass.</td>
+</tr>
+<tr>
+<td>Run the complete suite</td>
+<td><pre class="command-pre"><code>pytest -q</code></pre></td>
+<td>All tests accumulated so far pass.</td>
+</tr>
+<tr>
+<td>Validate benchmark JSON</td>
+<td><pre class="command-pre"><code>python -m json.tool benchmarks/tasks.json &gt; /dev/null</code></pre></td>
+<td>Command exits successfully.</td>
+</tr>
+<tr>
+<td>Check benchmark count</td>
+<td><pre class="command-pre"><code>python -c "import json; print(len(json.load(open('benchmarks/tasks.json'))))"</code></pre></td>
+<td>Prints 10.</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="callout green">
+<strong>Manual understanding check:</strong>
+            Create a Task with a nonexistent workspace in a Python REPL. Confirm the failure occurs immediately, before any model or tool code could possibly run.
+          </div>
+<div class="callout checkpoint-pass">
+<strong>Stage passes only when:</strong>
+            the stage-specific tests pass, the complete accumulated suite passes,
+            the expected manual behavior is observed, and you can explain why
+            each changed file exists.
+          </div>
+</section>
+<div class="pager"><a href="step-00-mental-model.html">← 0. The Mental Model</a><a href="step-02-model-adapter.html">2. Create the Model Adapter →</a></div><div class="footer">khosiness — Harness Engineering From Scratch · shorthand: kness · build deliberately, measure everything, earn autonomy.</div></div></div><aside aria-label="Developing project tree" class="project-tree-panel">
+<div class="project-tree-card">
+<div class="tree-kicker">Developing project</div>
+<h2>Project tree</h2>
+<p class="tree-help">Yellow marks the folders and files created or modified in this stage.</p>
+<div class="tree-box">
+<div class="tree-row tree-root">
+<span class="tree-icon">▾</span>
+<span class="tree-label">khosiness/</span>
+</div>
+<div class="tree-row affected" style="--depth:0"><span class="tree-icon">▾</span><span class="tree-label">benchmarks/</span></div><div class="tree-row" style="--depth:1"><span class="tree-icon">•</span><span class="tree-label">.gitkeep</span></div><div class="tree-row affected" style="--depth:1"><span class="tree-icon">•</span><span class="tree-label">tasks.json</span></div><div class="tree-row" style="--depth:0"><span class="tree-icon">▾</span><span class="tree-label">docs/</span></div><div class="tree-row" style="--depth:1"><span class="tree-icon">•</span><span class="tree-label">architecture.md</span></div><div class="tree-row affected" style="--depth:0"><span class="tree-icon">▾</span><span class="tree-label">src/</span></div><div class="tree-row affected" style="--depth:1"><span class="tree-icon">▾</span><span class="tree-label">harness/</span></div><div class="tree-row" style="--depth:2"><span class="tree-icon">•</span><span class="tree-label">__init__.py</span></div><div class="tree-row affected" style="--depth:2"><span class="tree-icon">•</span><span class="tree-label">task.py</span></div><div class="tree-row affected" style="--depth:0"><span class="tree-icon">▾</span><span class="tree-label">tests/</span></div><div class="tree-row" style="--depth:1"><span class="tree-icon">•</span><span class="tree-label">__init__.py</span></div><div class="tree-row affected" style="--depth:1"><span class="tree-icon">•</span><span class="tree-label">test_task.py</span></div><div class="tree-row" style="--depth:0"><span class="tree-icon">•</span><span class="tree-label">.gitignore</span></div><div class="tree-row" style="--depth:0"><span class="tree-icon">•</span><span class="tree-label">pyproject.toml</span></div><div class="tree-row" style="--depth:0"><span class="tree-icon">•</span><span class="tree-label">README.md</span></div>
+</div>
+</div>
+</aside></div>
+  </main>
+</div>
+<script src="../assets/manual.js"></script>
+</body>
+</html>

@@ -1,0 +1,356 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>19. Building the Personal Harness — khosiness</title>
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<div class="site">
+  <aside class="sidebar">
+    <div class="brand">
+      <a href="../index.html">khosiness — Harness Engineering From Scratch</a>
+      <p>Personal agentic operating harness · Python + VS Code + Codex</p>
+    </div>
+    <div class="nav-title">Manual map</div>
+    <nav class="nav">
+      <a href="../index.html" class="">Overview</a>
+<div class="phase-nav-label">Phase I · Build khosiness</div>
+<a href="project-setup.html" class="">Setup. Project Setup</a>
+<a href="step-00-mental-model.html" class="">0. The Mental Model</a>
+<a href="step-01-task-contract.html" class="">1. Define the Task Contract</a>
+<a href="step-02-model-adapter.html" class="">2. Create the Model Adapter</a>
+<a href="step-03-event-log.html" class="">3. Build the Event Log</a>
+<a href="step-04-agent-loop.html" class="">4. Implement the Agent Loop</a>
+<a href="step-05-tool-system.html" class="">5. Build the Tool System</a>
+<a href="step-06-context-engineering.html" class="">6. Engineer the Context</a>
+<a href="step-07-repository-navigation.html" class="">7. Repository Navigation</a>
+<a href="step-08-shell-sandbox.html" class="">8. Shell Execution and Sandbox</a>
+<a href="step-09-policy-approvals.html" class="">9. Policy and Human Approval</a>
+<a href="step-10-state-recovery.html" class="">10. State, Checkpoints and Recovery</a>
+<a href="step-11-memory.html" class="">11. Memory</a>
+<a href="step-12-context-compaction.html" class="">12. Context Compaction</a>
+<a href="step-13-skills.html" class="">13. Skills and Progressive Disclosure</a>
+<a href="step-14-subagents.html" class="">14. Subagents</a>
+<a href="step-15-evaluation.html" class="">15. Evaluation</a>
+<a href="step-16-learning-loop.html" class="">16. The Harness Learning Loop</a>
+<a href="step-17-final-architecture.html" class="">17. Assemble the First-Generation Architecture</a>
+<a href="step-18-twelve-week-plan.html" class="">18. 12-Week Build Plan — Complete Phase I</a>
+<div class="phase-nav-label">Part II · Personal khosiness</div>
+<a href="part-ii-personal-harness.html" class="current-page">19. Building the Personal Harness</a>
+    </nav>
+  </aside>
+  <main class="content">
+    <div class="detail-layout"><div class="detail-main">
+<header class="hero">
+<div class="eyebrow">Part II · Target state</div>
+<h1>19. Building the Personal Harness</h1>
+<p>Phase I gives khosiness a safe, observable and testable substrate. Part II turns that substrate into a deeply personal engineering operating harness that reflects, augments and iteratively improves one engineer.</p>
+</header>
+<div class="wrap">
+<div class="pager">
+<a href="step-18-twelve-week-plan.html">← 18. 12-Week Build Plan</a>
+<a href="../index.html">Overview →</a>
+</div>
+<section class="card">
+<div class="checkpoint-kicker">The destination</div>
+<h2>What khosiness is becoming</h2>
+<p class="lead">
+<strong>khosiness is a continuously evolving computational extension of one software engineer:
+        preserving context, amplifying capability, extending operational reach, improving the engineer's own skills,
+        and progressively earning authority to act.</strong>
+</p>
+<div class="callout">
+<strong>Single-user is a design advantage.</strong>
+        khosiness does not need to generalize to millions of users. It can become specific to one engineer's
+        judgment, projects, working habits, technical standards, recurring mistakes, ambitions and risk tolerance.
+      </div>
+</section>
+<section class="card">
+<h2>The optimization target changes</h2>
+<p>Phase I mostly optimizes the reliability of the harness. Part II optimizes the combined system:</p>
+<pre><code>Engineer + khosiness</code></pre>
+<p>The objective is no longer simply “finish the task faster.” It becomes:</p>
+<pre><code>maximize:
+    long-term engineer capability
+    × effective work reach
+    × quality
+    × reliability
+
+subject to:
+    safety
+    authority
+    cost
+    attention
+    reversibility</code></pre>
+</section>
+<section class="card">
+<h2>The two fundamental learning loops</h2>
+<pre><code>                KHOSI
+
+      WORK REACH LOOP
+      Understand → Plan → Act
+      → Observe → Verify → Report → Learn
+
+                  ↓ traces + outcomes
+
+      ENGINEER LOOP
+      Observe Khosi → Diagnose
+      → Teach → Challenge → Measure → Adapt
+
+                  ↓
+
+          better Engineer + greater reach</code></pre>
+<p>
+        The first loop makes khosiness better at getting work done. The second prevents automation from quietly
+        weakening the engineer. Sometimes khosiness should act; sometimes it should collaborate; sometimes it should
+        deliberately leave the cognitive work with the engineer so skill compounds rather than decays.
+      </p>
+</section>
+<section class="card">
+<h2>The three collaboration modes</h2>
+<table>
+<thead>
+<tr><th>Mode</th><th>Purpose</th><th>Typical use</th></tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Learning</strong></td>
+<td>Maximize the engineer's understanding and capability.</td>
+<td>New architecture concepts, unfamiliar systems, deliberate practice.</td>
+</tr>
+<tr>
+<td><strong>Collaboration</strong></td>
+<td>Engineer and khosiness divide the reasoning and execution.</td>
+<td>Architecture, debugging, design reviews, complex project work.</td>
+</tr>
+<tr>
+<td><strong>Execution</strong></td>
+<td>Optimize for reliable completion within an established envelope.</td>
+<td>Routine tests, maintenance, monitoring, known procedures.</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section class="card">
+<h2>The five post-Phase-I development arcs</h2>
+<div class="target-arc">
+<h3>Phase II-A — Personalize khosiness</h3>
+<ul>
+<li>engineering principles and working philosophy;</li>
+<li>observed strengths and weaknesses;</li>
+<li>recurring mistakes and blind spots;</li>
+<li>preferred decomposition and verification styles;</li>
+<li>communication and documentation habits;</li>
+<li>project-specific and cross-project memory.</li>
+</ul>
+</div>
+<div class="target-arc">
+<h3>Phase II-B — Extend khosiness</h3>
+<ul>
+<li>coding and repository operations;</li>
+<li>architecture and design;</li>
+<li>research and technical synthesis;</li>
+<li>documentation and communication;</li>
+<li>infrastructure and operational work;</li>
+<li>project coordination and continuous monitoring.</li>
+</ul>
+</div>
+<div class="target-arc">
+<h3>Phase II-C — Model the Engineer</h3>
+<ul>
+<li>build an evidence-based engineering profile;</li>
+<li>distinguish self-belief from observed performance;</li>
+<li>identify areas where khosiness repeatedly compensates;</li>
+<li>turn recurring weakness into learning interventions;</li>
+<li>measure whether the engineer is actually improving.</li>
+</ul>
+</div>
+<div class="target-arc">
+<h3>Phase II-D — Earn trust</h3>
+<ul>
+<li>track success, reversions and human corrections per capability;</li>
+<li>grant autonomy by capability rather than globally;</li>
+<li>define reversible and irreversible action classes;</li>
+<li>use approval history and evaluation evidence to change authority;</li>
+<li>keep production-critical actions narrow until evidence justifies expansion.</li>
+</ul>
+</div>
+<div class="target-arc">
+<h3>Phase II-E — Let khosiness drive bounded objectives</h3>
+<ul>
+<li>continuous planning and execution inside known limits;</li>
+<li>delegation to subagents;</li>
+<li>monitoring and recovery;</li>
+<li>escalation only when genuine judgment is needed;</li>
+<li>long-horizon operation while preserving inspectability and control.</li>
+</ul>
+</div>
+</section>
+<section class="card">
+<h2>The autonomy ladder</h2>
+<table>
+<thead>
+<tr><th>Level</th><th>Name</th><th>Meaning</th></tr>
+</thead>
+<tbody>
+<tr><td>L0</td><td>Observe</td><td>Reads, watches and explains.</td></tr>
+<tr><td>L1</td><td>Advise</td><td>Recommends actions but does not prepare execution.</td></tr>
+<tr><td>L2</td><td>Prepare</td><td>Creates patches, plans or actions and waits.</td></tr>
+<tr><td>L3</td><td>Execute with approval</td><td>Acts only after explicit authorization.</td></tr>
+<tr><td>L4</td><td>Execute by policy</td><td>Acts automatically inside established safe envelopes.</td></tr>
+<tr><td>L5</td><td>Drive bounded objectives</td><td>Plans and operates over extended periods, escalating only what exceeds its mandate.</td></tr>
+</tbody>
+</table>
+<div class="callout green">
+<strong>Autonomy is earned per capability.</strong>
+        khosiness may eventually be L4 for routine dependency updates while remaining L1 for production database migrations.
+      </div>
+</section>
+<section class="card">
+<h2>Personal institutional memory</h2>
+<p>
+        A one-person engineering organization normally loses context that larger organizations preserve in teams,
+        meetings and institutional processes. khosiness should accumulate that history deliberately.
+      </p>
+<pre><code>khosiness/
+  identity/
+    principles.md
+    engineering-philosophy.md
+    communication.md
+    risk-tolerance.md
+
+  memory/
+    semantic/
+    episodic/
+    procedural/
+
+  skills/
+    repository-analysis/
+    debugging/
+    system-design/
+    security-review/
+
+  projects/
+    project-a/
+    project-b/
+    ...
+
+  evaluations/
+  experiments/
+  policies/
+  capability-trust/</code></pre>
+<p>
+        Over time, khosiness should be able to explain not only what the current system does, but why previous decisions were made,
+        what alternatives failed, and how your engineering judgment has changed.
+      </p>
+</section>
+<section class="card">
+<h2>Metacognition</h2>
+<p>Eventually, khosiness should reason about the operating system formed by you and it together.</p>
+<ul>
+<li>Where do you repeatedly need help?</li>
+<li>Which tasks are consistently underestimated?</li>
+<li>Where do you abstract too early?</li>
+<li>Which verification patterns reduce redesign?</li>
+<li>Where does delegation improve throughput without reducing understanding?</li>
+<li>Which capabilities should khosiness return to you for deliberate practice?</li>
+</ul>
+<div class="callout">
+        These are not merely memories. They are observations about the performance of the combined Engineer + khosiness system.
+      </div>
+</section>
+<section class="card">
+<h2>Recursive improvement has three directions</h2>
+<table>
+<thead>
+<tr><th>Loop</th><th>Meaning</th></tr>
+</thead>
+<tbody>
+<tr><td><strong>khosiness improves itself</strong></td><td>Better tools, context, skills, evals, memory and workflows.</td></tr>
+<tr><td><strong>khosiness improves the Engineer</strong></td><td>Diagnoses gaps, teaches, challenges and measures development.</td></tr>
+<tr><td><strong>The Engineer improves khosiness</strong></td><td>Changes architecture, corrects memory, adds capabilities and adjusts policy.</td></tr>
+</tbody>
+</table>
+</section>
+<section class="card">
+<div class="checkpoint-kicker">First document after Step 18</div>
+<h2>The Khosiness Constitution</h2>
+<p class="lead">
+        Before adding deep personalization or autonomy, define the governing specification that says what khosiness exists to optimize,
+        what it must never optimize away, how it relates to you, how it may learn about you, and how authority is earned.
+      </p>
+<p>The Constitution should eventually answer at least:</p>
+<ul>
+<li>What is khosiness for?</li>
+<li>What must remain under human judgment?</li>
+<li>When should khosiness optimize for execution versus learning?</li>
+<li>What kinds of personal observations may become durable memory?</li>
+<li>How can memory be challenged or corrected?</li>
+<li>How is capability-specific trust measured?</li>
+<li>How does autonomy increase, decrease or get revoked?</li>
+<li>What classes of action always require explicit approval?</li>
+<li>How does khosiness preserve the engineer's own capability?</li>
+</ul>
+<div class="callout warn">
+<strong>Do not jump directly from Step 18 to “fully autonomous.”</strong>
+        The Constitution, personal model and evidence-based trust system are the bridge between a useful harness and a system that can safely drive.
+      </div>
+</section>
+<section class="card">
+<h2>The long-term target</h2>
+<pre><code>generic frontier model
+        +
+years of Khosiness-specific engineering history
+        +
+project history
+        +
+judgment traces
+        +
+personal skills
+        +
+verified procedures
+        +
+trusted tools
+        +
+capability-specific autonomy
+        +
+measured failure history
+        +
+continuous self-improvement
+        =
+personal engineering infrastructure</code></pre>
+</section>
+<div class="pager">
+<a href="step-18-twelve-week-plan.html">← 18. 12-Week Build Plan</a>
+<a href="../index.html">Overview →</a>
+</div>
+</div>
+</div><aside aria-label="Target khosiness project tree" class="project-tree-panel">
+<div class="project-tree-card">
+<div class="tree-kicker">Target architecture</div>
+<h2>Future khosiness tree</h2>
+<p class="tree-help">This is the direction after Phase I. It is a target, not a requirement to create these folders immediately.</p>
+<div class="tree-box">
+<div class="tree-row tree-root"><span class="tree-icon">▾</span><span class="tree-label">khosiness/</span></div>
+<div class="tree-row affected" style="--depth:1"><span class="tree-icon">▾</span><span class="tree-label">identity/</span></div>
+<div class="tree-row" style="--depth:2"><span class="tree-icon">•</span><span class="tree-label">principles.md</span></div>
+<div class="tree-row" style="--depth:2"><span class="tree-icon">•</span><span class="tree-label">engineering-philosophy.md</span></div>
+<div class="tree-row" style="--depth:2"><span class="tree-icon">•</span><span class="tree-label">risk-tolerance.md</span></div>
+<div class="tree-row affected" style="--depth:1"><span class="tree-icon">▾</span><span class="tree-label">memory/</span></div>
+<div class="tree-row" style="--depth:2"><span class="tree-icon">•</span><span class="tree-label">semantic/</span></div>
+<div class="tree-row" style="--depth:2"><span class="tree-icon">•</span><span class="tree-label">episodic/</span></div>
+<div class="tree-row" style="--depth:2"><span class="tree-icon">•</span><span class="tree-label">procedural/</span></div>
+<div class="tree-row affected" style="--depth:1"><span class="tree-icon">▾</span><span class="tree-label">projects/</span></div>
+<div class="tree-row affected" style="--depth:1"><span class="tree-icon">▾</span><span class="tree-label">capability-trust/</span></div>
+<div class="tree-row affected" style="--depth:1"><span class="tree-icon">▾</span><span class="tree-label">evaluations/</span></div>
+<div class="tree-row affected" style="--depth:1"><span class="tree-icon">▾</span><span class="tree-label">policies/</span></div>
+</div>
+</div>
+</aside></div>
+  </main>
+</div>
+<script src="../assets/manual.js"></script>
+</body>
+</html>

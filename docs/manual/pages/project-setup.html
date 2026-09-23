@@ -1,0 +1,469 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Project Setup — khosiness</title>
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<div class="site">
+  <aside class="sidebar">
+    <div class="brand">
+      <a href="../index.html">khosiness — Harness Engineering From Scratch</a>
+      <p>Personal agentic operating harness · Python + VS Code + Codex</p>
+    </div>
+    <div class="nav-title">Manual map</div>
+    <nav class="nav">
+      <a href="../index.html" class="">Overview</a>
+<div class="phase-nav-label">Phase I · Build khosiness</div>
+<a href="project-setup.html" class="current-page">Setup. Project Setup</a>
+<a href="step-00-mental-model.html" class="">0. The Mental Model</a>
+<a href="step-01-task-contract.html" class="">1. Define the Task Contract</a>
+<a href="step-02-model-adapter.html" class="">2. Create the Model Adapter</a>
+<a href="step-03-event-log.html" class="">3. Build the Event Log</a>
+<a href="step-04-agent-loop.html" class="">4. Implement the Agent Loop</a>
+<a href="step-05-tool-system.html" class="">5. Build the Tool System</a>
+<a href="step-06-context-engineering.html" class="">6. Engineer the Context</a>
+<a href="step-07-repository-navigation.html" class="">7. Repository Navigation</a>
+<a href="step-08-shell-sandbox.html" class="">8. Shell Execution and Sandbox</a>
+<a href="step-09-policy-approvals.html" class="">9. Policy and Human Approval</a>
+<a href="step-10-state-recovery.html" class="">10. State, Checkpoints and Recovery</a>
+<a href="step-11-memory.html" class="">11. Memory</a>
+<a href="step-12-context-compaction.html" class="">12. Context Compaction</a>
+<a href="step-13-skills.html" class="">13. Skills and Progressive Disclosure</a>
+<a href="step-14-subagents.html" class="">14. Subagents</a>
+<a href="step-15-evaluation.html" class="">15. Evaluation</a>
+<a href="step-16-learning-loop.html" class="">16. The Harness Learning Loop</a>
+<a href="step-17-final-architecture.html" class="">17. Assemble the First-Generation Architecture</a>
+<a href="step-18-twelve-week-plan.html" class="">18. 12-Week Build Plan — Complete Phase I</a>
+<div class="phase-nav-label">Part II · Personal khosiness</div>
+<a href="part-ii-personal-harness.html" class="">19. Building the Personal Harness</a>
+    </nav>
+  </aside>
+  <main class="content">
+    <div class="detail-layout"><div class="detail-main">
+<header class="hero">
+<div class="eyebrow">Setup</div>
+<h1>Project Setup</h1>
+<p>Create the repository, Python environment, package layout, test runner and first clean Git baseline before building any harness behavior.</p>
+</header>
+<div class="wrap">
+<div class="pager">
+<a href="../index.html">← Overview</a>
+<a href="step-00-mental-model.html">0. The Mental Model →</a>
+</div>
+<section class="card">
+<h2>Why this step exists</h2>
+<p class="lead">You want the harness to grow inside a boring, repeatable Python project from the first minute. A clean baseline makes every later architectural change visible in Git and keeps the learning exercise focused on harness behavior rather than project housekeeping.</p>
+<h3>Files to create or modify</h3>
+<div class="files"><code>pyproject.toml</code><code>README.md</code><code>.gitignore</code><code>src/khosiness/__init__.py</code><code>src/khosiness/cli.py</code><code>tests/__init__.py</code><code>benchmarks/.gitkeep</code></div>
+<h3>Learning objectives</h3>
+<ul>
+<li>Create an installable Python package using the <code>src/</code> layout.</li>
+<li>Use an isolated virtual environment.</li>
+<li>Run tests before any harness code exists.</li>
+<li>Create a clean Git baseline that later steps can be compared against.</li>
+</ul>
+<div class="callout"><strong>Repository/package/CLI naming:</strong>
+<code>khosiness</code> is the repository and Python package name. <code>kness</code> is the shorthand command name.</div></section>
+<section class="card">
+<h2>Implementation sequence</h2>
+<div class="step">
+<div class="badge">1</div>
+<div>
+<h3>Create the repository</h3>
+<p>Start from an empty directory. Initialize Git immediately so every architectural step in this manual becomes inspectable history.</p>
+<pre><code>mkdir khosiness
+cd khosiness
+git init</code></pre>
+</div>
+</div>
+<div class="step">
+<div class="badge">2</div>
+<div>
+<h3>Create and activate the Python environment</h3>
+<p>Use Python 3.12+ if practical. The exact environment manager is less important than keeping dependencies isolated and reproducible.</p>
+<pre><code>python -m venv .venv
+source .venv/bin/activate
+
+python -m pip install --upgrade pip</code></pre>
+</div>
+</div>
+<div class="step">
+<div class="badge">3</div>
+<div>
+<h3>Create the initial project tree</h3>
+<pre><code>mkdir -p src/khosiness tests benchmarks
+touch src/khosiness/__init__.py
+touch src/khosiness/cli.py
+touch tests/__init__.py
+touch benchmarks/.gitkeep
+touch README.md .gitignore pyproject.toml</code></pre>
+</div>
+</div>
+<div class="step">
+<div class="badge">4</div>
+<div>
+<h3>Define the package and development dependencies</h3>
+<p>Keep the first dependency set deliberately small. Pydantic is useful for structured contracts; pytest gives you the test harness you will use throughout the course.</p>
+</div>
+</div>
+<div class="step">
+<div class="badge">5</div>
+<div>
+<h3>Install the project in editable mode</h3>
+<pre><code>python -m pip install -e ".[dev]"</code></pre>
+</div>
+</div>
+<div class="step">
+<div class="badge">6</div>
+<div>
+<h3>Prove the baseline works</h3>
+<p>Run pytest even though you have no tests yet. Then verify that the package imports from the virtual environment.</p>
+<pre><code>pytest -q
+python -c "import khosiness; print(khosiness.__file__)"</code></pre>
+</div>
+</div>
+<div class="step">
+<div class="badge">7</div>
+<div>
+<h3>Create the baseline commit</h3>
+<pre><code>git add .
+git commit -m "chore: initialize harness project"</code></pre>
+<p>This is your known-clean starting point. Every later step should ideally end in another small, explainable commit.</p>
+</div>
+</div>
+</section>
+<section class="card">
+<h2>Code to build from</h2>
+<h3><code>pyproject.toml</code></h3>
+<pre><code>[build-system]
+requires = ["setuptools&gt;=69"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "khosiness"
+version = "0.1.0"
+requires-python = "&gt;=3.12"
+dependencies = [
+    "pydantic&gt;=2.0",
+]
+
+[project.scripts]
+kness = "khosiness.cli:main"
+
+[project.optional-dependencies]
+dev = [
+    "pytest&gt;=8.0",
+]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]</code></pre>
+<h3><code>.gitignore</code></h3>
+<pre><code>.venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.coverage
+htmlcov/
+runs/
+.env
+.DS_Store</code></pre>
+<h3><code>README.md</code></h3>
+<pre><code># khosiness — Harness Engineering From Scratch
+
+A first-principles Python agent harness built to understand:
+
+- task contracts
+- model adapters
+- event logs
+- agent loops
+- tools
+- context engineering
+- sandboxing
+- policy and approvals
+- state and recovery
+- memory
+- skills
+- subagents
+- evaluation
+
+The project begins deliberately small and grows one architectural
+responsibility at a time.</code></pre>
+</section>
+<section class="card">
+<h2>Tests and checks</h2>
+<ul>
+<li><code>python --version</code> reports the interpreter you expect.</li>
+<li><code>python -m pip show khosiness</code> shows the editable local package.</li>
+<li><code>python -c "import khosiness"</code> succeeds.</li>
+<li><code>pytest -q</code> runs successfully.</li>
+<li><code>git status</code> is clean after the baseline commit.</li>
+<li>Run <code>kness --version</code> and confirm it prints <code>khosiness 0.1.0</code>.</li></ul>
+<div class="callout green">
+<strong>Deliberate failure:</strong> deactivate the virtual environment and try the import from a shell where the package is not installed. Observe the difference between project source existing and the active Python environment knowing about it.
+      </div>
+</section>
+<section class="card">
+<h2>Common mistakes to watch for</h2>
+<ul>
+<li>Installing dependencies globally instead of using a project environment.</li>
+<li>Starting with a large framework dependency set before you know which abstractions you need.</li>
+<li>Skipping Git until “the real code” begins.</li>
+<li>Creating many speculative packages and directories before their responsibilities exist.</li>
+</ul>
+</section>
+<section class="card">
+<h2>Exit checklist</h2>
+<ul class="checks">
+<li>The package imports successfully from the active environment.</li>
+<li>Pytest runs successfully.</li>
+<li>The repository has the minimal project tree shown at right.</li>
+<li>The baseline is committed and <code>git status</code> is clean.</li>
+</ul>
+<p><strong>Only now should you begin implementing harness concepts.</strong></p>
+</section>
+<section class="card stage-checkpoint">
+<div class="checkpoint-kicker">Stage release checkpoint</div>
+<h2>End-state file contents</h2>
+<p class="lead">
+            Stop here and compare your repository with this checkpoint.
+            These are the <strong>complete contents</strong> of every file created
+            or modified in this stage—not fragments. Your implementation may
+            differ stylistically, but its contracts, tests and behavior should
+            be equivalent before you continue.
+          </p>
+<div class="snapshot-files">
+<details class="snapshot-file" open="">
+<summary>
+<code>pyproject.toml</code>
+<span>complete file</span>
+</summary>
+<div class="snapshot-body">
+<button class="copy-code" type="button">Copy file</button>
+<pre><code>[build-system]
+requires = ["setuptools&gt;=69"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "khosiness"
+version = "0.1.0"
+requires-python = "&gt;=3.12"
+dependencies = [
+    "pydantic&gt;=2.0",
+]
+
+[project.scripts]
+kness = "khosiness.cli:main"
+
+[project.optional-dependencies]
+dev = [
+    "pytest&gt;=8.0",
+]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]</code></pre>
+</div>
+</details>
+<details class="snapshot-file">
+<summary>
+<code>README.md</code>
+<span>complete file</span>
+</summary>
+<div class="snapshot-body">
+<button class="copy-code" type="button">Copy file</button>
+<pre><code># khosiness — Harness Engineering From Scratch
+
+A first-principles Python agent harness.
+
+The project will grow one architectural responsibility at a time:
+
+1. task contracts
+2. model adapters
+3. event logging
+4. the agent loop
+5. tools
+6. context engineering
+7. repository navigation
+8. shell sandboxing
+9. policy and approvals
+10. state and recovery
+11. memory
+12. context compaction
+13. skills
+14. subagents
+15. evaluation
+16. controlled harness improvement
+
+The rule for the project is simple:
+
+&gt; The model proposes. The harness controls what is visible, executable,
+&gt; persistent, permitted and considered complete.</code></pre>
+</div>
+</details>
+<details class="snapshot-file">
+<summary>
+<code>.gitignore</code>
+<span>complete file</span>
+</summary>
+<div class="snapshot-body">
+<button class="copy-code" type="button">Copy file</button>
+<pre><code>.venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.coverage
+htmlcov/
+runs/
+.env
+.DS_Store</code></pre>
+</div>
+</details>
+<details class="snapshot-file">
+<summary>
+<code>src/khosiness/__init__.py</code>
+<span>complete file</span>
+</summary>
+<div class="snapshot-body">
+<button class="copy-code" type="button">Copy file</button>
+<pre><code>"""khosiness — personal agentic harness."""
+
+__version__ = "0.1.0"
+</code></pre>
+</div>
+</details>
+<details class="snapshot-file">
+<summary>
+<code>tests/__init__.py</code>
+<span>complete file</span>
+</summary>
+<div class="snapshot-body">
+<button class="copy-code" type="button">Copy file</button>
+<pre><code></code></pre>
+</div>
+</details>
+<details class="snapshot-file">
+<summary>
+<code>benchmarks/.gitkeep</code>
+<span>complete file</span>
+</summary>
+<div class="snapshot-body">
+<button class="copy-code" type="button">Copy file</button>
+<pre><code></code></pre>
+</div>
+</details>
+<details class="snapshot-file">
+<summary><code>src/khosiness/cli.py</code><span>complete file</span></summary>
+<div class="snapshot-body"><button class="copy-code" type="button">Copy file</button><pre><code>import argparse
+
+from . import __version__
+
+
+def main() -&gt; None:
+    parser = argparse.ArgumentParser(
+        prog="kness",
+        description="khosiness — personal agentic harness",
+    )
+    parser.add_argument(
+        "--version",
+        action="store_true",
+        help="show the khosiness version",
+    )
+    args = parser.parse_args()
+
+    if args.version:
+        print(f"khosiness {__version__}")
+        return
+
+    parser.print_help()
+
+
+if __name__ == "__main__":
+    main()
+</code></pre></div></details></div>
+</section>
+<section class="card validation-gate">
+<div class="checkpoint-kicker">Do not advance until this passes</div>
+<h2>Validation gate</h2>
+<p>
+            Run these checks from the repository root. A green unit test suite
+            is necessary but not sufficient; finish with the manual inspection
+            below so you also understand the behavior you just built.
+          </p>
+<div class="validation-table-wrap">
+<table class="validation-table">
+<thead>
+<tr>
+<th>Check</th>
+<th>Command</th>
+<th>Expected result</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Install the project</td>
+<td><pre class="command-pre"><code>python -m pip install -e ".[dev]"</code></pre></td>
+<td>Installation completes without errors.</td>
+</tr>
+<tr>
+<td>Import the package</td>
+<td><pre class="command-pre"><code>python -c "import khosiness; print(khosiness.__file__)"</code></pre></td>
+<td>Prints a path inside this repository's src/khosiness directory.</td>
+</tr>
+<tr>
+<td>Run the test runner</td>
+<td><pre class="command-pre"><code>pytest -q</code></pre></td>
+<td>Pytest exits successfully; at this point it may report that no tests were collected.</td>
+</tr>
+<tr>
+<td>Check the baseline</td>
+<td><pre class="command-pre"><code>git status --short</code></pre></td>
+<td>No output after you commit the setup baseline.</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="callout green">
+<strong>Manual understanding check:</strong>
+            Open `pyproject.toml` and confirm that the only runtime dependency is Pydantic. The project should still feel intentionally small.
+          </div>
+<div class="callout checkpoint-pass">
+<strong>Stage passes only when:</strong>
+            the stage-specific tests pass, the complete accumulated suite passes,
+            the expected manual behavior is observed, and you can explain why
+            each changed file exists.
+          </div>
+</section>
+<div class="pager">
+<a href="../index.html">← Overview</a>
+<a href="step-00-mental-model.html">0. The Mental Model →</a>
+</div>
+</div>
+</div><aside aria-label="Developing project tree" class="project-tree-panel">
+<div class="project-tree-card">
+<div class="tree-kicker">Developing project</div>
+<h2>Project tree</h2>
+<p class="tree-help">Yellow marks the folders and files created or modified in this stage.</p>
+<div class="tree-box">
+<div class="tree-row tree-root">
+<span class="tree-icon">▾</span>
+<span class="tree-label">khosiness/</span>
+</div>
+<div class="tree-row affected" style="--depth:0"><span class="tree-icon">▾</span><span class="tree-label">benchmarks/</span></div><div class="tree-row affected" style="--depth:1"><span class="tree-icon">•</span><span class="tree-label">.gitkeep</span></div><div class="tree-row affected" style="--depth:0"><span class="tree-icon">▾</span><span class="tree-label">src/</span></div><div class="tree-row affected" style="--depth:1"><span class="tree-icon">▾</span><span class="tree-label">harness/</span></div><div class="tree-row affected" style="--depth:2"><span class="tree-icon">•</span><span class="tree-label">__init__.py</span></div><div class="tree-row affected" style="--depth:0"><span class="tree-icon">▾</span><span class="tree-label">tests/</span></div><div class="tree-row affected" style="--depth:1"><span class="tree-icon">•</span><span class="tree-label">__init__.py</span></div><div class="tree-row affected" style="--depth:0"><span class="tree-icon">•</span><span class="tree-label">.gitignore</span></div><div class="tree-row affected" style="--depth:0"><span class="tree-icon">•</span><span class="tree-label">pyproject.toml</span></div><div class="tree-row affected" style="--depth:0"><span class="tree-icon">•</span><span class="tree-label">README.md</span></div>
+</div>
+</div>
+</aside></div>
+  </main>
+</div>
+<script src="../assets/manual.js"></script>
+</body>
+</html>

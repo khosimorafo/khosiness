@@ -1,0 +1,234 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>16. The Harness Learning Loop — khosiness</title>
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<div class="site">
+  <aside class="sidebar">
+    <div class="brand">
+      <a href="../index.html">khosiness — Harness Engineering From Scratch</a>
+      <p>Personal agentic operating harness · Python + VS Code + Codex</p>
+    </div>
+    <div class="nav-title">Manual map</div>
+    <nav class="nav">
+      <a href="../index.html" class="">Overview</a>
+<div class="phase-nav-label">Phase I · Build khosiness</div>
+<a href="project-setup.html" class="">Setup. Project Setup</a>
+<a href="step-00-mental-model.html" class="">0. The Mental Model</a>
+<a href="step-01-task-contract.html" class="">1. Define the Task Contract</a>
+<a href="step-02-model-adapter.html" class="">2. Create the Model Adapter</a>
+<a href="step-03-event-log.html" class="">3. Build the Event Log</a>
+<a href="step-04-agent-loop.html" class="">4. Implement the Agent Loop</a>
+<a href="step-05-tool-system.html" class="">5. Build the Tool System</a>
+<a href="step-06-context-engineering.html" class="">6. Engineer the Context</a>
+<a href="step-07-repository-navigation.html" class="">7. Repository Navigation</a>
+<a href="step-08-shell-sandbox.html" class="">8. Shell Execution and Sandbox</a>
+<a href="step-09-policy-approvals.html" class="">9. Policy and Human Approval</a>
+<a href="step-10-state-recovery.html" class="">10. State, Checkpoints and Recovery</a>
+<a href="step-11-memory.html" class="">11. Memory</a>
+<a href="step-12-context-compaction.html" class="">12. Context Compaction</a>
+<a href="step-13-skills.html" class="">13. Skills and Progressive Disclosure</a>
+<a href="step-14-subagents.html" class="">14. Subagents</a>
+<a href="step-15-evaluation.html" class="">15. Evaluation</a>
+<a href="step-16-learning-loop.html" class="current-page">16. The Harness Learning Loop</a>
+<a href="step-17-final-architecture.html" class="">17. Assemble the First-Generation Architecture</a>
+<a href="step-18-twelve-week-plan.html" class="">18. 12-Week Build Plan — Complete Phase I</a>
+<div class="phase-nav-label">Part II · Personal khosiness</div>
+<a href="part-ii-personal-harness.html" class="">19. Building the Personal Harness</a>
+    </nav>
+  </aside>
+  <main class="content">
+    <div class="detail-layout"><div class="detail-main"><header class="hero"><div class="eyebrow">Step 16</div><h1>16. The Harness Learning Loop</h1><p>Use repeated failures to form one hypothesis, change one system variable, and measure the result.</p></header><div class="wrap"><div class="pager"><a href="step-15-evaluation.html">← 15. Evaluation</a><a href="step-17-final-architecture.html">17. Assemble the First-Generation Architecture →</a></div><section class="card"><h2>Conceptual objective</h2><p class="lead">Use repeated failures to form one hypothesis, change one system variable, and measure the result.</p><div class="callout">This stage turns the harness into an engineering system: measurable, comparable and improvable through controlled experiments rather than intuition.</div><h3>Files to create or modify</h3><div class="files"><code>experiments/README.md</code><code>experiments/results/exp-001.json</code><code>docs/decisions/EXP-001.md</code></div></section><section class="card"><h2>Implementation sequence</h2><div class="step"><div class="badge">1</div><div><h3>Select one repeated failure mode.</h3><p>Implement this as the smallest version that makes the responsibility concrete. Keep provider/framework details outside the core boundary, add an event where the action changes run state, and make failure observable rather than silent.</p></div></div><div class="step"><div class="badge">2</div><div><h3>Identify the likely boundary: context, tools, policy, memory, model or runtime.</h3><p>Implement this as the smallest version that makes the responsibility concrete. Keep provider/framework details outside the core boundary, add an event where the action changes run state, and make failure observable rather than silent.</p></div></div><div class="step"><div class="badge">3</div><div><h3>Write a falsifiable hypothesis.</h3><p>Implement this as the smallest version that makes the responsibility concrete. Keep provider/framework details outside the core boundary, add an event where the action changes run state, and make failure observable rather than silent.</p></div></div><div class="step"><div class="badge">4</div><div><h3>Change one variable.</h3><p>Implement this as the smallest version that makes the responsibility concrete. Keep provider/framework details outside the core boundary, add an event where the action changes run state, and make failure observable rather than silent.</p></div></div><div class="step"><div class="badge">5</div><div><h3>Run the identical benchmark.</h3><p>Implement this as the smallest version that makes the responsibility concrete. Keep provider/framework details outside the core boundary, add an event where the action changes run state, and make failure observable rather than silent.</p></div></div><div class="step"><div class="badge">6</div><div><h3>Keep or revert based on evidence.</h3><p>Implement this as the smallest version that makes the responsibility concrete. Keep provider/framework details outside the core boundary, add an event where the action changes run state, and make failure observable rather than silent.</p></div></div></section><section class="card"><h2>Starter implementation</h2><div class="callout warn"><strong>Do not paste blindly.</strong> Type this in VS Code, make it run, then explain every line before you add another layer.</div><pre><code># EXP-004: ADR discovery
+
+Observation: 6/15 architecture tasks failed because docs/adr was never found.
+Hypothesis: injecting an ADR index will improve architecture-task success.
+Change: add ADR discovery during repository initialization.
+Constants: same model, tasks, max_steps and tools.
+Result: baseline 9/15; variant 13/15.
+Decision: keep; investigate remaining failures separately.</code></pre></section><section class="card"><h2>Tests to perform</h2><ol><li>Baseline and variant use the same benchmark.</li><li>Run repeated trials if model variance is material.</li><li>Check secondary costs such as tokens/tool calls, not only success.</li></ol><div class="callout green"><strong>Deliberate-failure rule:</strong> after the happy path works, deliberately trigger at least one failure and inspect the returned result, state change and event trace.</div></section><section class="card"><h2>What to inspect before moving on</h2><ul class="checks"><li>The component has one clear responsibility.</li><li>Failure is explicit and testable.</li><li>The event log shows the important transition.</li><li>No provider/framework object has leaked across an architectural boundary without a reason.</li><li>You can explain what problem this step solves without reading the code.</li></ul></section><section class="card"><h2>Suggested commit</h2><pre><code>git add .
+git commit -m "step 16: the harness learning loop"</code></pre><p>Tagging each stage separately makes later architectural comparison much easier.</p></section>
+<section class="card stage-checkpoint">
+<div class="checkpoint-kicker">Stage release checkpoint</div>
+<h2>End-state file contents</h2>
+<p class="lead">
+            Stop here and compare your repository with this checkpoint.
+            These are the <strong>complete contents</strong> of every file created
+            or modified in this stage—not fragments. Your implementation may
+            differ stylistically, but its contracts, tests and behavior should
+            be equivalent before you continue.
+          </p>
+<div class="snapshot-files">
+<details class="snapshot-file" open="">
+<summary>
+<code>experiments/README.md</code>
+<span>complete file</span>
+</summary>
+<div class="snapshot-body">
+<button class="copy-code" type="button">Copy file</button>
+<pre><code># Harness experiments
+
+Every harness change that claims to improve reliability should be recorded as
+a controlled experiment.
+
+## Required structure
+
+1. Observation
+2. Failure class
+3. Hypothesis
+4. One changed variable
+5. Constants held fixed
+6. Benchmark result
+7. Secondary costs
+8. Decision: keep, revert or refine
+
+Do not change the model, prompt, tools and memory policy in one experiment.</code></pre>
+</div>
+</details>
+<details class="snapshot-file">
+<summary>
+<code>experiments/results/exp-001.json</code>
+<span>complete file</span>
+</summary>
+<div class="snapshot-body">
+<button class="copy-code" type="button">Copy file</button>
+<pre><code>{
+  "experiment": "EXP-001",
+  "name": "ADR discovery",
+  "baseline": {
+    "tasks": 15,
+    "successes": 9
+  },
+  "variant": {
+    "tasks": 15,
+    "successes": 13
+  },
+  "constants": [
+    "same model",
+    "same benchmark tasks",
+    "same max_steps",
+    "same tool set"
+  ],
+  "decision": "keep"
+}</code></pre>
+</div>
+</details>
+<details class="snapshot-file">
+<summary>
+<code>docs/decisions/EXP-001.md</code>
+<span>complete file</span>
+</summary>
+<div class="snapshot-body">
+<button class="copy-code" type="button">Copy file</button>
+<pre><code># EXP-001 — ADR discovery
+
+## Observation
+
+Several architecture tasks failed because the agent never discovered
+`docs/adr/`.
+
+## Failure class
+
+Missing context caused by weak repository discovery.
+
+## Hypothesis
+
+Providing an ADR index during repository initialization will improve
+architecture-task success.
+
+## Change
+
+Add ADR discovery to repository initialization.
+
+## Constants
+
+- same model;
+- same benchmark set;
+- same step limit;
+- same tool set.
+
+## Result
+
+Baseline: 9 / 15 successful.
+
+Variant: 13 / 15 successful.
+
+## Decision
+
+Keep the change.
+
+The remaining failures should be inspected before another harness variable
+is changed.</code></pre>
+</div>
+</details>
+</div>
+</section>
+<section class="card validation-gate">
+<div class="checkpoint-kicker">Do not advance until this passes</div>
+<h2>Validation gate</h2>
+<p>
+            Run these checks from the repository root. A green unit test suite
+            is necessary but not sufficient; finish with the manual inspection
+            below so you also understand the behavior you just built.
+          </p>
+<div class="validation-table-wrap">
+<table class="validation-table">
+<thead>
+<tr>
+<th>Check</th>
+<th>Command</th>
+<th>Expected result</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Validate experiment JSON</td>
+<td><pre class="command-pre"><code>python -m json.tool experiments/results/exp-001.json &gt; /dev/null</code></pre></td>
+<td>Command exits successfully.</td>
+</tr>
+<tr>
+<td>Check experiment record exists</td>
+<td><pre class="command-pre"><code>test -f docs/decisions/EXP-001.md</code></pre></td>
+<td>Command exits successfully.</td>
+</tr>
+<tr>
+<td>Run all tests</td>
+<td><pre class="command-pre"><code>pytest -q</code></pre></td>
+<td>The entire codebase remains green after the documented change.</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="callout green">
+<strong>Manual understanding check:</strong>
+            Read EXP-001 and identify the independent variable. If you can name more than one changed variable, the experiment was not controlled enough.
+          </div>
+<div class="callout checkpoint-pass">
+<strong>Stage passes only when:</strong>
+            the stage-specific tests pass, the complete accumulated suite passes,
+            the expected manual behavior is observed, and you can explain why
+            each changed file exists.
+          </div>
+</section>
+<div class="pager"><a href="step-15-evaluation.html">← 15. Evaluation</a><a href="step-17-final-architecture.html">17. Assemble the First-Generation Architecture →</a></div><div class="footer">khosiness — Harness Engineering From Scratch · shorthand: kness · build deliberately, measure everything, earn autonomy.</div></div></div><aside aria-label="Developing project tree" class="project-tree-panel">
+<div class="project-tree-card">
+<div class="tree-kicker">Developing project</div>
+<h2>Project tree</h2>
+<p class="tree-help">Yellow marks the folders and files created or modified in this stage.</p>
+<div class="tree-box">
+<div class="tree-row tree-root">
+<span class="tree-icon">▾</span>
+<span class="tree-label">khosiness/</span>
+</div>
+<div class="tree-row" style="--depth:0"><span class="tree-icon">▾</span><span class="tree-label">benchmarks/</span></div><div class="tree-row" style="--depth:1"><span class="tree-icon">•</span><span class="tree-label">.gitkeep</span></div><div class="tree-row" style="--depth:1"><span class="tree-icon">•</span><span class="tree-label">eval_tasks.json</span></div><div class="tree-row" style="--depth:1"><span class="tree-icon">•</span><span class="tree-label">repo_tasks.json</span></div><div class="tree-row" style="--depth:1"><span class="tree-icon">•</span><span class="tree-label">tasks.json</span></div><div class="tree-row affected" style="--depth:0"><span class="tree-icon">▾</span><span class="tree-label">docs/</span></div><div class="tree-row affected" style="--depth:1"><span class="tree-icon">▾</span><span class="tree-label">decisions/</span></div><div class="tree-row affected" style="--depth:2"><span class="tree-icon">•</span><span class="tree-label">EXP-001.md</span></div><div class="tree-row" style="--depth:1"><span class="tree-icon">•</span><span class="tree-label">architecture.md</span></div><div class="tree-row affected" style="--depth:0"><span class="tree-icon">▾</span><span class="tree-label">experiments/</span></div><div class="tree-row affected" style="--depth:1"><span class="tree-icon">▾</span><span class="tree-label">results/</span></div><div class="tree-row affected" style="--depth:2"><span class="tree-icon">•</span><span class="tree-label">exp-001.json</span></div><div class="tree-row affected" style="--depth:1"><span class="tree-icon">•</span><span class="tree-label">README.md</span></div><div class="tree-row" style="--depth:0"><span class="tree-icon">▾</span><span class="tree-label">skills/</span></div><div class="tree-row" style="--depth:1"><span class="tree-icon">▾</span><span class="tree-label">python-debugging/</span></div><div class="tree-row" style="--depth:2"><span class="tree-icon">•</span><span class="tree-label">SKILL.md</span></div><div class="tree-row" style="--depth:1"><span class="tree-icon">▾</span><span class="tree-label">repository-analysis/</span></div><div class="tree-row" style="--depth:2"><span class="tree-icon">•</span><span class="tree-label">SKILL.md</span></div><div class="tree-row" style="--depth:0"><span class="tree-icon">▾</span><span class="tree-label">src/</span></div><div class="tree-row" style="--depth:1"><span class="tree-icon">▾</span><span class="tree-label">harness/</span></div><div class="tree-row" style="--depth:2"><span class="tree-icon">▾</span><span class="tree-label">agents/</span></div><div class="tree-row" style="--depth:3"><span class="tree-icon">•</span><span class="tree-label">request.py</span></div><div class="tree-row" style="--depth:3"><span class="tree-icon">•</span><span class="tree-label">spawn.py</span></div><div class="tree-row" style="--depth:2"><span class="tree-icon">▾</span><span class="tree-label">context/</span></div><div class="tree-row" style="--depth:3"><span class="tree-icon">•</span><span class="tree-label">builder.py</span></div><div class="tree-row" style="--depth:3"><span class="tree-icon">•</span><span class="tree-label">compaction.py</span></div><div class="tree-row" style="--depth:2"><span class="tree-icon">▾</span><span class="tree-label">evals/</span></div><div class="tree-row" style="--depth:3"><span class="tree-icon">•</span><span class="tree-label">metrics.py</span></div><div class="tree-row" style="--depth:3"><span class="tree-icon">•</span><span class="tree-label">runner.py</span></div><div class="tree-row" style="--depth:2"><span class="tree-icon">▾</span><span class="tree-label">memory/</span></div><div class="tree-row" style="--depth:3"><span class="tree-icon">•</span><span class="tree-label">retrieval.py</span></div><div class="tree-row" style="--depth:3"><span class="tree-icon">•</span><span class="tree-label">schema.py</span></div><div class="tree-row" style="--depth:3"><span class="tree-icon">•</span><span class="tree-label">store.py</span></div><div class="tree-row" style="--depth:2"><span class="tree-icon">▾</span><span class="tree-label">models/</span></div><div class="tree-row" style="--depth:3"><span class="tree-icon">•</span><span class="tree-label">base.py</span></div><div class="tree-row" style="--depth:3"><span class="tree-icon">•</span><span class="tree-label">fake.py</span></div><div class="tree-row" style="--depth:3"><span class="tree-icon">•</span><span class="tree-label">provider.py</span></div><div class="tree-row" style="--depth:2"><span class="tree-icon">▾</span><span class="tree-label">policy/</span></div><div class="tree-row" style="--depth:3"><span class="tree-icon">•</span><span class="tree-label">approval.py</span></div><div class="tree-row" style="--depth:3"><span class="tree-icon">•</span><span class="tree-label">engine.py</span></div><div class="tree-row" style="--depth:3"><span class="tree-icon">•</span><span class="tree-label">risk.py</span></div><div class="tree-row" style="--depth:2"><span class="tree-icon">▾</span><span class="tree-label">sandbox/</span></div><div class="tree-row" style="--depth:3"><span class="tree-icon">•</span><span class="tree-label">base.py</span></div><div class="tree-row" style="--depth:3"><span class="tree-icon">•</span><span class="tree-label">local.py</span></div><div class="tree-row" style="--depth:2"><span class="tree-icon">▾</span><span class="tree-label">skills/</span></div><div class="tree-row" style="--depth:3"><span class="tree-icon">•</span><span class="tree-label">catalog.py</span></div><div class="tree-row" style="--depth:3"><span class="tree-icon">•</span><span class="tree-label">loader.py</span></div><div class="tree-row" style="--depth:2"><span class="tree-icon">▾</span><span class="tree-label">tools/</span></div><div class="tree-row" style="--depth:3"><span class="tree-icon">•</span><span class="tree-label">base.py</span></div><div class="tree-row" style="--depth:3"><span class="tree-icon">•</span><span class="tree-label">filesystem.py</span></div><div class="tree-row" style="--depth:3"><span class="tree-icon">•</span><span class="tree-label">registry.py</span></div><div class="tree-row" style="--depth:3"><span class="tree-icon">•</span><span class="tree-label">shell.py</span></div><div class="tree-row" style="--depth:2"><span class="tree-icon">•</span><span class="tree-label">__init__.py</span></div><div class="tree-row" style="--depth:2"><span class="tree-icon">•</span><span class="tree-label">checkpoint.py</span></div><div class="tree-row" style="--depth:2"><span class="tree-icon">•</span><span class="tree-label">event_store.py</span></div><div class="tree-row" style="--depth:2"><span class="tree-icon">•</span><span class="tree-label">events.py</span></div><div class="tree-row" style="--depth:2"><span class="tree-icon">•</span><span class="tree-label">loop.py</span></div><div class="tree-row" style="--depth:2"><span class="tree-icon">•</span><span class="tree-label">resume.py</span></div><div class="tree-row" style="--depth:2"><span class="tree-icon">•</span><span class="tree-label">state.py</span></div><div class="tree-row" style="--depth:2"><span class="tree-icon">•</span><span class="tree-label">task.py</span></div><div class="tree-row" style="--depth:0"><span class="tree-icon">▾</span><span class="tree-label">tests/</span></div><div class="tree-row" style="--depth:1"><span class="tree-icon">•</span><span class="tree-label">__init__.py</span></div><div class="tree-row" style="--depth:1"><span class="tree-icon">•</span><span class="tree-label">test_compaction.py</span></div><div class="tree-row" style="--depth:1"><span class="tree-icon">•</span><span class="tree-label">test_context_builder.py</span></div><div class="tree-row" style="--depth:1"><span class="tree-icon">•</span><span class="tree-label">test_evals.py</span></div><div class="tree-row" style="--depth:1"><span class="tree-icon">•</span><span class="tree-label">test_event_store.py</span></div><div class="tree-row" style="--depth:1"><span class="tree-icon">•</span><span class="tree-label">test_loop.py</span></div><div class="tree-row" style="--depth:1"><span class="tree-icon">•</span><span class="tree-label">test_memory.py</span></div><div class="tree-row" style="--depth:1"><span class="tree-icon">•</span><span class="tree-label">test_model_adapter.py</span></div><div class="tree-row" style="--depth:1"><span class="tree-icon">•</span><span class="tree-label">test_policy.py</span></div><div class="tree-row" style="--depth:1"><span class="tree-icon">•</span><span class="tree-label">test_recovery.py</span></div><div class="tree-row" style="--depth:1"><span class="tree-icon">•</span><span class="tree-label">test_repository_tasks.py</span></div><div class="tree-row" style="--depth:1"><span class="tree-icon">•</span><span class="tree-label">test_shell.py</span></div><div class="tree-row" style="--depth:1"><span class="tree-icon">•</span><span class="tree-label">test_skills.py</span></div><div class="tree-row" style="--depth:1"><span class="tree-icon">•</span><span class="tree-label">test_subagents.py</span></div><div class="tree-row" style="--depth:1"><span class="tree-icon">•</span><span class="tree-label">test_task.py</span></div><div class="tree-row" style="--depth:1"><span class="tree-icon">•</span><span class="tree-label">test_tools.py</span></div><div class="tree-row" style="--depth:0"><span class="tree-icon">•</span><span class="tree-label">.gitignore</span></div><div class="tree-row" style="--depth:0"><span class="tree-icon">•</span><span class="tree-label">pyproject.toml</span></div><div class="tree-row" style="--depth:0"><span class="tree-icon">•</span><span class="tree-label">README.md</span></div>
+</div>
+</div>
+</aside></div>
+  </main>
+</div>
+<script src="../assets/manual.js"></script>
+</body>
+</html>

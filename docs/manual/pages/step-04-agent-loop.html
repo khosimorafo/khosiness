@@ -1,0 +1,410 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>4. Implement the Agent Loop — khosiness</title>
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<div class="site">
+  <aside class="sidebar">
+    <div class="brand">
+      <a href="../index.html">khosiness — Harness Engineering From Scratch</a>
+      <p>Personal agentic operating harness · Python + VS Code + Codex</p>
+    </div>
+    <div class="nav-title">Manual map</div>
+    <nav class="nav">
+      <a href="../index.html" class="">Overview</a>
+<div class="phase-nav-label">Phase I · Build khosiness</div>
+<a href="project-setup.html" class="">Setup. Project Setup</a>
+<a href="step-00-mental-model.html" class="">0. The Mental Model</a>
+<a href="step-01-task-contract.html" class="">1. Define the Task Contract</a>
+<a href="step-02-model-adapter.html" class="">2. Create the Model Adapter</a>
+<a href="step-03-event-log.html" class="">3. Build the Event Log</a>
+<a href="step-04-agent-loop.html" class="current-page">4. Implement the Agent Loop</a>
+<a href="step-05-tool-system.html" class="">5. Build the Tool System</a>
+<a href="step-06-context-engineering.html" class="">6. Engineer the Context</a>
+<a href="step-07-repository-navigation.html" class="">7. Repository Navigation</a>
+<a href="step-08-shell-sandbox.html" class="">8. Shell Execution and Sandbox</a>
+<a href="step-09-policy-approvals.html" class="">9. Policy and Human Approval</a>
+<a href="step-10-state-recovery.html" class="">10. State, Checkpoints and Recovery</a>
+<a href="step-11-memory.html" class="">11. Memory</a>
+<a href="step-12-context-compaction.html" class="">12. Context Compaction</a>
+<a href="step-13-skills.html" class="">13. Skills and Progressive Disclosure</a>
+<a href="step-14-subagents.html" class="">14. Subagents</a>
+<a href="step-15-evaluation.html" class="">15. Evaluation</a>
+<a href="step-16-learning-loop.html" class="">16. The Harness Learning Loop</a>
+<a href="step-17-final-architecture.html" class="">17. Assemble the First-Generation Architecture</a>
+<a href="step-18-twelve-week-plan.html" class="">18. 12-Week Build Plan — Complete Phase I</a>
+<div class="phase-nav-label">Part II · Personal khosiness</div>
+<a href="part-ii-personal-harness.html" class="">19. Building the Personal Harness</a>
+    </nav>
+  </aside>
+  <main class="content">
+    <div class="detail-layout"><div class="detail-main"><header class="hero"><div class="eyebrow">Step 4</div><h1>4. Implement the Agent Loop</h1><p>Build the irreducible observe → decide → act → record cycle.</p></header><div class="wrap"><div class="pager"><a href="step-03-event-log.html">← 3. Build the Event Log</a><a href="step-05-tool-system.html">5. Build the Tool System →</a></div><section class="card"><h2>Conceptual objective</h2><p class="lead">Build the irreducible observe → decide → act → record cycle.</p><div class="callout">At this stage you are constructing the irreducible harness core. Prefer deterministic code and fake-model tests. Do not introduce abstractions that solve problems you have not yet encountered.</div><h3>Files to create or modify</h3><div class="files"><code>src/khosiness/state.py</code><code>src/khosiness/loop.py</code><code>tests/test_loop.py</code></div></section><section class="card"><h2>Implementation sequence</h2><div class="step"><div class="badge">1</div><div><h3>Create minimal RunState.</h3><p>Implement this as the smallest version that makes the responsibility concrete. Keep provider/framework details outside the core boundary, add an event where the action changes run state, and make failure observable rather than silent.</p></div></div><div class="step"><div class="badge">2</div><div><h3>Build context each turn.</h3><p>Implement this as the smallest version that makes the responsibility concrete. Keep provider/framework details outside the core boundary, add an event where the action changes run state, and make failure observable rather than silent.</p></div></div><div class="step"><div class="badge">3</div><div><h3>Call the model.</h3><p>Implement this as the smallest version that makes the responsibility concrete. Keep provider/framework details outside the core boundary, add an event where the action changes run state, and make failure observable rather than silent.</p></div></div><div class="step"><div class="badge">4</div><div><h3>Execute tool calls or accept final text.</h3><p>Implement this as the smallest version that makes the responsibility concrete. Keep provider/framework details outside the core boundary, add an event where the action changes run state, and make failure observable rather than silent.</p></div></div><div class="step"><div class="badge">5</div><div><h3>Enforce max_steps.</h3><p>Implement this as the smallest version that makes the responsibility concrete. Keep provider/framework details outside the core boundary, add an event where the action changes run state, and make failure observable rather than silent.</p></div></div><div class="step"><div class="badge">6</div><div><h3>Checkpoint after meaningful transitions.</h3><p>Implement this as the smallest version that makes the responsibility concrete. Keep provider/framework details outside the core boundary, add an event where the action changes run state, and make failure observable rather than silent.</p></div></div></section><section class="card"><h2>Starter implementation</h2><div class="callout warn"><strong>Do not paste blindly.</strong> Type this in VS Code, make it run, then explain every line before you add another layer.</div><pre><code>while not state.finished and state.step &lt; task.max_steps:
+    state.step += 1
+    messages = context_builder.build(task, state)
+    response = model.generate(messages=messages, tools=tools.schemas())
+
+    if response.tool_calls:
+        for call in response.tool_calls:
+            result = tools.execute(call)
+            state.observations.append({"tool": call.name, "result": result.model_dump()})
+    elif response.text is not None:
+        state.finished = True
+        state.final_answer = response.text
+
+    save_checkpoint(state)</code></pre></section><section class="card"><h2>Tests to perform</h2><ol><li>Tool call then final answer completes in two turns.</li><li>Final answer on first turn works.</li><li>max_steps stops an unfinished run.</li><li>A tool error becomes an observation rather than crashing the loop.</li></ol><div class="callout green"><strong>Deliberate-failure rule:</strong> after the happy path works, deliberately trigger at least one failure and inspect the returned result, state change and event trace.</div></section><section class="card"><h2>What to inspect before moving on</h2><ul class="checks"><li>The component has one clear responsibility.</li><li>Failure is explicit and testable.</li><li>The event log shows the important transition.</li><li>No provider/framework object has leaked across an architectural boundary without a reason.</li><li>You can explain what problem this step solves without reading the code.</li></ul></section><section class="card"><h2>Suggested commit</h2><pre><code>git add .
+git commit -m "step 4: implement the agent loop"</code></pre><p>Tagging each stage separately makes later architectural comparison much easier.</p></section>
+<section class="card stage-checkpoint">
+<div class="checkpoint-kicker">Stage release checkpoint</div>
+<h2>End-state file contents</h2>
+<p class="lead">
+            Stop here and compare your repository with this checkpoint.
+            These are the <strong>complete contents</strong> of every file created
+            or modified in this stage—not fragments. Your implementation may
+            differ stylistically, but its contracts, tests and behavior should
+            be equivalent before you continue.
+          </p>
+<div class="snapshot-files">
+<details class="snapshot-file" open="">
+<summary>
+<code>src/khosiness/state.py</code>
+<span>complete file</span>
+</summary>
+<div class="snapshot-body">
+<button class="copy-code" type="button">Copy file</button>
+<pre><code>from pydantic import BaseModel, Field
+
+
+class RunState(BaseModel):
+    run_id: str
+    step: int = 0
+    observations: list[dict] = Field(default_factory=list)
+    finished: bool = False
+    final_answer: str | None = None</code></pre>
+</div>
+</details>
+<details class="snapshot-file">
+<summary>
+<code>src/khosiness/loop.py</code>
+<span>complete file</span>
+</summary>
+<div class="snapshot-body">
+<button class="copy-code" type="button">Copy file</button>
+<pre><code>from collections.abc import Callable
+
+from .event_store import JsonlEventStore
+from .events import Event
+from .state import RunState
+from .task import Task
+
+
+def run(
+    *,
+    task: Task,
+    state: RunState,
+    model,
+    context_builder,
+    tools,
+    events: JsonlEventStore,
+    save_state: Callable[[RunState], None] | None = None,
+) -&gt; RunState:
+    """Run the smallest genuine observe -&gt; decide -&gt; act loop."""
+
+    save_state = save_state or (lambda _: None)
+
+    while not state.finished and state.step &lt; task.max_steps:
+        state.step += 1
+        messages = context_builder.build(task, state)
+
+        events.append(
+            Event(
+                run_id=state.run_id,
+                type="model_called",
+                payload={"step": state.step},
+            )
+        )
+
+        response = model.generate(
+            messages=messages,
+            tools=tools.schemas(),
+        )
+
+        events.append(
+            Event(
+                run_id=state.run_id,
+                type="model_responded",
+                payload={
+                    "step": state.step,
+                    "has_text": response.text is not None,
+                    "tool_call_count": len(response.tool_calls),
+                },
+            )
+        )
+
+        if response.tool_calls:
+            for call in response.tool_calls:
+                events.append(
+                    Event(
+                        run_id=state.run_id,
+                        type="tool_requested",
+                        payload={
+                            "name": call.name,
+                            "arguments": call.arguments,
+                        },
+                    )
+                )
+
+                result = tools.execute(call)
+
+                state.observations.append(
+                    {
+                        "tool": call.name,
+                        "arguments": call.arguments,
+                        "result": result.model_dump(),
+                    }
+                )
+
+                events.append(
+                    Event(
+                        run_id=state.run_id,
+                        type=(
+                            "tool_completed"
+                            if result.ok
+                            else "tool_failed"
+                        ),
+                        payload={
+                            "name": call.name,
+                            "ok": result.ok,
+                        },
+                    )
+                )
+
+        elif response.text is not None:
+            state.finished = True
+            state.final_answer = response.text
+            events.append(
+                Event(
+                    run_id=state.run_id,
+                    type="task_completed",
+                    payload={"step": state.step},
+                )
+            )
+
+        save_state(state)
+
+    if not state.finished and state.step &gt;= task.max_steps:
+        events.append(
+            Event(
+                run_id=state.run_id,
+                type="step_limit_reached",
+                payload={"max_steps": task.max_steps},
+            )
+        )
+
+    return state</code></pre>
+</div>
+</details>
+<details class="snapshot-file">
+<summary>
+<code>tests/test_loop.py</code>
+<span>complete file</span>
+</summary>
+<div class="snapshot-body">
+<button class="copy-code" type="button">Copy file</button>
+<pre><code>from pathlib import Path
+
+from khosiness.event_store import JsonlEventStore
+from khosiness.loop import run
+from khosiness.models.base import ModelResponse, ToolCall
+from khosiness.models.fake import FakeModel
+from khosiness.state import RunState
+from khosiness.task import Task
+from khosiness.tools.base import ToolResult
+
+
+class StaticContext:
+    def build(self, task, state):
+        return [
+            {
+                "role": "user",
+                "content": task.objective,
+            }
+        ]
+
+
+class FakeTools:
+    def __init__(self):
+        self.calls = []
+
+    def schemas(self):
+        return [{"name": "echo"}]
+
+    def execute(self, call):
+        self.calls.append(call)
+        return ToolResult(
+            ok=True,
+            content=call.arguments["text"],
+        )
+
+
+def make_task(tmp_path: Path, max_steps: int = 5):
+    return Task(
+        id="task-1",
+        objective="Use echo, then finish",
+        workspace=tmp_path,
+        max_steps=max_steps,
+    )
+
+
+def test_loop_executes_tool_then_finishes(tmp_path):
+    fake_model = FakeModel(
+        [
+            ModelResponse(
+                tool_calls=[
+                    ToolCall(
+                        id="1",
+                        name="echo",
+                        arguments={"text": "hello"},
+                    )
+                ]
+            ),
+            ModelResponse(text="finished"),
+        ]
+    )
+    tools = FakeTools()
+    events = JsonlEventStore(tmp_path / "events.jsonl")
+    state = RunState(run_id="run-1")
+
+    result = run(
+        task=make_task(tmp_path),
+        state=state,
+        model=fake_model,
+        context_builder=StaticContext(),
+        tools=tools,
+        events=events,
+    )
+
+    assert result.finished is True
+    assert result.final_answer == "finished"
+    assert result.step == 2
+    assert len(tools.calls) == 1
+    assert result.observations[0]["result"]["content"] == "hello"
+
+
+def test_loop_stops_on_first_final_answer(tmp_path):
+    result = run(
+        task=make_task(tmp_path),
+        state=RunState(run_id="run-1"),
+        model=FakeModel([ModelResponse(text="done")]),
+        context_builder=StaticContext(),
+        tools=FakeTools(),
+        events=JsonlEventStore(tmp_path / "events.jsonl"),
+    )
+
+    assert result.step == 1
+    assert result.final_answer == "done"
+
+
+def test_loop_obeys_step_limit(tmp_path):
+    fake_model = FakeModel(
+        [
+            ModelResponse(
+                tool_calls=[
+                    ToolCall(
+                        id=str(index),
+                        name="echo",
+                        arguments={"text": "again"},
+                    )
+                ]
+            )
+            for index in range(5)
+        ]
+    )
+
+    result = run(
+        task=make_task(tmp_path, max_steps=2),
+        state=RunState(run_id="run-1"),
+        model=fake_model,
+        context_builder=StaticContext(),
+        tools=FakeTools(),
+        events=JsonlEventStore(tmp_path / "events.jsonl"),
+    )
+
+    assert result.finished is False
+    assert result.step == 2</code></pre>
+</div>
+</details>
+</div>
+</section>
+<section class="card validation-gate">
+<div class="checkpoint-kicker">Do not advance until this passes</div>
+<h2>Validation gate</h2>
+<p>
+            Run these checks from the repository root. A green unit test suite
+            is necessary but not sufficient; finish with the manual inspection
+            below so you also understand the behavior you just built.
+          </p>
+<div class="validation-table-wrap">
+<table class="validation-table">
+<thead>
+<tr>
+<th>Check</th>
+<th>Command</th>
+<th>Expected result</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Run loop tests</td>
+<td><pre class="command-pre"><code>pytest tests/test_loop.py -q</code></pre></td>
+<td>3 tests pass.</td>
+</tr>
+<tr>
+<td>Run all tests</td>
+<td><pre class="command-pre"><code>pytest -q</code></pre></td>
+<td>All accumulated tests pass.</td>
+</tr>
+<tr>
+<td>Inspect event types</td>
+<td><pre class="command-pre"><code>pytest tests/test_loop.py -q &amp;&amp; python - &lt;&lt;'PY'
+from pathlib import Path
+print("Use the test trace or a debugger to inspect: model_called -&gt; model_responded -&gt; tool_requested -&gt; tool_completed -&gt; model_called -&gt; model_responded -&gt; task_completed")
+PY</code></pre></td>
+<td>The conceptual event order is clear and deterministic.</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="callout green">
+<strong>Manual understanding check:</strong>
+            Step through `run()` once in the VS Code debugger. Stop before the first model call, after the tool result, and before completion. You should be able to name exactly what changed in state at each point.
+          </div>
+<div class="callout checkpoint-pass">
+<strong>Stage passes only when:</strong>
+            the stage-specific tests pass, the complete accumulated suite passes,
+            the expected manual behavior is observed, and you can explain why
+            each changed file exists.
+          </div>
+</section>
+<div class="pager"><a href="step-03-event-log.html">← 3. Build the Event Log</a><a href="step-05-tool-system.html">5. Build the Tool System →</a></div><div class="footer">khosiness — Harness Engineering From Scratch · shorthand: kness · build deliberately, measure everything, earn autonomy.</div></div></div><aside aria-label="Developing project tree" class="project-tree-panel">
+<div class="project-tree-card">
+<div class="tree-kicker">Developing project</div>
+<h2>Project tree</h2>
+<p class="tree-help">Yellow marks the folders and files created or modified in this stage.</p>
+<div class="tree-box">
+<div class="tree-row tree-root">
+<span class="tree-icon">▾</span>
+<span class="tree-label">khosiness/</span>
+</div>
+<div class="tree-row" style="--depth:0"><span class="tree-icon">▾</span><span class="tree-label">benchmarks/</span></div><div class="tree-row" style="--depth:1"><span class="tree-icon">•</span><span class="tree-label">.gitkeep</span></div><div class="tree-row" style="--depth:1"><span class="tree-icon">•</span><span class="tree-label">tasks.json</span></div><div class="tree-row" style="--depth:0"><span class="tree-icon">▾</span><span class="tree-label">docs/</span></div><div class="tree-row" style="--depth:1"><span class="tree-icon">•</span><span class="tree-label">architecture.md</span></div><div class="tree-row affected" style="--depth:0"><span class="tree-icon">▾</span><span class="tree-label">src/</span></div><div class="tree-row affected" style="--depth:1"><span class="tree-icon">▾</span><span class="tree-label">harness/</span></div><div class="tree-row" style="--depth:2"><span class="tree-icon">▾</span><span class="tree-label">models/</span></div><div class="tree-row" style="--depth:3"><span class="tree-icon">•</span><span class="tree-label">base.py</span></div><div class="tree-row" style="--depth:3"><span class="tree-icon">•</span><span class="tree-label">fake.py</span></div><div class="tree-row" style="--depth:3"><span class="tree-icon">•</span><span class="tree-label">provider.py</span></div><div class="tree-row" style="--depth:2"><span class="tree-icon">•</span><span class="tree-label">__init__.py</span></div><div class="tree-row" style="--depth:2"><span class="tree-icon">•</span><span class="tree-label">event_store.py</span></div><div class="tree-row" style="--depth:2"><span class="tree-icon">•</span><span class="tree-label">events.py</span></div><div class="tree-row affected" style="--depth:2"><span class="tree-icon">•</span><span class="tree-label">loop.py</span></div><div class="tree-row affected" style="--depth:2"><span class="tree-icon">•</span><span class="tree-label">state.py</span></div><div class="tree-row" style="--depth:2"><span class="tree-icon">•</span><span class="tree-label">task.py</span></div><div class="tree-row affected" style="--depth:0"><span class="tree-icon">▾</span><span class="tree-label">tests/</span></div><div class="tree-row" style="--depth:1"><span class="tree-icon">•</span><span class="tree-label">__init__.py</span></div><div class="tree-row" style="--depth:1"><span class="tree-icon">•</span><span class="tree-label">test_event_store.py</span></div><div class="tree-row affected" style="--depth:1"><span class="tree-icon">•</span><span class="tree-label">test_loop.py</span></div><div class="tree-row" style="--depth:1"><span class="tree-icon">•</span><span class="tree-label">test_model_adapter.py</span></div><div class="tree-row" style="--depth:1"><span class="tree-icon">•</span><span class="tree-label">test_task.py</span></div><div class="tree-row" style="--depth:0"><span class="tree-icon">•</span><span class="tree-label">.gitignore</span></div><div class="tree-row" style="--depth:0"><span class="tree-icon">•</span><span class="tree-label">pyproject.toml</span></div><div class="tree-row" style="--depth:0"><span class="tree-icon">•</span><span class="tree-label">README.md</span></div>
+</div>
+</div>
+</aside></div>
+  </main>
+</div>
+<script src="../assets/manual.js"></script>
+</body>
+</html>

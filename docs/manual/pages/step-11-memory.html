@@ -1,0 +1,456 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>11. Memory — khosiness</title>
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<div class="site">
+  <aside class="sidebar">
+    <div class="brand">
+      <a href="../index.html">khosiness — Harness Engineering From Scratch</a>
+      <p>Personal agentic operating harness · Python + VS Code + Codex</p>
+    </div>
+    <div class="nav-title">Manual map</div>
+    <nav class="nav">
+      <a href="../index.html" class="">Overview</a>
+<div class="phase-nav-label">Phase I · Build khosiness</div>
+<a href="project-setup.html" class="">Setup. Project Setup</a>
+<a href="step-00-mental-model.html" class="">0. The Mental Model</a>
+<a href="step-01-task-contract.html" class="">1. Define the Task Contract</a>
+<a href="step-02-model-adapter.html" class="">2. Create the Model Adapter</a>
+<a href="step-03-event-log.html" class="">3. Build the Event Log</a>
+<a href="step-04-agent-loop.html" class="">4. Implement the Agent Loop</a>
+<a href="step-05-tool-system.html" class="">5. Build the Tool System</a>
+<a href="step-06-context-engineering.html" class="">6. Engineer the Context</a>
+<a href="step-07-repository-navigation.html" class="">7. Repository Navigation</a>
+<a href="step-08-shell-sandbox.html" class="">8. Shell Execution and Sandbox</a>
+<a href="step-09-policy-approvals.html" class="">9. Policy and Human Approval</a>
+<a href="step-10-state-recovery.html" class="">10. State, Checkpoints and Recovery</a>
+<a href="step-11-memory.html" class="current-page">11. Memory</a>
+<a href="step-12-context-compaction.html" class="">12. Context Compaction</a>
+<a href="step-13-skills.html" class="">13. Skills and Progressive Disclosure</a>
+<a href="step-14-subagents.html" class="">14. Subagents</a>
+<a href="step-15-evaluation.html" class="">15. Evaluation</a>
+<a href="step-16-learning-loop.html" class="">16. The Harness Learning Loop</a>
+<a href="step-17-final-architecture.html" class="">17. Assemble the First-Generation Architecture</a>
+<a href="step-18-twelve-week-plan.html" class="">18. 12-Week Build Plan — Complete Phase I</a>
+<div class="phase-nav-label">Part II · Personal khosiness</div>
+<a href="part-ii-personal-harness.html" class="">19. Building the Personal Harness</a>
+    </nav>
+  </aside>
+  <main class="content">
+    <div class="detail-layout"><div class="detail-main"><header class="hero"><div class="eyebrow">Step 11</div><h1>11. Memory</h1><p>Add cross-run knowledge using explicit memory types and bounded retrieval.</p></header><div class="wrap"><div class="pager"><a href="step-10-state-recovery.html">← 10. State, Checkpoints and Recovery</a><a href="step-12-context-compaction.html">12. Context Compaction →</a></div><section class="card"><h2>Conceptual objective</h2><p class="lead">Add cross-run knowledge using explicit memory types and bounded retrieval.</p><div class="callout">This stage adds continuity and modular expertise. Keep storage, retrieval and context injection separate so that long-lived knowledge does not silently become prompt clutter.</div><h3>Files to create or modify</h3><div class="files"><code>src/khosiness/memory/schema.py</code><code>src/khosiness/memory/store.py</code><code>src/khosiness/memory/retrieval.py</code><code>tests/test_memory.py</code></div></section><section class="card"><h2>Implementation sequence</h2><div class="step"><div class="badge">1</div><div><h3>Distinguish working, episodic, semantic and procedural memory.</h3><p>Implement this as the smallest version that makes the responsibility concrete. Keep provider/framework details outside the core boundary, add an event where the action changes run state, and make failure observable rather than silent.</p></div></div><div class="step"><div class="badge">2</div><div><h3>Use SQLite first.</h3><p>Implement this as the smallest version that makes the responsibility concrete. Keep provider/framework details outside the core boundary, add an event where the action changes run state, and make failure observable rather than silent.</p></div></div><div class="step"><div class="badge">3</div><div><h3>Store source run and status with each memory.</h3><p>Implement this as the smallest version that makes the responsibility concrete. Keep provider/framework details outside the core boundary, add an event where the action changes run state, and make failure observable rather than silent.</p></div></div><div class="step"><div class="badge">4</div><div><h3>Implement keyword retrieval before embeddings.</h3><p>Implement this as the smallest version that makes the responsibility concrete. Keep provider/framework details outside the core boundary, add an event where the action changes run state, and make failure observable rather than silent.</p></div></div><div class="step"><div class="badge">5</div><div><h3>Inject only a bounded relevant set.</h3><p>Implement this as the smallest version that makes the responsibility concrete. Keep provider/framework details outside the core boundary, add an event where the action changes run state, and make failure observable rather than silent.</p></div></div></section><section class="card"><h2>Starter implementation</h2><div class="callout warn"><strong>Do not paste blindly.</strong> Type this in VS Code, make it run, then explain every line before you add another layer.</div><pre><code>CREATE TABLE memories (
+    id TEXT PRIMARY KEY,
+    memory_type TEXT NOT NULL,
+    content TEXT NOT NULL,
+    source_run_id TEXT,
+    created_at TEXT NOT NULL,
+    updated_at TEXT NOT NULL,
+    status TEXT NOT NULL DEFAULT 'active'
+);
+
+CREATE INDEX idx_memories_type ON memories(memory_type);</code></pre></section><section class="card"><h2>Tests to perform</h2><ol><li>Store in run A and retrieve in run B.</li><li>Inactive memory does not retrieve.</li><li>Retrieval limit is honored.</li><li>Source run is visible.</li></ol><div class="callout green"><strong>Deliberate-failure rule:</strong> after the happy path works, deliberately trigger at least one failure and inspect the returned result, state change and event trace.</div></section><section class="card"><h2>What to inspect before moving on</h2><ul class="checks"><li>The component has one clear responsibility.</li><li>Failure is explicit and testable.</li><li>The event log shows the important transition.</li><li>No provider/framework object has leaked across an architectural boundary without a reason.</li><li>You can explain what problem this step solves without reading the code.</li></ul></section><section class="card"><h2>Suggested commit</h2><pre><code>git add .
+git commit -m "step 11: memory"</code></pre><p>Tagging each stage separately makes later architectural comparison much easier.</p></section>
+<section class="card stage-checkpoint">
+<div class="checkpoint-kicker">Stage release checkpoint</div>
+<h2>End-state file contents</h2>
+<p class="lead">
+            Stop here and compare your repository with this checkpoint.
+            These are the <strong>complete contents</strong> of every file created
+            or modified in this stage—not fragments. Your implementation may
+            differ stylistically, but its contracts, tests and behavior should
+            be equivalent before you continue.
+          </p>
+<div class="snapshot-files">
+<details class="snapshot-file" open="">
+<summary>
+<code>src/khosiness/memory/schema.py</code>
+<span>complete file</span>
+</summary>
+<div class="snapshot-body">
+<button class="copy-code" type="button">Copy file</button>
+<pre><code>from datetime import datetime, timezone
+from typing import Literal
+from uuid import uuid4
+
+from pydantic import BaseModel, Field
+
+
+MemoryType = Literal[
+    "episodic",
+    "semantic",
+    "procedural",
+]
+
+
+class Memory(BaseModel):
+    id: str = Field(
+        default_factory=lambda: str(uuid4())
+    )
+    memory_type: MemoryType
+    content: str
+    source_run_id: str | None = None
+    created_at: datetime = Field(
+        default_factory=lambda: datetime.now(
+            timezone.utc
+        )
+    )
+    updated_at: datetime = Field(
+        default_factory=lambda: datetime.now(
+            timezone.utc
+        )
+    )
+    status: str = "active"</code></pre>
+</div>
+</details>
+<details class="snapshot-file">
+<summary>
+<code>src/khosiness/memory/store.py</code>
+<span>complete file</span>
+</summary>
+<div class="snapshot-body">
+<button class="copy-code" type="button">Copy file</button>
+<pre><code>import sqlite3
+from pathlib import Path
+
+from .schema import Memory
+
+
+SCHEMA = """
+CREATE TABLE IF NOT EXISTS memories (
+    id TEXT PRIMARY KEY,
+    memory_type TEXT NOT NULL,
+    content TEXT NOT NULL,
+    source_run_id TEXT,
+    created_at TEXT NOT NULL,
+    updated_at TEXT NOT NULL,
+    status TEXT NOT NULL
+);
+
+CREATE INDEX IF NOT EXISTS idx_memories_type
+ON memories(memory_type);
+"""
+
+
+class SqliteMemoryStore:
+    def __init__(self, path: Path):
+        self.path = path
+        self.path.parent.mkdir(
+            parents=True,
+            exist_ok=True,
+        )
+        with self._connect() as connection:
+            connection.executescript(SCHEMA)
+
+    def _connect(self):
+        return sqlite3.connect(self.path)
+
+    def add(self, memory: Memory) -&gt; None:
+        with self._connect() as connection:
+            connection.execute(
+                """
+                INSERT INTO memories (
+                    id,
+                    memory_type,
+                    content,
+                    source_run_id,
+                    created_at,
+                    updated_at,
+                    status
+                ) VALUES (?, ?, ?, ?, ?, ?, ?)
+                """,
+                (
+                    memory.id,
+                    memory.memory_type,
+                    memory.content,
+                    memory.source_run_id,
+                    memory.created_at.isoformat(),
+                    memory.updated_at.isoformat(),
+                    memory.status,
+                ),
+            )
+
+    def set_status(
+        self,
+        memory_id: str,
+        status: str,
+    ) -&gt; None:
+        with self._connect() as connection:
+            connection.execute(
+                """
+                UPDATE memories
+                SET status = ?
+                WHERE id = ?
+                """,
+                (status, memory_id),
+            )
+
+    def search(
+        self,
+        query: str,
+        memory_types: list[str] | None = None,
+        limit: int = 5,
+    ) -&gt; list[Memory]:
+        clauses = [
+            "status = 'active'",
+            "content LIKE ?",
+        ]
+        parameters: list[object] = [
+            f"%{query}%"
+        ]
+
+        if memory_types:
+            placeholders = ",".join(
+                "?" for _ in memory_types
+            )
+            clauses.append(
+                f"memory_type IN ({placeholders})"
+            )
+            parameters.extend(memory_types)
+
+        parameters.append(limit)
+
+        sql = f"""
+            SELECT
+                id,
+                memory_type,
+                content,
+                source_run_id,
+                created_at,
+                updated_at,
+                status
+            FROM memories
+            WHERE {" AND ".join(clauses)}
+            ORDER BY updated_at DESC
+            LIMIT ?
+        """
+
+        with self._connect() as connection:
+            rows = connection.execute(
+                sql,
+                parameters,
+            ).fetchall()
+
+        return [
+            Memory(
+                id=row[0],
+                memory_type=row[1],
+                content=row[2],
+                source_run_id=row[3],
+                created_at=row[4],
+                updated_at=row[5],
+                status=row[6],
+            )
+            for row in rows
+        ]</code></pre>
+</div>
+</details>
+<details class="snapshot-file">
+<summary>
+<code>src/khosiness/memory/retrieval.py</code>
+<span>complete file</span>
+</summary>
+<div class="snapshot-body">
+<button class="copy-code" type="button">Copy file</button>
+<pre><code>from .store import SqliteMemoryStore
+
+
+class MemoryRetriever:
+    def __init__(
+        self,
+        store: SqliteMemoryStore,
+        limit: int = 5,
+    ):
+        self.store = store
+        self.limit = limit
+
+    def retrieve(
+        self,
+        query: str,
+    ) -&gt; list[str]:
+        memories = self.store.search(
+            query=query,
+            limit=self.limit,
+        )
+
+        return [
+            (
+                f"[{memory.memory_type}] "
+                f"{memory.content} "
+                f"(source_run={memory.source_run_id})"
+            )
+            for memory in memories
+        ]</code></pre>
+</div>
+</details>
+<details class="snapshot-file">
+<summary>
+<code>tests/test_memory.py</code>
+<span>complete file</span>
+</summary>
+<div class="snapshot-body">
+<button class="copy-code" type="button">Copy file</button>
+<pre><code>from khosiness.memory.retrieval import MemoryRetriever
+from khosiness.memory.schema import Memory
+from khosiness.memory.store import SqliteMemoryStore
+
+
+def test_memory_survives_new_store_instance(tmp_path):
+    path = tmp_path / "memory.db"
+
+    first = SqliteMemoryStore(path)
+    first.add(
+        Memory(
+            memory_type="semantic",
+            content="Database retries live in db/config.py",
+            source_run_id="run-a",
+        )
+    )
+
+    second = SqliteMemoryStore(path)
+    results = second.search("retries")
+
+    assert len(results) == 1
+    assert results[0].source_run_id == "run-a"
+
+
+def test_inactive_memory_is_not_retrieved(tmp_path):
+    store = SqliteMemoryStore(
+        tmp_path / "memory.db"
+    )
+    memory = Memory(
+        memory_type="semantic",
+        content="Old configuration fact",
+    )
+    store.add(memory)
+    store.set_status(memory.id, "inactive")
+
+    assert store.search("configuration") == []
+
+
+def test_memory_type_filter(tmp_path):
+    store = SqliteMemoryStore(
+        tmp_path / "memory.db"
+    )
+    store.add(
+        Memory(
+            memory_type="semantic",
+            content="run tests before release",
+        )
+    )
+    store.add(
+        Memory(
+            memory_type="procedural",
+            content="run tests before release",
+        )
+    )
+
+    results = store.search(
+        "tests",
+        memory_types=["procedural"],
+    )
+
+    assert len(results) == 1
+    assert results[0].memory_type == "procedural"
+
+
+def test_retriever_returns_bounded_rendering(tmp_path):
+    store = SqliteMemoryStore(
+        tmp_path / "memory.db"
+    )
+
+    for index in range(10):
+        store.add(
+            Memory(
+                memory_type="semantic",
+                content=f"retry fact {index}",
+            )
+        )
+
+    rendered = MemoryRetriever(
+        store,
+        limit=3,
+    ).retrieve("retry")
+
+    assert len(rendered) == 3</code></pre>
+</div>
+</details>
+</div>
+</section>
+<section class="card validation-gate">
+<div class="checkpoint-kicker">Do not advance until this passes</div>
+<h2>Validation gate</h2>
+<p>
+            Run these checks from the repository root. A green unit test suite
+            is necessary but not sufficient; finish with the manual inspection
+            below so you also understand the behavior you just built.
+          </p>
+<div class="validation-table-wrap">
+<table class="validation-table">
+<thead>
+<tr>
+<th>Check</th>
+<th>Command</th>
+<th>Expected result</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Run memory tests</td>
+<td><pre class="command-pre"><code>pytest tests/test_memory.py -q</code></pre></td>
+<td>4 tests pass.</td>
+</tr>
+<tr>
+<td>Run all tests</td>
+<td><pre class="command-pre"><code>pytest -q</code></pre></td>
+<td>All accumulated tests pass.</td>
+</tr>
+<tr>
+<td>Inspect SQLite directly</td>
+<td><pre class="command-pre"><code>python - &lt;&lt;'PY'
+import sqlite3
+from pathlib import Path
+p=Path("/tmp/manual-memory.db"); p.unlink(missing_ok=True)
+from khosiness.memory.store import SqliteMemoryStore
+from khosiness.memory.schema import Memory
+s=SqliteMemoryStore(p); s.add(Memory(memory_type="semantic", content="demo fact"))
+print(sqlite3.connect(p).execute("select memory_type,content,status from memories").fetchall())
+PY</code></pre></td>
+<td>Prints one active semantic-memory row.</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="callout green">
+<strong>Manual understanding check:</strong>
+            Ask yourself whether each piece of data belongs in current state, the event log, or cross-run memory. If the answer is “memory” for everything, stop and separate lifetimes again.
+          </div>
+<div class="callout checkpoint-pass">
+<strong>Stage passes only when:</strong>
+            the stage-specific tests pass, the complete accumulated suite passes,
+            the expected manual behavior is observed, and you can explain why
+            each changed file exists.
+          </div>
+</section>
+<div class="pager"><a href="step-10-state-recovery.html">← 10. State, Checkpoints and Recovery</a><a href="step-12-context-compaction.html">12. Context Compaction →</a></div><div class="footer">khosiness — Harness Engineering From Scratch · shorthand: kness · build deliberately, measure everything, earn autonomy.</div></div></div><aside aria-label="Developing project tree" class="project-tree-panel">
+<div class="project-tree-card">
+<div class="tree-kicker">Developing project</div>
+<h2>Project tree</h2>
+<p class="tree-help">Yellow marks the folders and files created or modified in this stage.</p>
+<div class="tree-box">
+<div class="tree-row tree-root">
+<span class="tree-icon">▾</span>
+<span class="tree-label">khosiness/</span>
+</div>
+<div class="tree-row" style="--depth:0"><span class="tree-icon">▾</span><span class="tree-label">benchmarks/</span></div><div class="tree-row" style="--depth:1"><span class="tree-icon">•</span><span class="tree-label">.gitkeep</span></div><div class="tree-row" style="--depth:1"><span class="tree-icon">•</span><span class="tree-label">repo_tasks.json</span></div><div class="tree-row" style="--depth:1"><span class="tree-icon">•</span><span class="tree-label">tasks.json</span></div><div class="tree-row" style="--depth:0"><span class="tree-icon">▾</span><span class="tree-label">docs/</span></div><div class="tree-row" style="--depth:1"><span class="tree-icon">•</span><span class="tree-label">architecture.md</span></div><div class="tree-row affected" style="--depth:0"><span class="tree-icon">▾</span><span class="tree-label">src/</span></div><div class="tree-row affected" style="--depth:1"><span class="tree-icon">▾</span><span class="tree-label">harness/</span></div><div class="tree-row" style="--depth:2"><span class="tree-icon">▾</span><span class="tree-label">context/</span></div><div class="tree-row" style="--depth:3"><span class="tree-icon">•</span><span class="tree-label">builder.py</span></div><div class="tree-row affected" style="--depth:2"><span class="tree-icon">▾</span><span class="tree-label">memory/</span></div><div class="tree-row affected" style="--depth:3"><span class="tree-icon">•</span><span class="tree-label">retrieval.py</span></div><div class="tree-row affected" style="--depth:3"><span class="tree-icon">•</span><span class="tree-label">schema.py</span></div><div class="tree-row affected" style="--depth:3"><span class="tree-icon">•</span><span class="tree-label">store.py</span></div><div class="tree-row" style="--depth:2"><span class="tree-icon">▾</span><span class="tree-label">models/</span></div><div class="tree-row" style="--depth:3"><span class="tree-icon">•</span><span class="tree-label">base.py</span></div><div class="tree-row" style="--depth:3"><span class="tree-icon">•</span><span class="tree-label">fake.py</span></div><div class="tree-row" style="--depth:3"><span class="tree-icon">•</span><span class="tree-label">provider.py</span></div><div class="tree-row" style="--depth:2"><span class="tree-icon">▾</span><span class="tree-label">policy/</span></div><div class="tree-row" style="--depth:3"><span class="tree-icon">•</span><span class="tree-label">approval.py</span></div><div class="tree-row" style="--depth:3"><span class="tree-icon">•</span><span class="tree-label">engine.py</span></div><div class="tree-row" style="--depth:3"><span class="tree-icon">•</span><span class="tree-label">risk.py</span></div><div class="tree-row" style="--depth:2"><span class="tree-icon">▾</span><span class="tree-label">sandbox/</span></div><div class="tree-row" style="--depth:3"><span class="tree-icon">•</span><span class="tree-label">base.py</span></div><div class="tree-row" style="--depth:3"><span class="tree-icon">•</span><span class="tree-label">local.py</span></div><div class="tree-row" style="--depth:2"><span class="tree-icon">▾</span><span class="tree-label">tools/</span></div><div class="tree-row" style="--depth:3"><span class="tree-icon">•</span><span class="tree-label">base.py</span></div><div class="tree-row" style="--depth:3"><span class="tree-icon">•</span><span class="tree-label">filesystem.py</span></div><div class="tree-row" style="--depth:3"><span class="tree-icon">•</span><span class="tree-label">registry.py</span></div><div class="tree-row" style="--depth:3"><span class="tree-icon">•</span><span class="tree-label">shell.py</span></div><div class="tree-row" style="--depth:2"><span class="tree-icon">•</span><span class="tree-label">__init__.py</span></div><div class="tree-row" style="--depth:2"><span class="tree-icon">•</span><span class="tree-label">checkpoint.py</span></div><div class="tree-row" style="--depth:2"><span class="tree-icon">•</span><span class="tree-label">event_store.py</span></div><div class="tree-row" style="--depth:2"><span class="tree-icon">•</span><span class="tree-label">events.py</span></div><div class="tree-row" style="--depth:2"><span class="tree-icon">•</span><span class="tree-label">loop.py</span></div><div class="tree-row" style="--depth:2"><span class="tree-icon">•</span><span class="tree-label">resume.py</span></div><div class="tree-row" style="--depth:2"><span class="tree-icon">•</span><span class="tree-label">state.py</span></div><div class="tree-row" style="--depth:2"><span class="tree-icon">•</span><span class="tree-label">task.py</span></div><div class="tree-row affected" style="--depth:0"><span class="tree-icon">▾</span><span class="tree-label">tests/</span></div><div class="tree-row" style="--depth:1"><span class="tree-icon">•</span><span class="tree-label">__init__.py</span></div><div class="tree-row" style="--depth:1"><span class="tree-icon">•</span><span class="tree-label">test_context_builder.py</span></div><div class="tree-row" style="--depth:1"><span class="tree-icon">•</span><span class="tree-label">test_event_store.py</span></div><div class="tree-row" style="--depth:1"><span class="tree-icon">•</span><span class="tree-label">test_loop.py</span></div><div class="tree-row affected" style="--depth:1"><span class="tree-icon">•</span><span class="tree-label">test_memory.py</span></div><div class="tree-row" style="--depth:1"><span class="tree-icon">•</span><span class="tree-label">test_model_adapter.py</span></div><div class="tree-row" style="--depth:1"><span class="tree-icon">•</span><span class="tree-label">test_policy.py</span></div><div class="tree-row" style="--depth:1"><span class="tree-icon">•</span><span class="tree-label">test_recovery.py</span></div><div class="tree-row" style="--depth:1"><span class="tree-icon">•</span><span class="tree-label">test_repository_tasks.py</span></div><div class="tree-row" style="--depth:1"><span class="tree-icon">•</span><span class="tree-label">test_shell.py</span></div><div class="tree-row" style="--depth:1"><span class="tree-icon">•</span><span class="tree-label">test_task.py</span></div><div class="tree-row" style="--depth:1"><span class="tree-icon">•</span><span class="tree-label">test_tools.py</span></div><div class="tree-row" style="--depth:0"><span class="tree-icon">•</span><span class="tree-label">.gitignore</span></div><div class="tree-row" style="--depth:0"><span class="tree-icon">•</span><span class="tree-label">pyproject.toml</span></div><div class="tree-row" style="--depth:0"><span class="tree-icon">•</span><span class="tree-label">README.md</span></div>
+</div>
+</div>
+</aside></div>
+  </main>
+</div>
+<script src="../assets/manual.js"></script>
+</body>
+</html>

@@ -113,3 +113,9 @@ instructions on Step 0 do not apply to this documentation-only stage. Treat
 these as reference defects, not reasons to change the canonical live package.
 The Step 0 runtime failure trace is N/A because there is no event log or agent
 loop yet; the supplemental animation is explicitly conceptual.
+
+### Manual study aid
+
+The multi-page manual has a shared page-scoped Q&A panel backed by a separate
+local tutor service. This is documentation tooling for every stage, not a
+behavioral component of the khosiness harness or progress on Step 1.

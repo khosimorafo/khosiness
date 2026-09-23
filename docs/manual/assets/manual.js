@@ -138,13 +138,11 @@ function createManualTutor() {
   }
   function positionExpandedPanel() {
     if (!panel.classList.contains('expanded')) return;
-    const middle = document.querySelector('.detail-main');
-    const tree = document.querySelector('.project-tree-panel');
-    const rightEdge = middle?.getBoundingClientRect().right;
-    const hasSideColumn = tree && getComputedStyle(tree).position === 'sticky';
-    const left = hasSideColumn && rightEdge
-      ? Math.min(rightEdge, window.innerWidth - 340)
-      : Math.max(16, window.innerWidth - 900);
+    const card = document.querySelector('main.content .card');
+    const cardLeft = card?.getBoundingClientRect().left;
+    const left = cardLeft === undefined
+      ? Math.max(16, window.innerWidth - 900)
+      : Math.min(cardLeft, window.innerWidth - 340);
     panel.style.setProperty('--manual-qa-expanded-left', `${Math.max(16, Math.round(left))}px`);
   }
   button.addEventListener('click', () => panel.hidden ? openPanel() : closePanel());

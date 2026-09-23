@@ -14,21 +14,32 @@ document.addEventListener('click', async (event) => {
 });
 
 function manualPageContext() {
+  if (typeof window.manualTutorContext === 'string') return window.manualTutorContext.slice(0, 30000);
   const source = document.querySelector('.detail-main') || document.querySelector('main.content');
   if (!source) return '';
   const copy = source.cloneNode(true);
   copy.querySelectorAll('.snapshot-files, .project-tree-panel, .manual-qa-panel, nav, script').forEach(node => node.remove());
-  return (copy.innerText || copy.textContent || '').replace(/\n{3,}/g, '\n\n').trim().slice(0, 30000);
+  let lesson = '';
+  try {
+    lesson = document.querySelector('.stage-animation iframe')?.contentWindow?.manualTutorContext || '';
+  } catch (_) {
+    // Local file iframes can have opaque origins; the page text still provides context.
+  }
+  return `${(copy.innerText || copy.textContent || '').replace(/\n{3,}/g, '\n\n').trim()}\n\n${lesson}`.slice(0, 30000);
 }
 
 function manualPagePath() {
   const path = decodeURIComponent(location.pathname);
   const marker = '/docs/manual/';
-  if (location.protocol === 'file:') return path.split(marker)[1] || 'index.html';
+  if (location.protocol === 'file:') {
+    if (path.includes('/docs/animations/')) return `animations/${path.split('/docs/animations/')[1]}`;
+    return path.split(marker)[1] || 'index.html';
+  }
   return path.replace(/^\//, '') || 'index.html';
 }
 
 function createManualTutor() {
+  if (new URLSearchParams(location.search).get('embedded') === '1') return;
   const button = document.createElement('button');
   button.type = 'button';
   button.className = 'manual-qa-launcher';
@@ -159,6 +170,11 @@ function createManualTutor() {
 
   document.body.append(button, panel);
 }
+
+const tutorStyles = document.createElement('link');
+tutorStyles.rel = 'stylesheet';
+tutorStyles.href = new URL('manual-qa.css', document.currentScript.src).href;
+document.head.append(tutorStyles);
 
 if (document.readyState === 'loading') {
   document.addEventListener('DOMContentLoaded', createManualTutor);

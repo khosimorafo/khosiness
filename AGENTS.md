@@ -93,6 +93,9 @@ one rejected or failed path, and the resulting trace or state distinction.
 Label conceptual simulations clearly until the corresponding runtime exists.
 Keep the animation self-paced and usable without external services. Do not
 copy another educator's artwork, branding or narration.
+Embed each new stage animation on its matching multi-page manual page. Keep
+the standalone animation usable, including the optional local question tutor;
+the embedded view uses the manual page's question panel.
 
 When handing off a local HTML manual, animation, or other browser-viewable
 artifact, always include its complete absolute `file:///` URL so the human can

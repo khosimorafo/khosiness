@@ -14,6 +14,9 @@ The manual is authoritative for the Phase I sequence unless a later explicit dec
 The multi-page manual has an **Ask about this page** button on the overview and
 every dedicated stage page. It uses a separate local tutor service; it does not
 run the khosiness harness being built in Phase I.
+The Step 0 page embeds its conceptual animation. The same animation also has
+an **Ask about this page** button when opened on its own. Future stage
+animations belong on their matching pages.
 
 From the repository root, start the tutor:
 

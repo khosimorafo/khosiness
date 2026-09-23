@@ -13,9 +13,11 @@ import tempfile
 import threading
 from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
+from urllib.parse import urlsplit
 
 
 MANUAL_ROOT = Path(__file__).resolve().parent
+ANIMATION_ROOT = MANUAL_ROOT.parent / "animations"
 HOST = "127.0.0.1"
 PORT = 8765
 MAX_BODY_BYTES = 50_000
@@ -31,6 +33,9 @@ def valid_page(value: object) -> bool:
         return False
     if value == "index.html":
         return True
+    if value.startswith("animations/") and value.count("/") == 1:
+        path = (MANUAL_ROOT.parent / value).resolve()
+        return path.parent == ANIMATION_ROOT and path.suffix == ".html" and path.is_file()
     if not value.startswith("pages/") or value.count("/") != 1:
         return False
     path = (MANUAL_ROOT / value).resolve()
@@ -134,9 +139,31 @@ class ManualHandler(SimpleHTTPRequestHandler):
         self.wfile.write(payload)
 
     def do_GET(self) -> None:
-        if self.path == "/api/status":
+        path = urlsplit(self.path).path
+        if path == "/api/status":
             self.send_json(200, {"ready": shutil.which("codex") is not None,
                                  "provider": "signed-in Codex CLI"})
+            return
+        if path.startswith("/animations/") and valid_page(path.lstrip("/")):
+            content = (MANUAL_ROOT.parent / path.lstrip("/")).read_bytes()
+            self.send_response(200)
+            self.send_header("Content-Type", "text/html; charset=utf-8")
+            self.send_header("Content-Length", str(len(content)))
+            self.end_headers()
+            self.wfile.write(content)
+            return
+        extra_files = {
+            "/manual/assets/manual.js": (MANUAL_ROOT / "assets/manual.js", "text/javascript; charset=utf-8"),
+            "/manual/assets/manual-qa.css": (MANUAL_ROOT / "assets/manual-qa.css", "text/css; charset=utf-8"),
+        }
+        if path in extra_files:
+            file_path, content_type = extra_files[path]
+            content = file_path.read_bytes()
+            self.send_response(200)
+            self.send_header("Content-Type", content_type)
+            self.send_header("Content-Length", str(len(content)))
+            self.end_headers()
+            self.wfile.write(content)
             return
         super().do_GET()
 

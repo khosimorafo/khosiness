@@ -119,3 +119,6 @@ loop yet; the supplemental animation is explicitly conceptual.
 The multi-page manual has a shared page-scoped Q&A panel backed by a separate
 local tutor service. This is documentation tooling for every stage, not a
 behavioral component of the khosiness harness or progress on Step 1.
+The Step 0 animation is embedded in its matching manual page and has the
+same optional tutor when opened alone. Future animations should follow this
+page pairing; the Step 1 stage boundary remains unchanged.

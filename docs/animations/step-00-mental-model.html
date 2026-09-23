@@ -205,6 +205,11 @@
         kind: "Completion", nodes: ["task", "harness", "model", "history"], edges: ["context", "record"], planes: planes
       }
     ];
+    window.manualTutorContext = [
+      'Step 0 — The Mental Model. This is a conceptual animation, not a running agent.',
+      'The six planes are Cognition, Context, Action, Control, Continuity, and Measurement.',
+      ...scenes.map((scene, index) => `Scene ${index + 1}: ${scene.title}. ${scene.copy} Rule: ${scene.rule} Illustrative trace: ${scene.trace}`)
+    ].join('\n\n');
 
     const $ = id => document.getElementById(id);
     const duration = 6500;
@@ -291,5 +296,6 @@
     $("lesson-narration").setAttribute("aria-live", playing ? "off" : "polite");
     requestAnimationFrame(frame);
   </script>
+  <script src="../manual/assets/manual.js"></script>
 </body>
 </html>

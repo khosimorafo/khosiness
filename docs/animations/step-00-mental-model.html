@@ -292,6 +292,7 @@
     $("next").addEventListener("click", () => show(index + 1));
     $("play").addEventListener("click", () => setPlaying(!playing));
     document.addEventListener("keydown", event => {
+      if (event.target.closest('textarea, input, [contenteditable], .manual-qa-panel')) return;
       if (event.key === "ArrowRight") show(index + 1);
       if (event.key === "ArrowLeft") show(index - 1);
       if (event.code === "Space" && !(event.target instanceof HTMLButtonElement)) { event.preventDefault(); setPlaying(!playing); }

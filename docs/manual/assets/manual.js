@@ -193,7 +193,7 @@ function createManualTutor() {
       const result = await response.json();
       if (!response.ok) throw new Error(result.error || `HTTP ${response.status}`);
       addMessage('tutor', result.answer);
-      history.push({role: 'user', content: question}, {role: 'assistant', content: result.answer});
+      history.push({role: 'user', content: question}, {role: 'assistant', content: result.answer.slice(0, 2000)});
       status.textContent = 'Questions stay in this tab.';
     } catch (error) {
       addMessage('tutor', `I could not answer: ${error.message}`);

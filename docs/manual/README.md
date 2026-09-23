@@ -28,11 +28,14 @@ python docs/manual/manual_qa_server.py
 ```
 
 Then open `http://127.0.0.1:8765/index.html` and navigate to any stage. The
-button sends the current page's text, your question and recent questions from
-that browser tab to the signed-in Codex CLI. Codex must be installed and
+button sends the current page's text, your question, any selected text, and
+recent questions and answers from that browser tab to the signed-in Codex CLI.
+Codex must be installed and
 `codex login status` must report that you are signed in. The CLI is run from an
-empty temporary directory with a read-only sandbox. The browser does not hold
-an API key, and the tutor does not store chat history on disk.
+empty temporary directory with a read-only sandbox. This blocks writes but
+does not prevent it from reading files your user can read; the tutor prompt
+instructs it not to inspect files. The browser does not hold an API key, and
+the tutor does not store chat history on disk.
 
 Opening a page with `file:///` still works for reading and shows instructions
 for switching to the local server when you want to ask questions. The

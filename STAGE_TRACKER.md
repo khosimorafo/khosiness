@@ -99,10 +99,11 @@ An original, self-contained Step 0 animation is available at
 rejected shell proposal, a permitted read, event history versus selected
 context, and harness-owned completion. It is labeled as conceptual because
 the runtime is not yet implemented.
-An independent review found misleading red arrows on permitted paths and an
-ambiguous history-to-context route. Both were corrected. Browser inspection
-of all six scenes now shows red only for the rejected proposal, and the event
-history path visibly returns through the harness before the next context.
+An independent review found misleading red arrows on permitted paths; those
+were corrected. A later review found that scenes 3, 5, and 6 still need a
+focused visual pass: the rejection marker appears before policy, routes
+overlap during context selection, and the completion decision is not drawn.
+Use the manual's written ownership rules for those distinctions until then.
 
 ### Known manual discrepancies
 
@@ -122,3 +123,7 @@ behavioral component of the khosiness harness or progress on Step 1.
 The Step 0 animation is embedded in its matching manual page and has the
 same optional tutor when opened alone. Future animations should follow this
 page pairing; the Step 1 stage boundary remains unchanged.
+The follow-up review found and we fixed two tutor defects: long answers no
+longer break the next question, and animation shortcuts no longer intercept
+typing in the standalone tutor. The separate completion teach-back remains
+open until the human answers it.

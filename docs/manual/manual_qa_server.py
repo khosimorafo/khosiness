@@ -22,6 +22,8 @@ MANUAL_ROOT = Path(__file__).resolve().parent
 ANIMATION_ROOT = MANUAL_ROOT.parent / "animations"
 STAGE_TRACKER = MANUAL_ROOT.parent.parent / "STAGE_TRACKER.md"
 REPO_ROOT = STAGE_TRACKER.parent
+TUTOR_MODEL = "gpt-6-sol"
+TUTOR_REASONING_EFFORT = "medium"
 HOST = "127.0.0.1"
 PORT = 8765
 MAX_BODY_BYTES = 50_000
@@ -232,6 +234,8 @@ def answer_with_codex(prompt: str) -> tuple[str, dict[str, str]]:
         output = Path(temporary) / "answer.txt"
         command = [
             codex, "exec", "--ephemeral", "--ignore-user-config",
+            "--model", TUTOR_MODEL,
+            "--config", f'model_reasoning_effort="{TUTOR_REASONING_EFFORT}"',
             "--skip-git-repo-check", "--sandbox", "read-only",
             "-C", temporary, "--output-last-message", str(output), "-",
         ]
@@ -254,7 +258,11 @@ def answer_with_codex(prompt: str) -> tuple[str, dict[str, str]]:
         answer = output.read_text(encoding="utf-8").strip()
         if not answer:
             raise RuntimeError("Codex returned an empty answer.")
-        return answer[:12_000], codex_launch_metadata(result.stderr)
+        metadata = codex_launch_metadata(result.stderr)
+        if (metadata.get("model") != TUTOR_MODEL or
+                metadata.get("reasoning_effort") != TUTOR_REASONING_EFFORT):
+            raise RuntimeError("Codex did not confirm the tutor's configured model and effort.")
+        return answer[:12_000], metadata
 
 
 class ManualQAServer(ThreadingHTTPServer):
@@ -278,7 +286,9 @@ class ManualHandler(SimpleHTTPRequestHandler):
         path = urlsplit(self.path).path
         if path == "/api/status":
             self.send_json(200, {"ready": shutil.which("codex") is not None,
-                                 "provider": "signed-in Codex CLI"})
+                                 "provider": "signed-in Codex CLI",
+                                 "configured_model": TUTOR_MODEL,
+                                 "configured_reasoning_effort": TUTOR_REASONING_EFFORT})
             return
         if path.startswith("/animations/") and valid_page(path.lstrip("/")):
             content = (MANUAL_ROOT.parent / path.lstrip("/")).read_bytes()

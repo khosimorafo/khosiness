@@ -48,12 +48,10 @@ does not prevent it from reading files your user can read; the tutor prompt
 instructs it not to inspect files. The browser does not hold an API key, and
 the tutor does not store chat history on disk.
 The tutor starts Codex with `--ignore-user-config`, so model and effort values
-in `~/.codex/config.toml` do not apply. After each answer, the panel displays
-the model and reasoning-effort setting reported by that CLI invocation. A CLI
-report of `none` means no explicit effort setting was reported; it does not
-establish an API-level `none` reasoning mode.
-No model snapshot is pinned, so the reported default may change with CLI or
-account updates.
+in `~/.codex/config.toml` do not apply. It explicitly requests `gpt-6-sol`
+with `medium` reasoning effort, checks the CLI's launch metadata, and displays
+the confirmed values after each answer. The model name is an alias; no exact
+model snapshot is pinned.
 
 Opening a page with `file:///` still works for reading and shows instructions
 for switching to the local server when you want to ask questions. The

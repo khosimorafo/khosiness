@@ -23,6 +23,7 @@
       background: radial-gradient(circle at 84% 8%, #153451 0, transparent 31%),
                   radial-gradient(circle at 12% 90%, #102e37 0, transparent 28%), #07111f;
     }
+    body.embedded { min-height: 0; }
     .shell { width: min(1540px, 100%); margin: auto; padding: clamp(18px, 3vw, 42px); }
     header { display: flex; justify-content: space-between; align-items: start; gap: 24px; margin-bottom: 25px; }
     .eyebrow { color: var(--cyan); font-size: .78rem; font-weight: 800; letter-spacing: .16em; text-transform: uppercase; }
@@ -160,6 +161,20 @@
     <p class="note">Use the controls or ← and → keys to review a scene. Space pauses playback. This is a conceptual animation, not a running agent or an event log implementation.</p>
   </div>
   <script>
+    const embedded = new URLSearchParams(location.search).get('embedded') === '1';
+    if (embedded) {
+      document.body.classList.add('embedded');
+      const shell = document.querySelector('.shell');
+      const reportHeight = () => parent.postMessage({
+        type: 'khosiness-animation-height',
+        height: Math.ceil(shell.getBoundingClientRect().bottom)
+      }, '*');
+      new ResizeObserver(reportHeight).observe(shell);
+      window.addEventListener('message', event => {
+        if (event.source === parent && event.data?.type === 'khosiness-measure-animation') reportHeight();
+      });
+      window.addEventListener('load', reportHeight);
+    }
     const planes = ["Cognition", "Context", "Action", "Control", "Continuity", "Measurement"];
     const scenes = [
       {

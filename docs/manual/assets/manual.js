@@ -13,6 +13,21 @@ document.addEventListener('click', async (event) => {
   }
 });
 
+const animationFrame = document.querySelector('.stage-animation iframe');
+if (animationFrame) {
+  window.addEventListener('message', event => {
+    if (event.source !== animationFrame.contentWindow ||
+        event.data?.type !== 'khosiness-animation-height') return;
+    const height = event.data.height;
+    if (typeof height === 'number' && Number.isFinite(height) && height >= 200 && height <= 4000) {
+      animationFrame.style.height = `${Math.ceil(height)}px`;
+    }
+  });
+  animationFrame.addEventListener('load', () => {
+    animationFrame.contentWindow.postMessage({type: 'khosiness-measure-animation'}, '*');
+  });
+}
+
 function manualPageContext() {
   if (typeof window.manualTutorContext === 'string') return window.manualTutorContext.slice(0, 30000);
   const source = document.querySelector('.detail-main') || document.querySelector('main.content');

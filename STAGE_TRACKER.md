@@ -71,9 +71,10 @@ authority, execution, persistence and completion.
   matches, the human said history retains the factual results while the
   harness selects only task-relevant matches for the next model context.
   The manual's listed understanding questions have no remaining gaps.
-- Completion against task criteria is documented but was not separately
-  repeated by the human during the teach-back. Revisit this briefly before
-  Step 1, where task criteria become concrete.
+- In a follow-up teach-back, the human identified the harness as the owner of
+  the completion decision and the originating task as the standard to check.
+  The tutor clarified that this means checking the proposed result against
+  the task's completion criteria. No Step 0 understanding gap remains.
 - Reviewed the Step 0 files against the manual checkpoint and checked the final
   documentation formatting.
 
@@ -125,5 +126,5 @@ same optional tutor when opened alone. Future animations should follow this
 page pairing; the Step 1 stage boundary remains unchanged.
 The follow-up review found and we fixed two tutor defects: long answers no
 longer break the next question, and animation shortcuts no longer intercept
-typing in the standalone tutor. The separate completion teach-back remains
-open until the human answers it.
+typing in the standalone tutor. The separate completion teach-back is now
+closed with the human's answer recorded above.

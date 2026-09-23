@@ -1,0 +1,295 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Step 0 — The model proposes, khosiness controls</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: #07111f;
+      color: #edf5ff;
+      --cyan: #65d9f5;
+      --amber: #ffca78;
+      --rose: #ff758d;
+      --green: #85e4b2;
+      --muted: #9bb0c8;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: radial-gradient(circle at 84% 8%, #153451 0, transparent 31%),
+                  radial-gradient(circle at 12% 90%, #102e37 0, transparent 28%), #07111f;
+    }
+    .shell { width: min(1540px, 100%); margin: auto; padding: clamp(18px, 3vw, 42px); }
+    header { display: flex; justify-content: space-between; align-items: start; gap: 24px; margin-bottom: 25px; }
+    .eyebrow { color: var(--cyan); font-size: .78rem; font-weight: 800; letter-spacing: .16em; text-transform: uppercase; }
+    h1 { margin: 10px 0 7px; font-size: clamp(1.8rem, 3vw, 3.25rem); line-height: 1.08; letter-spacing: -.04em; }
+    header p { margin: 0; color: var(--muted); max-width: 64ch; line-height: 1.5; }
+    .stage-tag { white-space: nowrap; border: 1px solid #38546c; border-radius: 999px; padding: 9px 14px; color: #bcd3e9; font-size: .8rem; font-weight: 700; }
+    .layout { display: grid; grid-template-columns: minmax(0, 1.75fr) minmax(310px, .8fr); gap: 20px; }
+    .screen, .sidebar { border: 1px solid #29425a; border-radius: 24px; background: linear-gradient(145deg, #102238, #0a192b); box-shadow: 0 25px 70px #0007; }
+    .screen { overflow: hidden; position: relative; }
+    .screen-top { display: flex; justify-content: space-between; align-items: center; padding: 16px 23px 0; color: #9cb5cc; font-size: .75rem; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; }
+    .conceptual { display: inline-flex; align-items: center; border: 1px solid #46617a; border-radius: 999px; padding: 5px 9px; }
+    svg { display: block; width: 100%; height: auto; }
+    .edge { fill: none; stroke: #48627c; stroke-width: 3; stroke-linecap: round; stroke-dasharray: 8 9; opacity: 0; transition: stroke .4s, opacity .4s, filter .4s; }
+    .edge.active { stroke: var(--cyan); opacity: 1; filter: drop-shadow(0 0 6px #65d9f5a8); animation: travel 1.2s linear infinite; }
+    .edge.reject { stroke: var(--rose); filter: drop-shadow(0 0 6px #ff758daa); }
+    @keyframes travel { to { stroke-dashoffset: -34; } }
+    .node rect { fill: #142b44; stroke: #42627f; stroke-width: 2; transition: fill .4s, stroke .4s, filter .4s, transform .4s; }
+    .node text { fill: #e9f3ff; font-size: 20px; font-weight: 800; }
+    .node .sub { fill: #aac0d5; font-size: 16px; font-weight: 500; }
+    .node.active rect { fill: #173e56; stroke: var(--cyan); filter: drop-shadow(0 0 14px #65d9f555); }
+    .node.amber.active rect { fill: #42352a; stroke: var(--amber); filter: drop-shadow(0 0 14px #ffca7855); }
+    .node.rose.active rect { fill: #46283e; stroke: var(--rose); filter: drop-shadow(0 0 14px #ff758d66); }
+    .node.green.active rect { fill: #21433d; stroke: var(--green); filter: drop-shadow(0 0 14px #85e4b255); }
+    .node.dim { opacity: .28; }
+    .node { transition: opacity .4s; }
+    .caption { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 0 25px 22px; color: #b0c4d6; font-size: .82rem; }
+    .caption strong { color: #ecf6ff; }
+    .sidebar { padding: clamp(21px, 2.5vw, 34px); display: flex; flex-direction: column; min-height: 530px; }
+    .count { color: var(--cyan); font-size: .82rem; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; }
+    h2 { margin: 21px 0 12px; font-size: clamp(1.6rem, 2.2vw, 2.4rem); line-height: 1.13; letter-spacing: -.035em; }
+    .body-copy { margin: 0; color: #c5d5e5; font-size: 1.07rem; line-height: 1.57; }
+    .rule { margin-top: 27px; border-left: 4px solid var(--cyan); padding: 12px 0 12px 16px; color: #e8f5fc; font-weight: 650; line-height: 1.45; background: #162d40; border-radius: 0 10px 10px 0; }
+    .rule.reject { border-color: var(--rose); background: #372438; }
+    .rule.amber { border-color: var(--amber); background: #342d2d; }
+    .trace { margin-top: auto; padding-top: 30px; }
+    .trace-label { color: #8da9c1; text-transform: uppercase; font-size: .7rem; font-weight: 800; letter-spacing: .12em; }
+    .trace code { display: block; margin-top: 9px; padding: 12px; border: 1px solid #36516b; border-radius: 10px; background: #071828; color: #a7e8de; font: .83rem/1.5 ui-monospace, SFMono-Regular, Consolas, monospace; white-space: pre-wrap; }
+    .controls { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; padding: 18px 0 15px; }
+    button { border: 1px solid #46617a; background: #19314b; color: #edf5ff; border-radius: 10px; padding: 11px 16px; font: inherit; font-weight: 700; cursor: pointer; }
+    button:hover, button:focus-visible { border-color: var(--cyan); outline: none; background: #234563; }
+    button.primary { background: #1c7087; border-color: #4dd2e6; min-width: 96px; }
+    .timeline { flex: 1; min-width: 160px; height: 9px; overflow: hidden; border-radius: 100px; background: #27445a; margin: 0 6px; }
+    .timeline span { display: block; height: 100%; width: 0; background: linear-gradient(90deg, #5ed1ea, #8de9b5); border-radius: inherit; transition: width .25s linear; }
+    .ticks { display: flex; gap: 6px; align-items: center; }
+    .tick { width: 32px; height: 32px; border: 0; padding: 0; border-radius: 50%; background: radial-gradient(circle, #547790 0 5px, transparent 6px); }
+    .tick.active { background: radial-gradient(circle, var(--cyan) 0 7px, transparent 8px); }
+    .tick:focus-visible { outline: 3px solid var(--amber); outline-offset: 2px; }
+    .planes { border: 1px solid #29425a; border-radius: 17px; padding: 17px 19px; background: #0d2033; }
+    .planes-title { margin-bottom: 11px; color: #aac0d5; font-weight: 800; letter-spacing: .1em; font-size: .72rem; text-transform: uppercase; }
+    .plane-list { display: flex; gap: 8px; flex-wrap: wrap; }
+    .plane { border: 1px solid #375671; border-radius: 100px; padding: 7px 11px; color: #b4c6d8; font-size: .79rem; font-weight: 750; transition: color .3s, background .3s, border-color .3s; }
+    .plane.active { background: #164b5d; color: #e8fcff; border-color: var(--cyan); }
+    .note { margin: 14px 2px 0; color: #91a9bd; font-size: .77rem; line-height: 1.5; }
+    @media (max-width: 1000px) { .layout { grid-template-columns: 1fr; } .sidebar { min-height: 340px; } .trace { margin-top: 16px; padding-top: 12px; } }
+    @media (max-width: 600px) {
+      header { display: block; }
+      .stage-tag { display: inline-block; margin-top: 14px; }
+      .screen { overflow-x: auto; }
+      .screen-top, .caption { min-width: 820px; }
+      .screen svg { width: 820px; max-width: none; }
+      .screen-top { font-size: .63rem; }
+      .caption { align-items: start; }
+    }
+    @media (prefers-reduced-motion: reduce) { .edge.active { animation: none; } * { scroll-behavior: auto !important; transition-duration: .01ms !important; } }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <header>
+      <div>
+        <div class="eyebrow">khosiness · visual lesson 00</div>
+        <h1>The model proposes. The harness controls.</h1>
+        <p>Watch one read-only repository task cross the boundaries that make an agent harness understandable and safe.</p>
+      </div>
+      <div class="stage-tag">Step 0 · The Mental Model</div>
+    </header>
+
+    <main class="layout">
+      <section class="screen" aria-label="Animated harness architecture" tabindex="0">
+        <div class="screen-top"><span>Conceptual run · find the CLI version</span><span class="conceptual">Conceptual animation</span></div>
+        <svg viewBox="0 0 1200 620" role="img" aria-labelledby="diagram-title diagram-desc">
+          <title id="diagram-title">khosiness control boundary</title>
+          <desc id="diagram-desc">A user task enters the harness, which selects context, asks the model, validates proposals through policy, executes permitted tools, stores events, and selects a smaller next context.</desc>
+          <defs>
+            <marker id="arrow" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto" markerUnits="strokeWidth"><path d="M1 1 L8 4.5 L1 8" fill="none" stroke="#73d8eb" stroke-width="1.7"/></marker>
+            <marker id="red-arrow" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto" markerUnits="strokeWidth"><path d="M1 1 L8 4.5 L1 8" fill="none" stroke="#ff758d" stroke-width="1.7"/></marker>
+          </defs>
+          <g aria-hidden="true">
+            <path id="edge-task" class="edge" d="M270 130 H362" marker-end="url(#arrow)"/>
+            <path id="edge-context" class="edge" d="M570 118 H664" marker-end="url(#arrow)"/>
+            <path id="edge-proposal" class="edge" d="M768 174 V210 H620 V278 H570" marker-end="url(#arrow)"/>
+            <path id="edge-policy" class="edge" d="M468 174 V245" marker-end="url(#arrow)"/>
+            <path id="edge-run" class="edge" d="M570 290 H664" marker-end="url(#arrow)"/>
+            <path id="edge-workspace" class="edge" d="M870 290 H965" marker-end="url(#arrow)"/>
+            <path id="edge-record" class="edge" d="M664 320 H620 V392 H466 V437" marker-end="url(#arrow)"/>
+            <path id="edge-rejection" class="edge" d="M420 334 V437" marker-end="url(#red-arrow)"/>
+            <path id="edge-history" class="edge" d="M362 487 H308 V205 H400 V174" marker-end="url(#arrow)"/>
+            <path id="edge-select" class="edge" d="M570 163 H605 V392 H918 V487 H872" marker-end="url(#arrow)"/>
+            <path id="edge-stop" class="edge" d="M570 290 H635" marker-end="url(#red-arrow)"/>
+          </g>
+          <g id="node-task" class="node"><rect x="62" y="86" width="208" height="88" rx="17"/><text x="166" y="122" text-anchor="middle">User task</text><text class="sub" x="166" y="148" text-anchor="middle">Find kness version</text></g>
+          <g id="node-harness" class="node"><rect x="362" y="75" width="208" height="99" rx="17"/><text x="466" y="112" text-anchor="middle">Harness</text><text class="sub" x="466" y="139" text-anchor="middle">owns the run</text></g>
+          <g id="node-model" class="node amber"><rect x="664" y="75" width="208" height="99" rx="17"/><text x="768" y="112" text-anchor="middle">Model</text><text class="sub" x="768" y="139" text-anchor="middle">reasons + proposes</text></g>
+          <g id="node-policy" class="node rose"><rect x="362" y="245" width="208" height="89" rx="17"/><text x="466" y="281" text-anchor="middle">Harness policy</text><text class="sub" x="466" y="307" text-anchor="middle">validate + permit</text></g>
+          <g id="node-runtime" class="node green"><rect x="664" y="245" width="208" height="89" rx="17"/><text x="768" y="281" text-anchor="middle">Tool runtime</text><text class="sub" x="768" y="307" text-anchor="middle">executes approved call</text></g>
+          <g id="node-workspace" class="node"><rect x="965" y="245" width="200" height="89" rx="17"/><text x="1065" y="281" text-anchor="middle">Workspace</text><text class="sub" x="1065" y="307" text-anchor="middle">read-only v0</text></g>
+          <g id="node-history" class="node"><rect x="362" y="437" width="208" height="99" rx="17"/><text x="466" y="475" text-anchor="middle">Event history</text><text class="sub" x="466" y="503" text-anchor="middle">factual record</text></g>
+          <g id="node-next" class="node"><rect x="664" y="437" width="208" height="99" rx="17"/><text x="768" y="475" text-anchor="middle">Next context</text><text class="sub" x="768" y="503" text-anchor="middle">selected view</text></g>
+          <g id="stop-mark" opacity="0"><circle cx="626" cy="290" r="24" fill="#5a263d" stroke="#ff758d" stroke-width="3"/><path d="M616 280 L636 300 M636 280 L616 300" stroke="#fff" stroke-width="4" stroke-linecap="round"/></g>
+        </svg>
+        <div class="caption"><span><strong>Illustration only.</strong> Stage 0 defines these boundaries; runtime behavior arrives in later stages. On a small screen, swipe to inspect the diagram.</span><span id="scene-kind">Boundary</span></div>
+      </section>
+
+      <aside id="lesson-narration" class="sidebar" aria-live="off">
+        <div id="count" class="count">01 / 06</div>
+        <h2 id="scene-title">A task enters the harness</h2>
+        <p id="scene-copy" class="body-copy"></p>
+        <div id="rule" class="rule"></div>
+        <div class="trace"><div class="trace-label">Illustrative trace</div><code id="trace-line"></code></div>
+      </aside>
+    </main>
+
+    <nav class="controls" aria-label="Animation controls">
+      <button id="previous" type="button" aria-label="Previous scene">← Previous</button>
+      <button id="play" class="primary" type="button" aria-label="Pause animation">Pause</button>
+      <button id="next" type="button" aria-label="Next scene">Next →</button>
+      <div class="timeline" aria-hidden="true"><span id="progress"></span></div>
+      <div id="ticks" class="ticks" aria-label="Scenes"></div>
+    </nav>
+
+    <section class="planes" aria-label="The six planes">
+      <div class="planes-title">The six planes · active planes light up in each scene</div>
+      <div id="plane-list" class="plane-list"></div>
+    </section>
+    <p class="note">Use the controls or ← and → keys to review a scene. Space pauses playback. This is a conceptual animation, not a running agent or an event log implementation.</p>
+  </div>
+  <script>
+    const planes = ["Cognition", "Context", "Action", "Control", "Continuity", "Measurement"];
+    const scenes = [
+      {
+        title: "A task enters the harness",
+        copy: "The user asks where the CLI version comes from. The harness owns the run and enforces the task's completion criteria.",
+        rule: "A task is an objective with completion criteria, not just another chat message.",
+        trace: "task: locate the source of `kness --version`",
+        kind: "Task boundary", nodes: ["task", "harness"], edges: ["task"], planes: ["Control", "Continuity"]
+      },
+      {
+        title: "The harness selects context",
+        copy: "The model receives the task, the offered read-only tools, and only the repository information selected for this decision. The harness controls that view.",
+        rule: "History can be large. Context is the selected view shown to the model now.",
+        trace: "context → task + read-only tools + relevant paths",
+        kind: "Context selection", nodes: ["harness", "model"], edges: ["context"], planes: ["Context", "Cognition"]
+      },
+      {
+        title: "A proposed shell call is stopped",
+        copy: "Suppose the model asks to run a shell command anyway. Version 0 has no shell capability. Harness policy rejects the proposal before the runtime touches the workspace.",
+        rule: "A model proposal is never permission to execute.",
+        trace: "proposal: shell(\"cat src/khosiness/cli.py\")\nresult: rejected — shell unavailable in v0\nevent: rejection recorded",
+        kind: "Rejected proposal", nodes: ["model", "harness", "policy", "history"], edges: ["proposal", "stop", "rejection"], planes: ["Cognition", "Control", "Measurement"], reject: true
+      },
+      {
+        title: "A permitted read can execute",
+        copy: "The model proposes a ranged file read. The harness validates the request; policy permits it; then the tool/runtime layer reads from the workspace.",
+        rule: "Capability, permission, and execution are separate decisions.",
+        trace: "proposal: read_file_range(\"src/khosiness/__init__.py\", 1, 20)\nresult: permitted → runtime reads version",
+        kind: "Authorized action", nodes: ["model", "harness", "policy", "runtime", "workspace"], edges: ["proposal", "policy", "run", "workspace"], planes: ["Cognition", "Control", "Action"]
+      },
+      {
+        title: "Store the event; select the next view",
+        copy: "The factual read and result belong in event history. The next model context may contain only the version-related lines, because those are enough for the next decision.",
+        rule: "Store generously; inject selectively. The harness chooses the next context.",
+        trace: "history: full read request + result\nnext context: relevant version lines only",
+        kind: "History ≠ context", nodes: ["runtime", "history", "harness", "next"], edges: ["record", "history", "select"], planes: ["Context", "Continuity", "Measurement"]
+      },
+      {
+        title: "The harness decides when to stop",
+        copy: "The model may propose an answer. The harness checks that it meets the task criteria and can explain which evidence supports it.",
+        rule: "The model proposes. khosiness controls what is visible, valid, executable, persistent, permitted, and complete.",
+        trace: "completion: answer checked against task criteria",
+        kind: "Completion", nodes: ["task", "harness", "model", "history"], edges: ["context", "record"], planes: planes
+      }
+    ];
+
+    const $ = id => document.getElementById(id);
+    const duration = 6500;
+    let index = 0;
+    let playing = !window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    let started = performance.now();
+    let elapsedWhenPaused = 0;
+
+    planes.forEach(name => {
+      const item = document.createElement("span");
+      item.className = "plane";
+      item.dataset.plane = name;
+      item.textContent = name;
+      $("plane-list").append(item);
+    });
+    scenes.forEach((scene, sceneIndex) => {
+      const button = document.createElement("button");
+      button.type = "button";
+      button.className = "tick";
+      button.setAttribute("aria-label", `Go to scene ${sceneIndex + 1}: ${scene.title}`);
+      button.addEventListener("click", () => show(sceneIndex));
+      $("ticks").append(button);
+    });
+
+    function show(nextIndex) {
+      index = (nextIndex + scenes.length) % scenes.length;
+      const scene = scenes[index];
+      $("count").textContent = `${String(index + 1).padStart(2, "0")} / ${String(scenes.length).padStart(2, "0")}`;
+      $("scene-title").textContent = scene.title;
+      $("scene-copy").textContent = scene.copy;
+      $("rule").textContent = scene.rule;
+      $("rule").className = `rule${scene.reject ? " reject" : ""}`;
+      $("trace-line").textContent = scene.trace;
+      $("scene-kind").textContent = scene.kind;
+      document.querySelectorAll(".node").forEach(node => {
+        const active = scene.nodes.includes(node.id.replace("node-", ""));
+        node.classList.toggle("active", active);
+        node.classList.toggle("dim", !active);
+      });
+      document.querySelectorAll(".edge").forEach(edge => {
+        const active = scene.edges.includes(edge.id.replace("edge-", ""));
+        edge.classList.toggle("active", active);
+        edge.classList.toggle("reject", Boolean(active && scene.reject));
+        edge.setAttribute("marker-end", active && scene.reject ? "url(#red-arrow)" : "url(#arrow)");
+      });
+      $("stop-mark").setAttribute("opacity", scene.reject ? "1" : "0");
+      document.querySelectorAll(".plane").forEach(plane => plane.classList.toggle("active", scene.planes.includes(plane.dataset.plane)));
+      document.querySelectorAll(".tick").forEach((tick, tickIndex) => tick.classList.toggle("active", tickIndex === index));
+      elapsedWhenPaused = 0;
+      started = performance.now();
+      $("progress").style.width = "0%";
+    }
+
+    function setPlaying(value) {
+      if (playing === value) return;
+      playing = value;
+      if (playing) started = performance.now() - elapsedWhenPaused;
+      else elapsedWhenPaused = performance.now() - started;
+      $("play").textContent = playing ? "Pause" : "Play";
+      $("play").setAttribute("aria-label", playing ? "Pause animation" : "Play animation");
+      $("lesson-narration").setAttribute("aria-live", playing ? "off" : "polite");
+    }
+
+    $("previous").addEventListener("click", () => show(index - 1));
+    $("next").addEventListener("click", () => show(index + 1));
+    $("play").addEventListener("click", () => setPlaying(!playing));
+    document.addEventListener("keydown", event => {
+      if (event.key === "ArrowRight") show(index + 1);
+      if (event.key === "ArrowLeft") show(index - 1);
+      if (event.code === "Space" && !(event.target instanceof HTMLButtonElement)) { event.preventDefault(); setPlaying(!playing); }
+    });
+    document.addEventListener("visibilitychange", () => { if (document.hidden) setPlaying(false); });
+    function frame(now) {
+      if (playing) {
+        const elapsed = now - started;
+        if (elapsed >= duration) show(index + 1);
+        else $("progress").style.width = `${Math.min(100, elapsed / duration * 100)}%`;
+      }
+      requestAnimationFrame(frame);
+    }
+    show(0);
+    $("play").textContent = playing ? "Pause" : "Play";
+    $("play").setAttribute("aria-label", playing ? "Pause animation" : "Play animation");
+    $("lesson-narration").setAttribute("aria-live", playing ? "off" : "polite");
+    requestAnimationFrame(frame);
+  </script>
+</body>
+</html>

@@ -139,10 +139,11 @@ function createManualTutor() {
   function positionExpandedPanel() {
     if (!panel.classList.contains('expanded')) return;
     const card = document.querySelector('main.content .card');
-    const cardLeft = card?.getBoundingClientRect().left;
-    const left = cardLeft === undefined
-      ? Math.max(16, window.innerWidth - 900)
-      : Math.min(cardLeft, window.innerWidth - 340);
+    const tree = document.querySelector('.project-tree-panel');
+    const besideCards = card && tree && getComputedStyle(tree).position === 'sticky';
+    const left = besideCards
+      ? Math.min(card.getBoundingClientRect().right, window.innerWidth - 340)
+      : Math.max(16, window.innerWidth - 900);
     panel.style.setProperty('--manual-qa-expanded-left', `${Math.max(16, Math.round(left))}px`);
   }
   button.addEventListener('click', () => panel.hidden ? openPanel() : closePanel());

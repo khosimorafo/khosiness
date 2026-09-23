@@ -18,8 +18,8 @@ The Step 0 page embeds its conceptual animation. The same animation also has
 an **Ask about this page** button when opened on its own. Future stage
 animations belong on their matching pages.
 Use **Expand** in the tutor header for a reading panel that reaches the top
-and the left edge of the content cards; **Restore** returns it to its compact
-size.
+and sits to the right of the content cards on wide pages; **Restore** returns
+it to its compact size.
 
 From the repository root, start the tutor:
 

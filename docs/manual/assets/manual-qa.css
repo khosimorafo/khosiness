@@ -50,6 +50,7 @@
 }
 .manual-qa-head strong,.manual-qa-head small{display:block}
 .manual-qa-head small{color:#c6d5f3;font-size:.76rem;line-height:1.3}
+.manual-qa-runtime{margin-top:5px;overflow-wrap:anywhere}
 .manual-qa-head-actions{display:flex;align-items:flex-start;gap:10px}
 .manual-qa-expand{
   border:1px solid #8495b4;

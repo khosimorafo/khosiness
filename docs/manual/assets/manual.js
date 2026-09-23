@@ -70,7 +70,7 @@ function createManualTutor() {
   panel.hidden = true;
   panel.innerHTML = `
     <div class="manual-qa-head">
-      <div><strong>Ask the manual tutor</strong><small>Current page: ${document.title.replace(/</g, '&lt;')}</small></div>
+      <div><strong>Ask the manual tutor</strong><small>Current page: ${document.title.replace(/</g, '&lt;')}</small><small class="manual-qa-runtime">Codex CLI model details appear after an answer.</small></div>
       <div class="manual-qa-head-actions">
         <button class="manual-qa-expand" type="button" aria-label="Expand tutor" aria-pressed="false">Expand</button>
         <button class="manual-qa-close" type="button" aria-label="Close questions">×</button>
@@ -94,6 +94,7 @@ function createManualTutor() {
   const textarea = panel.querySelector('textarea');
   const submit = panel.querySelector('[type="submit"]');
   const status = panel.querySelector('.manual-qa-status');
+  const runtimeLabel = panel.querySelector('.manual-qa-runtime');
   const expand = panel.querySelector('.manual-qa-expand');
   const history = [];
   const servedHere = location.protocol === 'http:' &&
@@ -208,6 +209,11 @@ function createManualTutor() {
       const result = await response.json();
       if (!response.ok) throw new Error(result.error || `HTTP ${response.status}`);
       addMessage('tutor', result.answer);
+      const runtime = result.runtime || {};
+      const effort = runtime.reasoning_effort === 'none'
+        ? 'not explicitly set (CLI reports none)'
+        : (runtime.reasoning_effort || 'unreported');
+      runtimeLabel.textContent = `Codex CLI ${runtime.cli_version || 'version unreported'} · provider ${runtime.provider || 'unreported'} · model ${runtime.model || 'unreported'} · effort ${effort}`;
       history.push({role: 'user', content: question}, {role: 'assistant', content: result.answer.slice(0, 2000)});
       status.textContent = 'Questions stay in this tab.';
     } catch (error) {

@@ -71,7 +71,10 @@ function createManualTutor() {
   panel.innerHTML = `
     <div class="manual-qa-head">
       <div><strong>Ask the manual tutor</strong><small>Current page: ${document.title.replace(/</g, '&lt;')}</small></div>
-      <button class="manual-qa-close" type="button" aria-label="Close questions">×</button>
+      <div class="manual-qa-head-actions">
+        <button class="manual-qa-expand" type="button" aria-label="Expand tutor" aria-pressed="false">Expand</button>
+        <button class="manual-qa-close" type="button" aria-label="Close questions">×</button>
+      </div>
     </div>
     <div class="manual-qa-setup" hidden></div>
     <div class="manual-qa-messages" role="log" aria-live="polite" aria-relevant="additions text"></div>
@@ -90,6 +93,7 @@ function createManualTutor() {
   const textarea = panel.querySelector('textarea');
   const submit = panel.querySelector('[type="submit"]');
   const status = panel.querySelector('.manual-qa-status');
+  const expand = panel.querySelector('.manual-qa-expand');
   const history = [];
   const servedHere = location.protocol === 'http:' &&
     ['127.0.0.1', 'localhost'].includes(location.hostname);
@@ -132,8 +136,27 @@ function createManualTutor() {
     button.setAttribute('aria-expanded', 'false');
     button.focus();
   }
+  function positionExpandedPanel() {
+    if (!panel.classList.contains('expanded')) return;
+    const middle = document.querySelector('.detail-main');
+    const tree = document.querySelector('.project-tree-panel');
+    const rightEdge = middle?.getBoundingClientRect().right;
+    const hasSideColumn = tree && getComputedStyle(tree).position === 'sticky';
+    const left = hasSideColumn && rightEdge
+      ? Math.min(rightEdge, window.innerWidth - 340)
+      : Math.max(16, window.innerWidth - 900);
+    panel.style.setProperty('--manual-qa-expanded-left', `${Math.max(16, Math.round(left))}px`);
+  }
   button.addEventListener('click', () => panel.hidden ? openPanel() : closePanel());
   panel.querySelector('.manual-qa-close').addEventListener('click', closePanel);
+  expand.addEventListener('click', () => {
+    const expanded = panel.classList.toggle('expanded');
+    expand.textContent = expanded ? 'Restore' : 'Expand';
+    expand.setAttribute('aria-label', expanded ? 'Restore tutor size' : 'Expand tutor');
+    expand.setAttribute('aria-pressed', String(expanded));
+    positionExpandedPanel();
+  });
+  window.addEventListener('resize', positionExpandedPanel);
   panel.addEventListener('keydown', event => {
     if (event.key === 'Escape') closePanel();
     if (event.key === 'Enter' && (event.ctrlKey || event.metaKey)) {

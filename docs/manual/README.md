@@ -17,6 +17,8 @@ run the khosiness harness being built in Phase I.
 The Step 0 page embeds its conceptual animation. The same animation also has
 an **Ask about this page** button when opened on its own. Future stage
 animations belong on their matching pages.
+Use **Expand** in the tutor header for a taller reading panel; **Restore**
+returns it to its compact size.
 
 From the repository root, start the tutor:
 

@@ -4,9 +4,9 @@
 6f664579b10722f842d3beca21aafba5032ed065fef8e202942f6ff5338eb4d7  ./CURRENT_STATE.md
 271974b84f788f44a2ea1c9c5a7c9fe108e529a08cca8fe0ff741211d79f41fb  ./HANDOFF_MANIFEST.md
 72fb06600dba1bfda7110d5cc88a50e40163f32eb8bb69a3681d76130c7b1498  ./PROJECT_HISTORY.md
-f108548b50db2831eae345ab567c13c330e70725710223882a2801e53392e1bf  ./docs/manual/README.md
-91b491ea92fde2a02f7da4ae20ab4ed75d256629920ae0d321e1b228827ba4b9  ./docs/manual/assets/manual-qa.css
-8d31c9d615a24865234a3c3e4851f0433905ffb0bb4d95433a39ae08ecd18fe0  ./docs/manual/assets/manual.js
+66427f72ad75060728b7c7c285f7b9bcfc76408e698fd46c31ddff34b6bc6349  ./docs/manual/README.md
+f47caa93d05452af41786a0c291ce2d7df0260d85c7421527a6e4911baf37e7a  ./docs/manual/assets/manual-qa.css
+123cde174b193f8e4b49367fda756b78046b200df8efa2857e6fb4bac45a37d6  ./docs/manual/assets/manual.js
 bb87ce7a03c05407dc5a696bd61c3c8b6113768aad264a02e27ac50f1ef787f1  ./docs/manual/assets/style.css
 e9547b08634309de3247beac567de8a03bc981bc2a326614ada3d683e51ba137  ./docs/manual/index.html
 624d7a61704c74a375887b0e85b3feb93fc0cdac8d86d2e5e37b28ee6efc3929  ./docs/manual/manual_qa_server.py

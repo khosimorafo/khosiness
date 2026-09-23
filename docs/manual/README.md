@@ -32,7 +32,15 @@ button sends the current page's text, your question, any selected text, and
 recent questions and answers from that browser tab to the signed-in Codex CLI.
 The local server adds `STAGE_TRACKER.md` to each question so the tutor can
 answer progress questions from the recorded stage status rather than guessing
-from a manual page. The tracker is read afresh for each question.
+from a manual page. It also adds a bounded read of the stage's listed files
+and the matching manual code checkpoint. This lets the tutor identify missing
+code and suggest short, exact snippets while clearly separating existing code
+from reference code. The files and tracker are read afresh for each question.
+For roadmap questions, it can also compare the next pending stage even when
+you are still viewing a completed stage.
+The tutor is instructed to suggest commands and code without executing them;
+the read-only sandbox blocks writes. For implementation guidance, it gives no
+more than three steps at a time.
 Codex must be installed and
 `codex login status` must report that you are signed in. The CLI is run from an
 empty temporary directory with a read-only sandbox. This blocks writes but

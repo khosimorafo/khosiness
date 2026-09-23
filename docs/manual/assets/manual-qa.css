@@ -80,6 +80,7 @@
 .manual-qa-user{margin-left:auto;background:#ecfdf5}
 .manual-qa-message strong{display:block;font-size:.74rem;color:#344054}
 .manual-qa-message p{margin:5px 0 0;white-space:pre-wrap;overflow-wrap:anywhere;line-height:1.48;font-size:.91rem}
+.manual-qa-message pre{margin:9px 0 0;padding:10px;overflow:auto;border-radius:8px;background:#101828;color:#e6edf8;font:.82rem/1.45 ui-monospace,SFMono-Regular,Consolas,monospace;white-space:pre}
 .manual-qa-suggestions{display:flex;gap:6px;flex-wrap:wrap;padding:0 15px 11px}
 .manual-qa-suggestions button{
   border:1px solid #b9c9e5;border-radius:999px;background:#f6f9ff;

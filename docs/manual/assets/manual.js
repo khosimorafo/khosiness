@@ -79,9 +79,10 @@ function createManualTutor() {
     <div class="manual-qa-setup" hidden></div>
     <div class="manual-qa-messages" role="log" aria-live="polite" aria-relevant="additions text"></div>
     <div class="manual-qa-suggestions">
+      <button type="button">What code is missing for this stage?</button>
+      <button type="button">Show the next three steps with code.</button>
       <button type="button">What failure does this stage prevent?</button>
       <button type="button">Quiz me on this stage.</button>
-      <button type="button">What should I validate before moving on?</button>
     </div>
     <form class="manual-qa-form">
       <label for="manual-qa-question">Your question</label>
@@ -103,8 +104,22 @@ function createManualTutor() {
     message.className = `manual-qa-message manual-qa-${role}`;
     const label = document.createElement('strong');
     label.textContent = role === 'user' ? 'You' : 'Tutor';
-    const body = document.createElement('p');
-    body.textContent = content;
+    const body = document.createElement('div');
+    body.className = 'manual-qa-body';
+    content.split(/```[^\n]*\n([\s\S]*?)```/g).forEach((part, index) => {
+      if (!part) return;
+      if (index % 2) {
+        const code = document.createElement('code');
+        code.textContent = part.trimEnd();
+        const block = document.createElement('pre');
+        block.append(code);
+        body.append(block);
+      } else {
+        const paragraph = document.createElement('p');
+        paragraph.textContent = part.trim();
+        body.append(paragraph);
+      }
+    });
     message.append(label, body);
     messages.append(message);
     messages.scrollTop = messages.scrollHeight;
@@ -122,7 +137,7 @@ function createManualTutor() {
     panel.querySelector('.manual-qa-form').hidden = true;
     panel.querySelector('.manual-qa-suggestions').hidden = true;
   } else {
-    addMessage('tutor', 'Ask about this stage. I use this page for concepts and the stage tracker for recorded progress.');
+    addMessage('tutor', 'Ask about this stage. I can compare its reference code with the current files and use the stage tracker for recorded progress.');
   }
 
   function openPanel() {

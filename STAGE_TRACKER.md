@@ -20,7 +20,7 @@ a time.
 | Project Setup | Complete |
 | Step 0 — The Mental Model | Complete |
 | Step 1 — Define the Task Contract | Complete |
-| Step 2 — Create the Model Adapter | In progress — final review |
+| Step 2 — Create the Model Adapter | Complete |
 | Step 3 — Build the Event Log | Pending |
 | Step 4 — Implement the Agent Loop | Pending |
 | Step 5 — Build the Tool System | Pending |
@@ -334,7 +334,7 @@ commit contains exactly the nine intended files. After the commit,
 and whitespace checks also passed. Step 1 is closed. No Step 2 work begins
 until the human asks.
 
-## Active stage: Step 2 — Create the Model Adapter
+## Completed stage: Step 2 — Create the Model Adapter
 
 Responsibility: give the harness one provider-neutral request/response contract,
 with a deterministic fake for tests and a thin boundary for provider data.
@@ -360,7 +360,7 @@ creates CallableProviderAdapter; 5–8 add the four checkpoint tests one at a
 time; 9 runs the focused tests; 10 runs the accumulated suite; 11 checks
 provider isolation; 12 inspects FakeModel.calls and the empty-queue failure;
 13 is the understanding gate; 14 reviews and commits the stage. Corrections
-repeat the active number. Current progress: 13/14.
+repeat the active number. All 14/14 instructions are complete.
 
 ### Instruction 1/14 — complete
 
@@ -515,8 +515,12 @@ validation and policy permission must precede tool-runtime dispatch; a
 model proposal has no execution authority. This resolves the remaining
 understanding gaps. Progress: 13/14.
 
-### Current instruction 14/14 — final review and stage commit
+### Instruction 14/14 — complete
 
-Codex is comparing the live files with the Step 2 checkpoint, correcting
-documentation drift and formatting, and rerunning final validation before
-giving the human the commit command. Do not begin Step 3.
+Codex compared the live files with the Step 2 checkpoint, corrected minor
+formatting and stale animation wording, and reran final validation. The
+human committed the eight intended files as `d2e521c` (`step 2: create the
+model adapter`). Codex verified the commit contents and clean working tree.
+After the commit, `pytest -q` reported ten passing tests, the checksum
+manifest passed, and the whitespace check was clean. Step 2 is closed.
+No Step 3 work begins until the human asks.

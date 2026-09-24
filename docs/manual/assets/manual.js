@@ -20,7 +20,8 @@ if (animationFrame) {
         event.data?.type !== 'khosiness-animation-height') return;
     const height = event.data.height;
     if (typeof height === 'number' && Number.isFinite(height) && height >= 200 && height <= 4000) {
-      animationFrame.style.height = `${Math.ceil(height)}px`;
+      const measuredHeight = `${Math.ceil(height)}px`;
+      if (animationFrame.style.height !== measuredHeight) animationFrame.style.height = measuredHeight;
     }
   });
   animationFrame.addEventListener('load', () => {

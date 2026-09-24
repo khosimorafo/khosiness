@@ -1,0 +1,119 @@
+[
+    {
+        "id": "locate-cli-version",
+        "objective": "Find where the kness CLI version value is defined.",
+        "constraints": [
+            "Use repository evidence.",
+            "Do not modify files."
+        ],
+        "success_criteria": [
+            "Name the defining file.",
+            "Report the version value."
+        ]
+    },
+    {
+        "id": "trace-version-command",
+        "objective": "Explain how kness --version obtains and prints its value.",
+        "constraints": [
+            "Use repository evidence.",
+            "Do not modify files."
+        ],
+        "success_criteria": [
+            "Name the CLI entry point.",
+            "Name the version source."
+        ]
+    },
+    {
+        "id": "explain-source-package",
+        "objective": "Explain the responsibility of each Python source file in src/khosiness.",
+        "constraints": [
+            "Read source files only.",
+            "Do not modify files."
+        ],
+        "success_criteria": [
+            "Identify the Python source files.",
+            "Explain each file's responsibility."
+        ]
+    },
+    {
+        "id": "locate-cli-registration",
+        "objective": "Find where the kness command is registered for installation.",
+        "constraints": [
+            "Use repository evidence.",
+            "Do not modify files."
+        ],
+        "success_criteria": [
+            "Name the configuration file.",
+            "Report the script mapping."
+        ]
+    },
+    {
+        "id": "identify-runtime-dependencies",
+        "objective": "Identify the project's runtime Python dependencies.",
+        "constraints": [
+            "Use repository evidence.",
+            "Do not modify files."
+        ],
+        "success_criteria": [
+            "Name each runtime dependency and its declared version bound."
+        ]
+    },
+    {
+        "id": "identify-python-requirement",
+        "objective": "Find the minimum supported Python version.",
+        "constraints": [
+            "Use repository evidence.",
+            "Do not modify files."
+        ],
+        "success_criteria": [
+            "Name the configuration field.",
+            "Report its value."
+        ]
+    },
+    {
+        "id": "list-v0-capabilities",
+        "objective": "List the repository-reading capabilities planned for version 0.",
+        "constraints": [
+            "Use repository documentation.",
+            "Do not modify files."
+        ],
+        "success_criteria": [
+            "List all three initial read-only capabilities."
+        ]
+    },
+    {
+        "id": "list-v0-non-goals",
+        "objective": "Identify the capabilities explicitly excluded from version 0.",
+        "constraints": [
+            "Use repository documentation.",
+            "Do not modify files."
+        ],
+        "success_criteria": [
+            "List the stated non-goals and their source file."
+        ]
+    },
+    {
+        "id": "name-six-planes",
+        "objective": "Find and name the six planes of the harness architecture.",
+        "constraints": [
+            "Use repository documentation.",
+            "Do not modify files."
+        ],
+        "success_criteria": [
+            "Name all six planes.",
+            "Name the architecture document."
+        ]
+    },
+    {
+        "id": "explain-task-validation",
+        "objective": "Explain which Task fields have custom validation and what each validator rejects.",
+        "constraints": [
+            "Use repository source code.",
+            "Do not modify files."
+        ],
+        "success_criteria": [
+            "Name the three validated fields.",
+            "Describe each rejection condition."
+        ]
+    }
+]

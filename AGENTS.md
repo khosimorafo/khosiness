@@ -30,21 +30,28 @@ next stage without human instruction.
 
 Implement **one manual stage at a time** unless the human explicitly asks otherwise.
 
-### Three-instruction cadence
+### One-instruction cadence
 
 When guiding the human through a manual stage:
 
-- give at most three actionable instructions at a time;
-- wait for the human to report the results before issuing the next batch;
-- validate the reported results and update `STAGE_TRACKER.md` before continuing;
-- keep using three-instruction batches through the implementation, automated checks,
+- give exactly one actionable instruction at a time, with its exact command and
+  code when the human is implementing;
+- use an editor command and a separate code block for multiline file edits;
+  the human's zsh paste adds leading spaces to heredoc delimiters, so do not
+  give `cat <<EOF` or similar heredoc instructions;
+- wait for the human to report the result before issuing the next instruction;
+- validate the reported result and update `STAGE_TRACKER.md` before continuing;
+- keep using one-instruction turns through the implementation, automated checks,
   manual understanding check and stage closeout;
-- do not preview later batches unless the human explicitly asks for them;
+- label each human instruction `N/Y` for the active stage, state the current
+  progress, and track the planned total `Y` in `STAGE_TRACKER.md`; repeat the
+  same number for corrections rather than silently counting them as progress;
+- do not preview later instructions unless the human explicitly asks for them;
 - continue until the active stage is complete, then stop at the stage boundary.
 
 This cadence applies to every remaining Phase I stage. Repository inspection or
-explanation performed by Codex does not count against the human's three actionable
-instructions.
+explanation performed by Codex does not count against the human's one actionable
+instruction.
 
 For each stage:
 

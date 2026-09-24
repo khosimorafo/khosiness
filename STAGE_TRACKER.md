@@ -19,7 +19,7 @@ a time.
 | --- | --- |
 | Project Setup | Complete |
 | Step 0 — The Mental Model | Complete |
-| Step 1 — Define the Task Contract | In progress |
+| Step 1 — Define the Task Contract | Complete |
 | Step 2 — Create the Model Adapter | Pending |
 | Step 3 — Build the Event Log | Pending |
 | Step 4 — Implement the Agent Loop | Pending |
@@ -130,7 +130,7 @@ longer break the next question, and animation shortcuts no longer intercept
 typing in the standalone tutor. The separate completion teach-back is now
 closed with the human's answer recorded above.
 
-## Active stage: Step 1 — Define the Task Contract
+## Completed stage: Step 1 — Define the Task Contract
 
 Responsibility: make each run a bounded, validated Task with an identity,
 objective, existing workspace, constraints, success criteria, and step limit.
@@ -166,16 +166,16 @@ At the first review, `src/khosiness/task.py`, `tests/test_task.py`, and
 Step 1 implementation. The benchmark file's accidental executable bit was
 removed.
 
-The Task model, six tests, ten benchmark templates, final validation, and the
-Step 1 understanding gate are complete. Only the suggested stage commit
-remains. On 2026-09-24 the human requested one instruction at a time,
+The Task model, six tests, ten benchmark templates, final validation, the
+Step 1 understanding gate, and the stage commit are complete. On 2026-09-24
+the human requested one instruction at a time,
 superseding the earlier three-instruction cadence.
 The human also requested `N/Y` progress on every instruction. Step 1 has 15
 planned numbered instructions. Corrections repeat the active number. Steps
 1–8 cover the model, deliberate failure and six tests; 9 creates ten benchmark
 templates; 10 checks JSON syntax; 11 checks benchmark count; 12 runs the stage
 tests; 13 runs the complete suite; 14 is the understanding gate; 15 reviews
-and commits the finished Step 1 stage. At present, 14/15 are complete.
+and commits the finished Step 1 stage. All 15/15 are complete.
 
 ### Instruction 1 — complete
 
@@ -318,7 +318,7 @@ understanding gate with no remaining gap. The manual's deliberate failure was
 observed in instruction 2; no event log or run loop exists yet, so generic
 manual references to an event trace are N/A for this stage.
 
-### Current instruction 15/15 — pending stage commit
+### Instruction 15/15 — complete
 
 Codex reviewed the Task model, six tests, ten benchmark templates, animation,
 manual embed, tutor-height guard, and governing documents against the Step 1
@@ -326,5 +326,10 @@ checkpoint. `pytest tests/test_task.py -q` and `pytest -q` both report six
 passing tests; JSON syntax and count, checksum verification, compilation, and
 whitespace checks pass. The benchmark examples are specific to this live repo
 instead of the manual's generic examples but preserve the template contract.
-The next human action is to commit the reviewed Step 1 files with an explicit
-file list; no Step 2 work begins until the human asks.
+The human committed the reviewed Step 1 files as `b965c88` (`step 1: define
+the task contract`). An overlong `git add` command split the animation path
+in the terminal and failed; `git add -A` recovered it, and the resulting
+commit contains exactly the nine intended files. After the commit,
+`pytest -q` reported six passing tests; JSON syntax, checksum verification,
+and whitespace checks also passed. Step 1 is closed. No Step 2 work begins
+until the human asks.

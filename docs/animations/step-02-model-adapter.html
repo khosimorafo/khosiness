@@ -1,0 +1,229 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Step 2 — Create the Model Adapter</title>
+  <style>
+    :root { color-scheme:dark; font-family:Inter,ui-sans-serif,system-ui,sans-serif; background:#07111f; color:#edf5ff; --cyan:#65d9f5; --green:#85e4b2; --rose:#ff758d; --amber:#ffca78; --muted:#b4cadb; }
+    * { box-sizing:border-box; }
+    body { margin:0; background:radial-gradient(circle at 80% 0%,#173c54,transparent 35%),#07111f; }
+    .shell { max-width:1500px; margin:auto; padding:clamp(16px,2.5vw,34px); }
+    header { display:flex; justify-content:space-between; gap:16px; align-items:start; margin-bottom:20px; }
+    .eyebrow { color:var(--cyan); text-transform:uppercase; letter-spacing:.14em; font-size:.78rem; font-weight:800; }
+    h1 { margin:8px 0; font-size:clamp(1.7rem,3vw,3rem); line-height:1.08; }
+    header p { margin:0; max-width:66ch; color:var(--muted); line-height:1.5; }
+    .tag { border:1px solid #46617a; border-radius:999px; padding:8px 12px; white-space:nowrap; color:#c5d7e8; font-size:.8rem; }
+    .layout { display:grid; grid-template-columns:minmax(0,1.5fr) minmax(300px,.85fr); gap:18px; align-items:stretch; }
+    .screen,.sidebar { min-width:0; border:1px solid #2e4962; border-radius:20px; background:linear-gradient(145deg,#10253a,#0b1b2d); box-shadow:0 16px 45px #0005; }
+    .screen { padding:clamp(17px,2vw,25px); }
+    .screen-top { display:flex; justify-content:space-between; gap:12px; color:#b2c9dc; font-size:.74rem; text-transform:uppercase; letter-spacing:.1em; font-weight:800; }
+    .concept { color:var(--cyan); }
+    .flow { display:grid; grid-template-columns:minmax(0,1fr) 24px minmax(0,1fr) 24px minmax(0,1fr); gap:5px; align-items:stretch; margin:25px 0 17px; }
+    .node { min-width:0; padding:14px 10px; border:2px solid #46627a; border-radius:13px; background:#142a40; opacity:.46; }
+    .node.active { opacity:1; border-color:var(--cyan); box-shadow:0 0 19px #65d9f533; }
+    .node.good.active { border-color:var(--green); box-shadow:0 0 19px #85e4b233; }
+    .node.bad.active { border-color:var(--rose); box-shadow:0 0 19px #ff758d33; }
+    .node strong { display:block; color:#f2f8ff; font-size:.9rem; }
+    .node span { display:block; margin-top:7px; font-size:.76rem; line-height:1.4; color:#cbdae7; }
+    .arrow { align-self:center; color:var(--cyan); opacity:.22; font-size:1.4rem; text-align:center; }
+    .arrow.active { opacity:1; }
+    .boundary { border:1px dashed #69849a; border-radius:14px; padding:13px; background:#0a1b2d; }
+    .boundary-label { color:var(--amber); text-transform:uppercase; letter-spacing:.1em; font-size:.72rem; font-weight:800; margin-bottom:10px; }
+    .ports { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:9px; }
+    .port { min-width:0; border:1px solid #456078; border-radius:10px; padding:12px; opacity:.48; }
+    .port.active { opacity:1; border-color:var(--cyan); background:#15394a; }
+    .port.bad.active { border-color:var(--rose); background:#412737; }
+    .port b { display:block; font:.74rem/1.4 ui-monospace,monospace; color:#a3e7f5; }
+    .port small { display:block; margin-top:6px; font-size:.73rem; line-height:1.4; color:#d1e0eb; }
+    .trace-label { color:#93acc2; font-size:.7rem; text-transform:uppercase; letter-spacing:.1em; font-weight:800; margin-top:15px; }
+    .scene-stack { display:grid; }
+    .scene-pane { grid-area:1/1; min-width:0; visibility:hidden; opacity:0; }
+    .scene-pane.active { visibility:visible; opacity:1; }
+    pre { white-space:pre-wrap; overflow-wrap:anywhere; background:#061728; border:1px solid #38536d; border-radius:9px; padding:12px; margin:8px 0 0; color:#ade6d6; font:.77rem/1.55 ui-monospace,monospace; }
+    .screen-note { color:#a9bfd3; font-size:.78rem; line-height:1.45; margin:14px 0 0; }
+    .sidebar { padding:clamp(20px,2.4vw,30px); display:flex; flex-direction:column; }
+    .count { color:var(--cyan); font-size:.8rem; font-weight:800; letter-spacing:.1em; }
+    h2 { font-size:clamp(1.5rem,2.1vw,2.2rem); line-height:1.14; margin:18px 0 12px; }
+    .copy { color:#c8d9e8; line-height:1.57; margin:0; }
+    .rule { border-left:4px solid var(--cyan); background:#173143; border-radius:0 8px 8px 0; padding:12px 14px; margin:22px 0; line-height:1.45; font-weight:650; }
+    .scene-pane.error .rule { border-color:var(--rose); background:#3a2639; }
+    .controls { display:flex; gap:9px; align-items:center; flex-wrap:wrap; margin:16px 0 0; }
+    button { border:1px solid #4a6a82; background:#1a334c; color:#f0f7ff; border-radius:9px; padding:10px 14px; font:inherit; font-size:.9rem; font-weight:700; cursor:pointer; }
+    button:hover,button:focus-visible { outline:2px solid var(--cyan); outline-offset:2px; }
+    #play { background:#1a7188; }
+    .progress { height:8px; background:#29465b; border-radius:99px; flex:1; min-width:90px; overflow:hidden; }
+    .progress span { display:block; height:100%; width:0; background:var(--cyan); }
+    .dots { display:flex; gap:5px; }
+    .dot { width:30px; height:30px; padding:0; border:0; border-radius:50%; background:radial-gradient(circle,#55758a 0 4px,transparent 5px); }
+    .dot.active { background:radial-gradient(circle,var(--cyan) 0 7px,transparent 8px); }
+    .foot { color:#96aec2; font-size:.78rem; line-height:1.45; margin:7px 0 0; }
+    @media(max-width:1000px) { .layout { grid-template-columns:1fr; } }
+    @media(max-width:560px) { header { display:block; } .tag { display:inline-block; margin-top:12px; } .flow { grid-template-columns:1fr; } .arrow { display:none; } .ports { grid-template-columns:1fr; } }
+    @media(prefers-reduced-motion:reduce) { *,*::before,*::after { animation:none !important; transition:none !important; } }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <header><div><div class="eyebrow">khosiness · visual lesson 02</div><h1>One contract, replaceable models.</h1><p>See how a fake model and a provider transport can return the same harness-owned response without giving model output execution authority.</p></div><span class="tag">Step 2 · Model Adapter</span></header>
+    <main class="layout">
+      <section class="screen" aria-label="Conceptual model adapter diagram">
+        <div class="screen-top"><span>One repository question · two adapters</span><span class="concept">Conceptual animation</span></div>
+        <div class="flow">
+          <div id="node-harness" class="node"><strong>Harness</strong><span>Messages + offered tool descriptions</span></div>
+          <div id="arrow-in" class="arrow" aria-hidden="true">→</div>
+          <div id="node-adapter" class="node"><strong>ModelAdapter</strong><span>generate(messages, tools)</span></div>
+          <div id="arrow-out" class="arrow" aria-hidden="true">→</div>
+          <div id="node-response" class="node"><strong>ModelResponse</strong><span>Text, tool proposals, stop reason, token counts</span></div>
+        </div>
+        <div class="boundary">
+          <div class="boundary-label">Replaceable implementation behind the same interface</div>
+          <div class="ports">
+            <div id="port-fake" class="port"><b>FakeModel</b><small>Deque of known responses; records each call.</small></div>
+            <div id="port-provider" class="port"><b>CallableProviderAdapter</b><small>Transport returns a dictionary; Pydantic normalizes it.</small></div>
+          </div>
+        </div>
+        <div class="trace-label">Illustrative input / output</div>
+        <div id="traces" class="scene-stack">
+          <pre class="scene-pane">messages = [{"role": "user",
+             "content": "Where is the CLI version?"}]
+tools = [{"name": "read_file", ...}]
+adapter.generate(messages, tools)</pre>
+          <pre class="scene-pane">fake = FakeModel([ModelResponse(text="Check cli.py")])
+result = fake.generate(messages, tools)
+assert result.text == "Check cli.py"</pre>
+          <pre class="scene-pane">fake.calls[0] == {
+  "messages": messages,
+  "tools": tools
+}
+# What would have been sent is inspectable.</pre>
+          <pre class="scene-pane">ModelResponse(tool_calls=[
+  ToolCall(id="call-1", name="read_file",
+           arguments={"path": "README.md"})
+])
+# A proposal, not a file read.</pre>
+          <pre class="scene-pane">fake = FakeModel([])
+fake.generate(messages, tools)
+→ RuntimeError("FakeModel has no queued response")
+# The failed request is still in fake.calls.</pre>
+          <pre class="scene-pane">raw = {"text": "provider answer",
+       "tool_calls": [], "stop_reason": "end",
+       "input_tokens": 10, "output_tokens": 3}
+result = ModelResponse.model_validate(raw)
+assert result.input_tokens == 10</pre>
+        </div>
+        <p class="screen-note"><strong>Illustration only.</strong> Step 2 defines response data and adapters. It does not implement a run loop, event log, tool execution, or provider SDK integration.</p>
+      </section>
+      <aside id="narration" class="sidebar" aria-live="off">
+        <div id="count" class="count">01 / 06</div>
+        <div id="narratives" class="scene-stack">
+          <div class="scene-pane"><h2>Keep the core provider-neutral</h2><p class="copy">For “Where is the CLI version?”, the harness prepares messages and offered tool descriptions. Its call site depends on <code>generate(messages, tools)</code>, not a particular provider SDK.</p><div class="rule">The adapter boundary separates harness logic from model transport.</div></div>
+          <div class="scene-pane"><h2>Queue a known answer</h2><p class="copy">A FakeModel returns the next queued ModelResponse. No network, credentials, or sampling uncertainty is needed to test the harness-facing contract.</p><div class="rule">A deterministic fake lets the same input produce a known output.</div></div>
+          <div class="scene-pane"><h2>Inspect what the harness sent</h2><p class="copy">FakeModel.calls retains the exact messages and tool descriptions passed to generate. A test can inspect the request that would have gone to a real provider.</p><div class="rule">Offered tools are data in the request; their presence is not execution permission.</div></div>
+          <div class="scene-pane"><h2>A tool call is only a proposal</h2><p class="copy">The response can contain a structured ToolCall with an id, name, and arguments. At this stage it is data. Later harness stages validate and authorize it before any runtime acts.</p><div class="rule">A model response cannot directly read README.md.</div></div>
+          <div class="scene-pane error"><h2>Empty queue, explicit failure</h2><p class="copy">When the fake has no queued response, generate raises RuntimeError. The call is recorded before that check, so the attempted request remains inspectable. An event log does not exist yet.</p><div class="rule">Failure is visible and testable; it is not a fabricated model answer.</div></div>
+          <div class="scene-pane"><h2>Normalize a provider result</h2><p class="copy">CallableProviderAdapter calls an injected transport and validates its dictionary as ModelResponse. Provider-specific conversion belongs behind this boundary; the harness receives the same response type.</p><div class="rule">Swapping adapters should not change the core response contract.</div></div>
+        </div>
+      </aside>
+    </main>
+    <nav class="controls" aria-label="Animation controls"><button id="previous" type="button">← Previous</button><button id="play" type="button">Pause</button><button id="next" type="button">Next →</button><div class="progress" aria-hidden="true"><span id="progress"></span></div><div id="dots" class="dots" aria-label="Scenes"></div></nav>
+    <p class="foot">Use ← and → to change scenes, or Space to pause. Ask about this lesson through the manual page's tutor.</p>
+  </div>
+  <script>
+    const embedded = new URLSearchParams(location.search).get('embedded') === '1';
+    if (embedded) {
+      document.body.classList.add('embedded');
+      const shell = document.querySelector('.shell');
+      const reportHeight = () => parent.postMessage({type:'khosiness-animation-height',height:Math.ceil(shell.getBoundingClientRect().bottom)+2},'*');
+      new ResizeObserver(reportHeight).observe(shell);
+      window.addEventListener('message', event => { if (event.source === parent && event.data?.type === 'khosiness-measure-animation') reportHeight(); });
+      window.addEventListener('load', reportHeight);
+    }
+    const scenes = [
+      {nodes:['harness','adapter'], arrows:['in'], ports:[], title:'Keep the core provider-neutral'},
+      {nodes:['harness','adapter','response'], arrows:['in','out'], ports:['fake'], title:'Queue a known answer'},
+      {nodes:['harness','adapter'], arrows:['in'], ports:['fake'], title:'Inspect what the harness sent'},
+      {nodes:['adapter','response'], arrows:['out'], ports:['fake'], title:'A tool call is only a proposal'},
+      {nodes:['harness','adapter'], arrows:['in'], ports:['fake'], error:true, title:'Empty queue, explicit failure'},
+      {nodes:['harness','adapter','response'], arrows:['in','out'], ports:['provider'], title:'Normalize a provider result'}
+    ];
+    window.manualTutorContext = [
+      'Step 2 — Create the Model Adapter. This animation illustrates the adapter contracts; inspect the manual and live repository to verify implementation progress.',
+      'The manual checkpoint defines ToolCall(id, name, arguments), ModelResponse(text, tool_calls, stop_reason, input_tokens, output_tokens), ModelAdapter.generate(messages, tools), FakeModel with queued responses and calls, and CallableProviderAdapter with an injected transport. A tool call is proposed data, not an executed operation. No event log or agent loop exists yet.',
+      ...[...document.querySelectorAll('#narratives .scene-pane')].map((pane,i)=>`Scene ${i+1}: ${pane.textContent.trim()}`)
+    ].join('\n\n');
+    const $ = id => document.getElementById(id);
+    const narratives = [...document.querySelectorAll('#narratives .scene-pane')];
+    const traces = [...document.querySelectorAll('#traces .scene-pane')];
+    let index = 0, playing = !matchMedia('(prefers-reduced-motion: reduce)').matches;
+    let started = performance.now(), pausedElapsed = 0, frameId = null;
+    scenes.forEach((scene,i) => {
+      const button = document.createElement('button');
+      button.type='button'; button.className='dot';
+      button.setAttribute('aria-label',`Go to scene ${i+1}: ${scene.title}`);
+      button.addEventListener('click', () => show(i));
+      $('dots').append(button);
+    });
+    function show(next) {
+      index = (next + scenes.length) % scenes.length;
+      const scene = scenes[index];
+      $('count').textContent = `${String(index+1).padStart(2,'0')} / ${String(scenes.length).padStart(2,'0')}`;
+      for (const name of ['harness','adapter','response']) {
+        const node = $(`node-${name}`);
+        node.classList.toggle('active',scene.nodes.includes(name));
+        node.classList.toggle('bad',name==='adapter' && Boolean(scene.error));
+        node.classList.toggle('good',name==='response' && scene.nodes.includes(name));
+      }
+      for (const name of ['in','out']) $(`arrow-${name}`).classList.toggle('active',scene.arrows.includes(name));
+      for (const name of ['fake','provider']) {
+        const port = $(`port-${name}`);
+        port.classList.toggle('active',scene.ports.includes(name));
+        port.classList.toggle('bad',name==='fake' && Boolean(scene.error));
+      }
+      narratives.forEach((pane,i) => pane.classList.toggle('active',i===index));
+      traces.forEach((pane,i) => pane.classList.toggle('active',i===index));
+      document.querySelectorAll('.dot').forEach((dot,i)=>dot.classList.toggle('active',i===index));
+      started = performance.now(); pausedElapsed = 0;
+      if (index===scenes.length-1) { setPlaying(false); $('progress').style.width='100%'; }
+      else $('progress').style.width='0%';
+      updatePlayButton();
+    }
+    function updatePlayButton() {
+      const label = !playing && index===scenes.length-1 ? 'Replay' : playing ? 'Pause' : 'Play';
+      $('play').textContent=label;
+      $('play').setAttribute('aria-label',label==='Replay'?'Replay animation':`${label} animation`);
+    }
+    function scheduleFrame() { if (playing && frameId===null) frameId=requestAnimationFrame(frame); }
+    function setPlaying(value) {
+      if (playing===value) return;
+      playing=value;
+      if (value) { started=performance.now()-pausedElapsed; scheduleFrame(); }
+      else { pausedElapsed=performance.now()-started; if (frameId!==null) { cancelAnimationFrame(frameId); frameId=null; } }
+      $('narration').setAttribute('aria-live',value?'off':'polite');
+      updatePlayButton();
+    }
+    function frame(now) {
+      frameId=null;
+      if (!playing) return;
+      const elapsed=now-started;
+      if (elapsed>=7000) show(index+1);
+      else $('progress').style.width=`${Math.min(100,elapsed/70)}%`;
+      scheduleFrame();
+    }
+    $('previous').addEventListener('click',()=>show(index-1));
+    $('next').addEventListener('click',()=>show(index+1));
+    $('play').addEventListener('click',()=>{if(!playing && index===scenes.length-1) show(0); setPlaying(!playing);});
+    document.addEventListener('keydown',event=>{
+      if (event.target.closest?.('textarea, input, [contenteditable], .manual-qa-panel')) return;
+      if (event.key==='ArrowRight') show(index+1);
+      if (event.key==='ArrowLeft') show(index-1);
+      if (event.code==='Space' && !(event.target instanceof HTMLButtonElement)) { event.preventDefault(); setPlaying(!playing); }
+    });
+    document.addEventListener('visibilitychange',()=>{if(document.hidden) setPlaying(false);});
+    show(0);
+    $('narration').setAttribute('aria-live',playing?'off':'polite');
+    scheduleFrame();
+  </script>
+  <script src="../manual/assets/manual.js"></script>
+</body>
+</html>

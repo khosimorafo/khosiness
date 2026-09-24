@@ -14,7 +14,7 @@ d7c752490fd9189639a18b127802043bf7ed123d0ead6c340cc453082bab09db  ./docs/manual/
 71fdf7203bfcefd193ae4e29f2c62d6bb88b6c10d82b6560ef2b704df19635aa  ./docs/manual/pages/project-setup.html
 60f3c07a58baee1c2e8b005326c60013e34b94bd883b4a03678f3f3690d8dd3f  ./docs/manual/pages/step-00-mental-model.html
 6b963ccfa5f165691f8b23395448b5d54d068db3019478c642c7c5b0963d69ca  ./docs/manual/pages/step-01-task-contract.html
-645ba2811419c77a9393deb81005d81f4fa40259a86195e65af6f6812ef03386  ./docs/manual/pages/step-02-model-adapter.html
+c4c1a22ec51361d7d38ca73047d801ebf193b4b868746964f2145b54e630c4ff  ./docs/manual/pages/step-02-model-adapter.html
 07138356bb5ef66e88b8995feb99a33842e027dd6cf1dc9954eb6e74169c1ac9  ./docs/manual/pages/step-03-event-log.html
 4331b50da6f558006d54ee5e3ec856e9477bb411a892d3ab8bdd24c509202316  ./docs/manual/pages/step-04-agent-loop.html
 80c0aadd32521d221d816e4691c051631351cd4b355f1e9bc9de2700fe8dcfd8  ./docs/manual/pages/step-05-tool-system.html

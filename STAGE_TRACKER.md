@@ -20,7 +20,7 @@ a time.
 | Project Setup | Complete |
 | Step 0 — The Mental Model | Complete |
 | Step 1 — Define the Task Contract | Complete |
-| Step 2 — Create the Model Adapter | Pending |
+| Step 2 — Create the Model Adapter | In progress — final review |
 | Step 3 — Build the Event Log | Pending |
 | Step 4 — Implement the Agent Loop | Pending |
 | Step 5 — Build the Tool System | Pending |
@@ -333,3 +333,190 @@ commit contains exactly the nine intended files. After the commit,
 `pytest -q` reported six passing tests; JSON syntax, checksum verification,
 and whitespace checks also passed. Step 1 is closed. No Step 2 work begins
 until the human asks.
+
+## Active stage: Step 2 — Create the Model Adapter
+
+Responsibility: give the harness one provider-neutral request/response contract,
+with a deterministic fake for tests and a thin boundary for provider data.
+
+Failure mode addressed: provider-specific response objects leaking into core
+harness logic, or nondeterministic network calls being required to test it.
+
+The conceptual animation at `docs/animations/step-02-model-adapter.html` is
+embedded in the matching manual page. It shows the common `generate(messages,
+tools)` interface, queued fake responses, inspectable calls, a structured
+tool proposal that does not execute, an empty-queue failure, and provider
+dictionary normalization. Its traces are illustrative; live Step 2 code,
+tests, and the understanding gate have now been completed.
+Headless Chrome checks at 1440, 768, and 390 pixels confirmed that scenes
+5 → 6 → 5 keep the diagram, narration, and controls at identical positions
+and sizes, with no horizontal overflow. The existing six tests, JavaScript
+syntax check, checksum manifest, and whitespace check pass.
+
+The human requested the animation first and then began the Step 2 code
+sequence. There are 14 planned numbered instructions: 1 defines ToolCall and
+ModelResponse; 2 adds the ModelAdapter protocol; 3 creates FakeModel; 4
+creates CallableProviderAdapter; 5–8 add the four checkpoint tests one at a
+time; 9 runs the focused tests; 10 runs the accumulated suite; 11 checks
+provider isolation; 12 inspects FakeModel.calls and the empty-queue failure;
+13 is the understanding gate; 14 reviews and commits the stage. Corrections
+repeat the active number. Current progress: 13/14.
+
+### Instruction 1/14 — complete
+
+Create `src/khosiness/models/base.py` with only the provider-neutral
+`ToolCall` and `ModelResponse` data models. Wait for the saved file and
+inspect it before adding the ModelAdapter protocol in instruction 2.
+
+The human saved the file. Codex inspected it against the manual checkpoint
+and imported both models. A structured tool call serialized with the expected
+id, name, and arguments; optional response fields defaulted to `None` or an
+empty list. Progress: 1/14.
+
+### Instruction 2/14 — complete
+
+Add the `ModelAdapter` protocol to the same file, with a
+`generate(messages, tools) -> ModelResponse` signature. Do not add a
+provider implementation yet.
+
+The human reported another save and requested that the next instruction be
+9/Y. Inspection found no protocol or later Step 2 files at that time. The
+Step 2 sequence therefore remained at instruction 2/14.
+
+The human then saved the protocol. Codex verified that it imports and has
+the required `generate(messages, tools) -> ModelResponse` signature.
+Progress: 2/14.
+
+### Instruction 3/14 — complete
+
+Create `src/khosiness/models/fake.py` with a deterministic response queue,
+recorded calls, and an explicit empty-queue failure. Wait for the saved file
+before moving to the provider adapter.
+
+The human saved the checkpoint-equivalent fake. Codex imported it and observed
+the first queued response and recorded inputs. A second call raised the
+expected `RuntimeError("FakeModel has no queued response")`; the probe's
+nonzero exit status came from that deliberate failure. Progress: 3/14.
+
+### Instruction 4/14 — complete
+
+Create `src/khosiness/models/provider.py` with a callable transport wrapper
+that validates provider dictionaries into `ModelResponse`.
+
+The human saved the wrapper. Codex imported it and verified that a transport
+dictionary becomes a `ModelResponse` with its text and input-token count
+intact. No provider SDK was introduced. Progress: 4/14.
+
+### Instruction 5/14 — complete
+
+Create `tests/test_model_adapter.py` with the first test: a queued fake
+returns known text and records the supplied messages and tools.
+
+The human saved the test. Codex inspected it and ran the focused adapter
+suite: one test passed. Progress: 5/14.
+
+### Instruction 6/14 — complete
+
+Add a test that the fake preserves a structured `ToolCall` proposal,
+including its name and arguments. Do not assert that any tool executes.
+
+The human saved the test. Codex confirmed the saved structure and ran the
+focused suite: two tests passed. The assertion checks proposed data only;
+no file read occurs. Progress: 6/14.
+
+### Instruction 7/14 — complete
+
+Add a test for the fake's empty response queue and its explicit
+`RuntimeError`.
+
+The human saved the test. Codex ran the focused suite: three tests passed,
+including the expected failure and the recorded attempted call. Progress:
+7/14.
+
+### Instruction 8/14 — complete
+
+Add the provider-normalization test, asserting the callable transport's
+dictionary becomes a `ModelResponse` with text and token count intact.
+
+The human saved the test. Codex inspected it and confirmed the test file
+compiles; the four adapter tests are ready for the stage-specific run.
+Progress: 8/14.
+
+### Instruction 9/14 — complete
+
+Run the focused Step 2 test suite and report the result. Expected: four
+passing tests.
+
+The human ran `pytest tests/test_model_adapter.py -q` and reported
+`4 passed in 0.13s`. Progress: 9/14.
+
+### Instruction 10/14 — complete
+
+Run the full accumulated test suite. Expected: all ten tests from Steps 1
+and 2 pass.
+
+The human reported `10 passed` for `pytest -q`. Progress: 10/14.
+
+### Instruction 11/14 — complete
+
+Check that the Python source has no direct OpenAI or Anthropic SDK references.
+This stage uses a callable transport boundary, not a provider SDK.
+
+The human ran the recursive Python-source search and reported no output.
+Progress: 11/14.
+
+### Instruction 12/14 — complete
+
+In a Python REPL, inspect a FakeModel response and its recorded request, then
+exhaust the queue and inspect the explicit error and second recorded request.
+There is no event log yet; FakeModel.calls is the relevant trace at this stage.
+
+The human pasted the REPL lines and the terminal inserted leading spaces,
+causing `IndentationError` before the example ran. This is a command-entry
+failure, not a harness failure. Repeat instruction 12/14 using a small script
+saved through the editor, then inspect its output.
+The human saved the temporary script but reran the four adapter tests instead
+of executing it. The tests passed again; instruction 12 remains open. The
+next command is `python /tmp/khosiness-step2-inspect.py`.
+
+The human then ran the script. It printed `ModelResponse(text='done', ...)`,
+showed messages and the offered `read_file` description in the first call,
+raised `FakeModel has no queued response` on the second, and showed both
+calls in `fake.calls`. This satisfies the stage's manual trace inspection;
+the event-log clause is N/A until Step 3. Progress: 12/14.
+
+### Instruction 13/14 — complete
+
+Ask the human to explain the adapter boundary in their own words: what the
+protocol promises, why FakeModel and CallableProviderAdapter can be exchanged,
+why a ToolCall is not execution authority, and what the empty-queue trace
+proved. Assess the answer before closing the stage.
+
+First teach-back: the human correctly described replaceable models sharing
+one contract and the fake producing known outputs. Gaps: the provider adapter
+receives a dictionary and returns a `ModelResponse`, not a normalized
+dictionary; a `ToolCall` is a structured proposal, not a benchmark template;
+and the empty-queue observation shows an explicit error plus a recorded
+attempt, rather than merely proving the general adapter boundary. Ask for
+a focused retry on those points. Progress remains 12/14.
+
+Second teach-back: the human correctly said the provider transport returns a
+dictionary and the adapter returns a `ModelResponse`. The human identified
+the tool call as a structured proposal, although execution would require
+later harness validation/permission and a tool runtime, not merely a loop.
+The human named the empty-queue `RuntimeError` but omitted that
+`FakeModel.calls` retains the attempted second request. Ask only for those
+two final distinctions. Progress remains 12/14.
+
+Final teach-back: the human correctly explained that `FakeModel.generate()`
+records the attempted request before checking the queue, so the failed
+request remains in `fake.calls`. The human also stated that later harness
+validation and policy permission must precede tool-runtime dispatch; a
+model proposal has no execution authority. This resolves the remaining
+understanding gaps. Progress: 13/14.
+
+### Current instruction 14/14 — final review and stage commit
+
+Codex is comparing the live files with the Step 2 checkpoint, correcting
+documentation drift and formatting, and rerunning final validation before
+giving the human the commit command. Do not begin Step 3.

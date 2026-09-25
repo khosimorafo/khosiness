@@ -21,7 +21,7 @@ a time.
 | Step 0 — The Mental Model | Complete |
 | Step 1 — Define the Task Contract | Complete |
 | Step 2 — Create the Model Adapter | Complete |
-| Step 3 — Build the Event Log | Pending |
+| Step 3 — Build the Event Log | In progress — final review |
 | Step 4 — Implement the Agent Loop | Pending |
 | Step 5 — Build the Tool System | Pending |
 | Step 6 — Engineer the Context | Pending |
@@ -524,3 +524,194 @@ model adapter`). Codex verified the commit contents and clean working tree.
 After the commit, `pytest -q` reported ten passing tests, the checksum
 manifest passed, and the whitespace check was clean. Step 2 is closed.
 No Step 3 work begins until the human asks.
+
+## Active stage: Step 3 — Build the Event Log
+
+The human opened Step 3 and requested a concise explanation before code
+instructions. The working tree was clean and ten accumulated tests passed at
+the Step 2 boundary.
+
+Responsibility: store factual run events in append-only JSON Lines so a run
+can later be inspected, replayed, evaluated, and recovered.
+
+Failure mode addressed: losing the sequence of facts or mistaking durable
+history for the selected context shown to a model.
+
+The manual checkpoint adds `src/khosiness/events.py`,
+`src/khosiness/event_store.py`, and `tests/test_event_store.py`. The event
+envelope carries an id, run id, type, UTC timestamp, and payload. The store
+appends one JSON object per line and flushes each write; it loads the file
+back in order. The initial tests cover an empty store, ordering, payload
+round-trip, and 1,000 events. Manual validation inspects the JSONL file and
+the effect of process termination after append. Actual model/tool/task
+emissions await the agent loop and tool stages. History is not model context.
+
+Planned instruction count: 14. Instructions 1–3 build the envelope, append,
+and load behavior; 4–7 add the four checkpoint tests; 8–9 run focused and
+accumulated tests; 10–12 inspect JSONL, process termination, and a deliberate
+malformed-record failure; 13 is the teach-back; 14 reviews and commits the
+stage. Current progress: 13/14. Instructions 1–13 have been validated;
+instruction 14 is next.
+
+### Instruction 1/14 — complete
+
+Create `src/khosiness/events.py` with the typed Event envelope from the
+manual checkpoint. Validate the saved file before advancing to the store.
+
+The human saved the file before requesting the Step 3 animation. Codex
+inspected it against the checkpoint and imported `Event`. Two new events had
+distinct IDs, UTC timestamps, and independent empty payload defaults.
+Progress: 1/14.
+
+### Supplemental visual lesson
+
+`docs/animations/step-03-event-log.html` is embedded in the matching
+manual page and can also open alone with the optional tutor. Its seven
+conceptual scenes show the event envelope, append and flush, ordered reload,
+1,000-event check, process termination after append, malformed-record
+failure, and future harness-owned context selection. The animation labels
+real task/model/tool emission and context selection as later-stage work,
+and distinguishes flush from power-loss durability. Headless Chrome checks
+at 1440, 768, and 390 pixels found stable card and control positions across
+scenes 6 → 7 → 6, no horizontal overflow, and exactly one visible narration
+and trace. The manual embed was visually checked. The existing ten tests
+passed; JavaScript syntax, checksums, and whitespace checks passed.
+
+### Instruction 2/14 — complete
+
+Create `src/khosiness/event_store.py` with the JSONL store initializer and
+`append()`. The human asked to continue; the exact code has now been issued.
+Wait for the saved file and validate it before adding `load_all()`.
+
+The human saved the checkpoint-equivalent append path. Codex inspected it and
+wrote an event into a nested temporary directory. The directory was created
+and the file contained exactly one newline-terminated JSON object. Progress:
+2/14.
+
+### Instruction 3/14 — complete
+
+Add `load_all()` to the store: return an empty list when the file is absent,
+otherwise parse nonblank JSONL lines into `Event` objects in file order.
+
+The human saved the checkpoint-equivalent loader. Codex inspected it and
+observed `[]` for an absent file and `['first', 'second']` after two appends.
+Progress: 3/14.
+
+### Instruction 4/14 — complete
+
+Create `tests/test_event_store.py` with the empty-store test from the manual
+checkpoint. Add the other tests one at a time.
+
+The human saved the test. Codex inspected it and ran the focused event-store
+suite: one test passed. Progress: 4/14.
+
+### Instruction 5/14 — complete
+
+Add a test that two appended events load back in their original order.
+
+The human saved the test. Codex inspected it and ran the focused suite: two
+tests passed. Progress: 5/14.
+
+### Instruction 6/14 — complete
+
+Add a test that an event payload survives JSONL serialization and reload.
+
+The human saved the test. Codex inspected it and ran the focused suite: three
+tests passed, including the payload round-trip. Progress: 6/14.
+
+### Instruction 7/14 — complete
+
+Add the manual's 1,000-event round-trip test, checking total count and the
+last payload index.
+
+The human saved the test. Codex inspected it and ran the focused suite: four
+tests passed, including the 1,000-event round-trip. Progress: 7/14.
+
+### Instruction 8/14 — complete
+
+Run `pytest tests/test_event_store.py -q` from the repository root and
+report the stage-specific result. Expected: four passing tests.
+
+The human reported the expected result as correct. Codex's independent
+focused run also reported four passing tests. Progress: 8/14.
+
+### Instruction 9/14 — complete
+
+Run `pytest -q` and confirm the accumulated Steps 1–3 suite passes.
+Expected: fourteen tests.
+
+The human showed `4 passed in 0.17s` for the focused event-store suite and
+`14 passed in 0.19s` for the accumulated suite. Progress: 9/14.
+
+### Instruction 10/14 — complete
+
+Write one event to a temporary JSONL file and inspect the raw file directly.
+Confirm there is one complete JSON object and one trailing newline.
+
+The human ran the temporary script and saw `lines: 1` and
+`trailing newline: True`. Direct `cat` output showed a complete JSON object
+with event_id, run_id, type, UTC timestamp, and payload. Progress: 10/14.
+
+### Instruction 11/14 — complete
+
+Use a disposable child process to append one event, then terminate that
+child after append returns. Reopen the JSONL file in the parent and confirm
+the event is present. This checks process termination, not power-loss
+durability.
+
+The human ran the temporary child-process script and observed
+`reloaded: ['started']` after terminating the child. Progress: 11/14.
+
+### Instruction 12/14 — complete
+
+Append a deliberately malformed line to a temporary JSONL file after a
+valid event. Confirm `load_all()` raises visibly and the raw file still
+contains both lines. Do not modify the repository or its tests for this
+exercise.
+
+The human ran the temporary corruption script. `load_all()` raised
+`ValidationError`, and the raw file still contained the valid event plus
+the deliberately malformed second line. Progress: 12/14.
+
+### Instruction 13/14 — complete
+
+Ask the human to explain the event envelope and store boundary; why stored
+history is not automatically model context; what flush and the process-kill
+test prove and do not prove; and what the malformed-line inspection showed.
+Assess the answer before review and commit.
+
+First teach-back: the human correctly described an Event as a factual run
+record, the JSONL store as persistent storage, context as selected information
+for a model, flush as making appended content available to another process,
+and malformed JSON as an explicit failure. Gaps: the envelope has distinct
+`event_id`, `run_id`, and `type` fields; selected event facts may later enter
+model context, so saying event information is never sent to the model is too
+absolute; and the child-process check does not establish power-loss
+durability. Ask for a focused retry on these three distinctions. Progress
+remains 12/14.
+
+Focused retry, part one: the human correctly distinguished `event_id` as
+the record identifier, `run_id` as the run identifier, and `type` as the
+name of what happened (for example, a tool-call event). The response did
+not address selected event facts versus full history or why the process
+termination check does not prove power-loss durability. Ask only those two
+remaining questions. Progress remains 12/14.
+
+Final teach-back: the human explained that a later harness context builder
+may select relevant event facts for model messages while the event store
+retains the full history. The human also understood that the process-kill
+check proves the event can be reloaded by another process, not that a
+power loss would preserve it; the bytes may still be in OS cache because
+the store does not call `fsync()`. No understanding gap remains. Progress:
+13/14.
+
+### Current instruction 14/14 — final review and stage commit
+
+Codex reviewed the live code, tests, animation, manual embed, and tracker
+against the Step 3 checkpoint. `pytest tests/test_event_store.py -q`
+reported four passes and `pytest -q` reported fourteen. JSONL inspection,
+process termination, malformed-record inspection, checksum verification,
+Python compilation, JavaScript syntax, iframe embed, and whitespace checks
+passed. The seven changed files are the intended Step 3 files: the two
+source modules, test module, animation, manual page, tracker, and checksum
+manifest. The human stage commit is pending. Do not begin Step 4.

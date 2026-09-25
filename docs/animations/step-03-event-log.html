@@ -1,0 +1,246 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Step 3 — Build the Event Log</title>
+  <style>
+    :root { color-scheme:dark; font-family:Inter,ui-sans-serif,system-ui,sans-serif; background:#07111f; color:#edf5ff; --cyan:#65d9f5; --green:#85e4b2; --rose:#ff758d; --amber:#ffca78; --muted:#b4cadb; }
+    * { box-sizing:border-box; }
+    body { margin:0; background:radial-gradient(circle at 84% 0%,#173c54,transparent 35%),#07111f; }
+    .shell { max-width:1500px; margin:auto; padding:clamp(16px,2.5vw,34px); }
+    header { display:flex; justify-content:space-between; gap:16px; align-items:start; margin-bottom:20px; }
+    .eyebrow { color:var(--cyan); text-transform:uppercase; letter-spacing:.14em; font-size:.78rem; font-weight:800; }
+    h1 { margin:8px 0; font-size:clamp(1.7rem,3vw,3rem); line-height:1.08; }
+    header p { margin:0; max-width:66ch; color:var(--muted); line-height:1.5; }
+    .tag { border:1px solid #46617a; border-radius:999px; padding:8px 12px; white-space:nowrap; color:#c5d7e8; font-size:.8rem; }
+    .layout { display:grid; grid-template-columns:minmax(0,1.5fr) minmax(300px,.85fr); gap:18px; align-items:stretch; }
+    .screen,.sidebar { min-width:0; border:1px solid #2e4962; border-radius:20px; background:linear-gradient(145deg,#10253a,#0b1b2d); box-shadow:0 16px 45px #0005; }
+    .screen { padding:clamp(17px,2vw,25px); }
+    .screen-top { display:flex; justify-content:space-between; gap:12px; color:#b2c9dc; font-size:.74rem; text-transform:uppercase; letter-spacing:.1em; font-weight:800; }
+    .concept { color:var(--cyan); }
+    .flow { display:grid; grid-template-columns:minmax(0,1fr) 22px minmax(0,1fr) 22px minmax(0,1fr); gap:5px; align-items:stretch; margin:22px 0 15px; }
+    .node { min-width:0; padding:13px 10px; border:2px solid #46627a; border-radius:13px; background:#142a40; opacity:.46; }
+    .node.active { opacity:1; border-color:var(--cyan); box-shadow:0 0 19px #65d9f533; }
+    .node.good.active { border-color:var(--green); box-shadow:0 0 19px #85e4b233; }
+    .node.bad.active { border-color:var(--rose); box-shadow:0 0 19px #ff758d33; }
+    .node strong { display:block; color:#f2f8ff; font-size:.9rem; }
+    .node span { display:block; margin-top:7px; font-size:.76rem; line-height:1.4; color:#cbdae7; }
+    .arrow { align-self:center; color:var(--cyan); opacity:.22; font-size:1.35rem; text-align:center; }
+    .arrow.active { opacity:1; }
+    .log { border:1px dashed #69849a; border-radius:14px; padding:13px; background:#0a1b2d; }
+    .log-head { display:flex; justify-content:space-between; gap:10px; color:var(--amber); text-transform:uppercase; letter-spacing:.1em; font-size:.72rem; font-weight:800; margin-bottom:9px; }
+    .log-head small { color:#a9bfd3; letter-spacing:normal; text-transform:none; font-size:.72rem; }
+    .rows { display:grid; gap:7px; }
+    .row { border:1px solid #456078; border-radius:9px; padding:9px 10px; color:#c6d9e8; font:.73rem/1.38 ui-monospace,monospace; opacity:.46; overflow-wrap:anywhere; }
+    .row.active { opacity:1; border-color:var(--cyan); background:#15394a; }
+    .row.bad.active { border-color:var(--rose); background:#412737; }
+    #row-bad { visibility:hidden; }
+    #row-bad.active { visibility:visible; }
+    .row b { color:#91e0ed; }
+    .row.bad.active b { color:var(--rose); }
+    .selection { display:grid; grid-template-columns:1fr auto 1fr auto 1fr; gap:8px; align-items:stretch; margin-top:12px; }
+    .selection .node { padding:10px; }
+    .selection .arrow { color:var(--amber); }
+    .selection .node strong { font-size:.82rem; }
+    .selection .node span { font-size:.72rem; }
+    .trace-label { color:#93acc2; font-size:.7rem; text-transform:uppercase; letter-spacing:.1em; font-weight:800; margin-top:14px; }
+    .scene-stack { display:grid; }
+    .scene-pane { grid-area:1/1; min-width:0; visibility:hidden; opacity:0; }
+    .scene-pane.active { visibility:visible; opacity:1; }
+    pre { white-space:pre-wrap; overflow-wrap:anywhere; background:#061728; border:1px solid #38536d; border-radius:9px; padding:12px; margin:8px 0 0; color:#ade6d6; font:.76rem/1.48 ui-monospace,monospace; }
+    .screen-note { color:#a9bfd3; font-size:.78rem; line-height:1.45; margin:13px 0 0; }
+    .sidebar { padding:clamp(20px,2.4vw,30px); display:flex; flex-direction:column; }
+    .count { color:var(--cyan); font-size:.8rem; font-weight:800; letter-spacing:.1em; }
+    h2 { font-size:clamp(1.5rem,2.1vw,2.2rem); line-height:1.14; margin:18px 0 12px; }
+    .copy { color:#c8d9e8; line-height:1.57; margin:0; }
+    .rule { border-left:4px solid var(--cyan); background:#173143; border-radius:0 8px 8px 0; padding:12px 14px; margin:22px 0; line-height:1.45; font-weight:650; }
+    .scene-pane.error .rule { border-color:var(--rose); background:#3a2639; }
+    .controls { display:flex; gap:9px; align-items:center; flex-wrap:wrap; margin:16px 0 0; }
+    button { border:1px solid #4a6a82; background:#1a334c; color:#f0f7ff; border-radius:9px; padding:10px 14px; font:inherit; font-size:.9rem; font-weight:700; cursor:pointer; }
+    button:hover,button:focus-visible { outline:2px solid var(--cyan); outline-offset:2px; }
+    #play { background:#1a7188; }
+    .progress { height:8px; background:#29465b; border-radius:99px; flex:1; min-width:90px; overflow:hidden; }
+    .progress span { display:block; height:100%; width:0; background:var(--cyan); }
+    .dots { display:flex; gap:5px; }
+    .dot { width:30px; height:30px; padding:0; border:0; border-radius:50%; background:radial-gradient(circle,#55758a 0 4px,transparent 5px); }
+    .dot.active { background:radial-gradient(circle,var(--cyan) 0 7px,transparent 8px); }
+    .foot { color:#96aec2; font-size:.78rem; line-height:1.45; margin:7px 0 0; }
+    @media(max-width:1000px) { .layout { grid-template-columns:1fr; } }
+    @media(max-width:560px) { header { display:block; } .tag { display:inline-block; margin-top:12px; } .flow { grid-template-columns:1fr; } .flow .arrow { display:none; } .selection { grid-template-columns:1fr; } .selection .arrow { display:none; } }
+    @media(prefers-reduced-motion:reduce) { *,*::before,*::after { animation:none !important; transition:none !important; } }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <header><div><div class="eyebrow">khosiness · visual lesson 03</div><h1>Keep the facts. Choose the view.</h1><p>Follow a run event into an append-only JSONL history, then see what survives, what fails, and what a future model may see.</p></div><span class="tag">Step 3 · Event Log</span></header>
+    <main class="layout">
+      <section class="screen" aria-label="Conceptual event log diagram">
+        <div class="screen-top"><span>One run · durable factual history</span><span class="concept">Conceptual animation</span></div>
+        <div class="flow">
+          <div id="node-event" class="node"><strong>Event</strong><span>id · run_id · type · UTC time · payload</span></div>
+          <div id="arrow-append" class="arrow" aria-hidden="true">→</div>
+          <div id="node-store" class="node"><strong>JsonlEventStore</strong><span>append() writes one line and flushes</span></div>
+          <div id="arrow-file" class="arrow" aria-hidden="true">→</div>
+          <div id="node-file" class="node"><strong>events.jsonl</strong><span>Readable lines, in append order</span></div>
+        </div>
+        <div class="log">
+          <div class="log-head"><span>Illustrative file contents</span><small>one JSON object per line</small></div>
+          <div class="rows">
+            <div id="row-start" class="row"><b>1</b> {"event_id":"e1","run_id":"r1","type":"task_started","timestamp":"2026-09-25T00:00:00Z","payload":{}}</div>
+            <div id="row-model" class="row"><b>2</b> {"event_id":"e2","run_id":"r1","type":"model_responded","timestamp":"2026-09-25T00:00:01Z","payload":{}}</div>
+            <div id="row-tool" class="row"><b>3</b> {"event_id":"e3","run_id":"r1","type":"tool_completed","timestamp":"2026-09-25T00:00:02Z","payload":{"ok":true}}</div>
+            <div id="row-bad" class="row"><b>4</b> {broken JSON</div>
+          </div>
+        </div>
+        <div class="selection">
+          <div id="node-history" class="node"><strong>Stored history</strong><span>All factual events remain available.</span></div>
+          <div id="arrow-to-selector" class="arrow" aria-hidden="true">⇢</div>
+          <div id="node-selector" class="node"><strong>Future harness selector</strong><span>Chooses relevant facts.</span></div>
+          <div id="arrow-to-context" class="arrow" aria-hidden="true">⇢</div>
+          <div id="node-context" class="node"><strong>Future context</strong><span>Harness may select relevant facts later.</span></div>
+        </div>
+        <div class="trace-label">Illustrative code / observation</div>
+        <div id="traces" class="scene-stack">
+          <pre class="scene-pane">Event(run_id="r1", type="task_started",
+      payload={"objective": "find CLI version"})
+# event_id and UTC timestamp get defaults.</pre>
+          <pre class="scene-pane">store.append(event)
+# open in append mode → write JSON + "\n" → flush
+# events.jsonl now contains one complete line.</pre>
+          <pre class="scene-pane">store.append(Event(run_id="r1", type="model_responded"))
+store.append(Event(run_id="r1", type="tool_completed"))
+[e.type for e in store.load_all()]
+→ ["task_started", "model_responded", "tool_completed"]</pre>
+          <pre class="scene-pane">for index in range(1000):
+    store.append(Event(run_id="r1", type="tick",
+                       payload={"index": index}))
+assert len(store.load_all()) == 1000</pre>
+          <pre class="scene-pane">append(event); process exits
+reopen store → event remains in events.jsonl
+# flush handles process exit; no fsync/power-loss claim.</pre>
+          <pre class="scene-pane">events.jsonl contains: {broken JSON
+store.load_all()
+→ validation/parsing error at the bad line
+# Earlier lines remain in the file.</pre>
+          <pre class="scene-pane">history = store.load_all()   # all recorded facts
+next_context = select_relevant(history)
+# Selection is a later stage, not EventStore.load_all().</pre>
+        </div>
+        <p class="screen-note"><strong>Illustration only.</strong> Step 3 builds the event envelope and store. The agent loop and tool runtime that would emit real task, model, and tool events come later. Context selection is also a later stage.</p>
+      </section>
+      <aside id="narration" class="sidebar" aria-live="off">
+        <div id="count" class="count">01 / 07</div>
+        <div id="narratives" class="scene-stack">
+          <div class="scene-pane"><h2>Give every fact an envelope</h2><p class="copy">An Event has an ID, run ID, type, UTC timestamp, and payload. These fields identify the record and the run it belongs to. The example describes a task starting; it is not a prompt message.</p><div class="rule">A factual event records what happened; it does not ask the model what to do.</div></div>
+          <div class="scene-pane"><h2>Append one JSON object per line</h2><p class="copy">JsonlEventStore opens the file in append mode, writes the serialized event plus a newline, and flushes the handle. A reader can inspect the file with an ordinary text editor.</p><div class="rule">Append new facts; preserve earlier lines and their order.</div></div>
+          <div class="scene-pane"><h2>Reload in the same order</h2><p class="copy">load_all() parses each nonblank line into an Event. The file order is the returned list order. The store does not invent a model summary or choose context.</p><div class="rule">History is the full sequence; it is not the next model input.</div></div>
+          <div class="scene-pane"><h2>Check a thousand events</h2><p class="copy">A deterministic test appends 1,000 events and reloads them. It checks the count and the last payload index, catching missing, duplicated, or reordered lines in this small checkpoint.</p><div class="rule">Test the storage behavior before depending on it for recovery.</div></div>
+          <div class="scene-pane"><h2>Inspect after process termination</h2><p class="copy">Once append() returns, the handle has been flushed and closed. A new process can reopen the JSONL file and read that event. This does not promise survival of a machine power loss.</p><div class="rule">Flush is a process-level check; power-loss durability would need stronger guarantees.</div></div>
+          <div class="scene-pane error"><h2>A malformed line fails visibly</h2><p class="copy">If a line is not valid event JSON, load_all() raises a parsing or validation error. The original file remains inspectable, including its earlier good lines. This checkpoint does not repair corruption.</p><div class="rule">Do not silently turn a damaged history into an apparently complete one.</div></div>
+          <div class="scene-pane"><h2>Keep history separate from context</h2><p class="copy">The event store retains all factual records. A future harness context component will decide which relevant facts a model sees. That selection path is shown conceptually; Step 3 does not implement it.</p><div class="rule">Store generously; inject selectively.</div></div>
+        </div>
+      </aside>
+    </main>
+    <nav class="controls" aria-label="Animation controls"><button id="previous" type="button">← Previous</button><button id="play" type="button">Pause</button><button id="next" type="button">Next →</button><div class="progress" aria-hidden="true"><span id="progress"></span></div><div id="dots" class="dots" aria-label="Scenes"></div></nav>
+    <p class="foot">Use ← and → to change scenes, or Space to pause. Ask about this lesson through the manual page's tutor.</p>
+  </div>
+  <script>
+    const embedded = new URLSearchParams(location.search).get('embedded') === '1';
+    if (embedded) {
+      document.body.classList.add('embedded');
+      const shell = document.querySelector('.shell');
+      const reportHeight = () => parent.postMessage({type:'khosiness-animation-height',height:Math.ceil(shell.getBoundingClientRect().bottom)+2},'*');
+      new ResizeObserver(reportHeight).observe(shell);
+      window.addEventListener('message', event => { if (event.source === parent && event.data?.type === 'khosiness-measure-animation') reportHeight(); });
+      window.addEventListener('load', reportHeight);
+    }
+    const scenes = [
+      {nodes:['event'], rows:['start'], title:'Give every fact an envelope'},
+      {nodes:['event','store','file'], arrows:['append','file'], rows:['start'], title:'Append one JSON object per line'},
+      {nodes:['store','file'], rows:['start','model','tool'], title:'Reload in the same order'},
+      {nodes:['store','file'], rows:['start','model','tool'], title:'Check a thousand events'},
+      {nodes:['file'], rows:['start'], title:'Inspect after process termination'},
+      {nodes:['store','file'], rows:['start','model','tool','bad'], error:true, title:'A malformed line fails visibly'},
+      {nodes:['file','history','selector','context'], arrows:['to-selector','to-context'], rows:['start','model','tool'], title:'Keep history separate from context'}
+    ];
+    window.manualTutorContext = [
+      'Step 3 — Build the Event Log. This animation is conceptual; inspect the live repository to verify implementation progress.',
+      'The manual checkpoint defines Event(event_id, run_id, type, UTC timestamp, payload) and JsonlEventStore.append/load_all. One event is written per JSONL line, and append flushes each write. No agent loop, tool runtime, or context selector exists yet. A malformed line makes load_all raise. Flush does not mean power-loss durability.',
+      ...[...document.querySelectorAll('#narratives .scene-pane')].map((pane,i)=>`Scene ${i+1}: ${pane.textContent.trim()}`)
+    ].join('\n\n');
+    const $ = id => document.getElementById(id);
+    const narratives = [...document.querySelectorAll('#narratives .scene-pane')];
+    const traces = [...document.querySelectorAll('#traces .scene-pane')];
+    let index = 0, playing = !matchMedia('(prefers-reduced-motion: reduce)').matches;
+    let started = performance.now(), pausedElapsed = 0, frameId = null;
+    scenes.forEach((scene,i) => {
+      const button = document.createElement('button');
+      button.type='button'; button.className='dot';
+      button.setAttribute('aria-label',`Go to scene ${i+1}: ${scene.title}`);
+      button.addEventListener('click', () => show(i));
+      $('dots').append(button);
+    });
+    function show(next) {
+      index = (next + scenes.length) % scenes.length;
+      const scene = scenes[index];
+      $('count').textContent = `${String(index+1).padStart(2,'0')} / ${String(scenes.length).padStart(2,'0')}`;
+      for (const name of ['event','store','file','history','selector','context']) {
+        const node = $(`node-${name}`);
+        node.classList.toggle('active',scene.nodes.includes(name));
+        node.classList.toggle('bad',name==='store' && Boolean(scene.error));
+        node.classList.toggle('good',name==='file' && scene.nodes.includes(name) && !scene.error);
+      }
+      for (const name of ['append','file','to-selector','to-context']) $(`arrow-${name}`).classList.toggle('active',scene.arrows?.includes(name) || false);
+      for (const name of ['start','model','tool','bad']) {
+        const row = $(`row-${name}`);
+        row.classList.toggle('active',scene.rows.includes(name));
+        row.classList.toggle('bad',name==='bad' && Boolean(scene.error));
+      }
+      narratives.forEach((pane,i) => pane.classList.toggle('active',i===index));
+      traces.forEach((pane,i) => pane.classList.toggle('active',i===index));
+      document.querySelectorAll('.dot').forEach((dot,i)=>dot.classList.toggle('active',i===index));
+      started = performance.now(); pausedElapsed = 0;
+      if (index===scenes.length-1) { setPlaying(false); $('progress').style.width='100%'; }
+      else $('progress').style.width='0%';
+      updatePlayButton();
+    }
+    function updatePlayButton() {
+      const label = !playing && index===scenes.length-1 ? 'Replay' : playing ? 'Pause' : 'Play';
+      $('play').textContent=label;
+      $('play').setAttribute('aria-label',label==='Replay'?'Replay animation':`${label} animation`);
+    }
+    function scheduleFrame() { if (playing && frameId===null) frameId=requestAnimationFrame(frame); }
+    function setPlaying(value) {
+      if (playing===value) return;
+      playing=value;
+      if (value) { started=performance.now()-pausedElapsed; scheduleFrame(); }
+      else { pausedElapsed=performance.now()-started; if (frameId!==null) { cancelAnimationFrame(frameId); frameId=null; } }
+      $('narration').setAttribute('aria-live',value?'off':'polite');
+      updatePlayButton();
+    }
+    function frame(now) {
+      frameId=null;
+      if (!playing) return;
+      const elapsed=now-started;
+      if (elapsed>=7000) show(index+1);
+      else $('progress').style.width=`${Math.min(100,elapsed/70)}%`;
+      scheduleFrame();
+    }
+    $('previous').addEventListener('click',()=>show(index-1));
+    $('next').addEventListener('click',()=>show(index+1));
+    $('play').addEventListener('click',()=>{if(!playing && index===scenes.length-1) show(0); setPlaying(!playing);});
+    document.addEventListener('keydown',event=>{
+      if (event.target.closest?.('textarea, input, [contenteditable], .manual-qa-panel')) return;
+      if (event.key==='ArrowRight') show(index+1);
+      if (event.key==='ArrowLeft') show(index-1);
+      if (event.code==='Space' && !(event.target instanceof HTMLButtonElement)) { event.preventDefault(); setPlaying(!playing); }
+    });
+    document.addEventListener('visibilitychange',()=>{if(document.hidden) setPlaying(false);});
+    show(0);
+    $('narration').setAttribute('aria-live',playing?'off':'polite');
+    scheduleFrame();
+  </script>
+  <script src="../manual/assets/manual.js"></script>
+</body>
+</html>

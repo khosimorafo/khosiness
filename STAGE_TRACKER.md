@@ -21,7 +21,7 @@ a time.
 | Step 0 — The Mental Model | Complete |
 | Step 1 — Define the Task Contract | Complete |
 | Step 2 — Create the Model Adapter | Complete |
-| Step 3 — Build the Event Log | In progress — final review |
+| Step 3 — Build the Event Log | Complete |
 | Step 4 — Implement the Agent Loop | Pending |
 | Step 5 — Build the Tool System | Pending |
 | Step 6 — Engineer the Context | Pending |
@@ -525,7 +525,7 @@ After the commit, `pytest -q` reported ten passing tests, the checksum
 manifest passed, and the whitespace check was clean. Step 2 is closed.
 No Step 3 work begins until the human asks.
 
-## Active stage: Step 3 — Build the Event Log
+## Completed stage: Step 3 — Build the Event Log
 
 The human opened Step 3 and requested a concise explanation before code
 instructions. The working tree was clean and ten accumulated tests passed at
@@ -550,8 +550,7 @@ Planned instruction count: 14. Instructions 1–3 build the envelope, append,
 and load behavior; 4–7 add the four checkpoint tests; 8–9 run focused and
 accumulated tests; 10–12 inspect JSONL, process termination, and a deliberate
 malformed-record failure; 13 is the teach-back; 14 reviews and commits the
-stage. Current progress: 13/14. Instructions 1–13 have been validated;
-instruction 14 is next.
+stage. All 14/14 instructions are complete.
 
 ### Instruction 1/14 — complete
 
@@ -705,7 +704,7 @@ power loss would preserve it; the bytes may still be in OS cache because
 the store does not call `fsync()`. No understanding gap remains. Progress:
 13/14.
 
-### Current instruction 14/14 — final review and stage commit
+### Instruction 14/14 — complete
 
 Codex reviewed the live code, tests, animation, manual embed, and tracker
 against the Step 3 checkpoint. `pytest tests/test_event_store.py -q`
@@ -714,4 +713,8 @@ process termination, malformed-record inspection, checksum verification,
 Python compilation, JavaScript syntax, iframe embed, and whitespace checks
 passed. The seven changed files are the intended Step 3 files: the two
 source modules, test module, animation, manual page, tracker, and checksum
-manifest. The human stage commit is pending. Do not begin Step 4.
+manifest. The human committed these files as `f4749a1` (`step 3: build the
+event log`). Codex verified the seven committed files and clean working
+tree. After the commit, `pytest -q` reported fourteen passes and the
+checksum manifest passed. Step 3 is closed. Do not begin Step 4 until the
+human asks.

@@ -69,11 +69,22 @@
     @media(max-width:1000px) { .layout { grid-template-columns:1fr; } }
     @media(max-width:560px) { header { display:block; } .tag { display:inline-block; margin-top:12px; } .flow { grid-template-columns:1fr; } .flow .arrow { display:none; } .selection { grid-template-columns:1fr; } .selection .arrow { display:none; } }
     @media(prefers-reduced-motion:reduce) { *,*::before,*::after { animation:none !important; transition:none !important; } }
+
+    .animation-orientation { border:1px solid #2e4962; border-radius:18px; background:#10253a; padding:18px; margin-bottom:18px; }
+    .animation-orientation .orientation-kicker { color:var(--cyan); font-size:.76rem; font-weight:800; letter-spacing:.12em; text-transform:uppercase; }
+    .animation-orientation h2 { margin:6px 0 12px; font-size:1.35rem; }
+    .animation-orientation-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:9px; }
+    .animation-orientation-item { border:1px solid #3b5770; border-radius:10px; background:#0b1b2d; padding:12px; }
+    .animation-orientation-item h3 { margin:0 0 5px; color:#aee9f4; font-size:.85rem; }
+    .animation-orientation-item p { margin:0; color:#d2e1ed; line-height:1.45; font-size:.84rem; }
+    body.embedded .animation-orientation { display:none; }
+    @media(max-width:680px) { .animation-orientation-grid { grid-template-columns:1fr; } }
   </style>
 </head>
 <body>
   <div class="shell">
     <header><div><div class="eyebrow">khosiness · visual lesson 03</div><h1>Keep the facts. Choose the view.</h1><p>Follow a run event into an append-only JSONL history, then see what survives, what fails, and what a future model may see.</p></div><span class="tag">Step 3 · Event Log</span></header>
+    <section class="animation-orientation" aria-label="Before the animation"><div class="orientation-kicker">Before the animation</div><h2>Step 3 in context</h2><div class="animation-orientation-grid"><div class="animation-orientation-item"><h3>What this step does</h3><p>Record run facts as typed events in an append-only JSON Lines file, then load them back in order.</p></div><div class="animation-orientation-item"><h3>What it builds on</h3><p>Steps 1 and 2 give us task identity and model response shapes. They do not yet provide a durable account of what happened.</p></div><div class="animation-orientation-item"><h3>Goal</h3><p>Preserve a factual history for inspection and later recovery without treating that whole history as model context.</p></div><div class="animation-orientation-item"><h3>End state</h3><p>Event and JsonlEventStore support newline-terminated append, flush, ordered reload, and explicit failure on malformed lines. The loop will emit real run events in Step 4.</p></div></div></section>
     <main class="layout">
       <section class="screen" aria-label="Conceptual event log diagram">
         <div class="screen-top"><span>One run · durable factual history</span><span class="concept">Conceptual animation</span></div>
@@ -241,6 +252,7 @@ next_context = select_relevant(history)
     $('narration').setAttribute('aria-live',playing?'off':'polite');
     scheduleFrame();
   </script>
+  <script>window.manualTutorContext = document.querySelector('.animation-orientation').textContent.trim() + '\n\n' + (window.manualTutorContext || '');</script>
   <script src="../manual/assets/manual.js"></script>
 </body>
 </html>

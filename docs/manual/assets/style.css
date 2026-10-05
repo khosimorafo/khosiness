@@ -605,6 +605,48 @@ li{margin:6px 0}
 
 
 /* Dedicated-page manual build */
+.agent-relationship{margin:24px 0}
+.agent-relationship-scroll{overflow-x:auto;border-radius:12px}
+.agent-relationship-scroll:focus-visible{outline:3px solid var(--accent);outline-offset:3px}
+.agent-relationship svg{display:block;width:100%;min-width:900px;height:auto;font-family:inherit}
+.agent-relationship figcaption{margin:12px 0 0;color:#475467;font-size:.93rem;line-height:1.55}
+.stage-orientation .orientation-kicker{
+  color:#28539e;
+  font-size:.74rem;
+  font-weight:800;
+  letter-spacing:.11em;
+  text-transform:uppercase;
+}
+.stage-orientation .orientation-intro{
+  margin:4px 0 18px;
+  color:var(--muted);
+  line-height:1.5;
+}
+.orientation-grid{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:12px;
+}
+.orientation-item{
+  border:1px solid #dce5f2;
+  border-left:4px solid #3f6fc2;
+  border-radius:11px;
+  background:#f6f9ff;
+  padding:13px 15px;
+  min-width:0;
+}
+.orientation-item h3{
+  margin:0 0 6px;
+  color:#244777;
+  font-size:.94rem;
+}
+.orientation-item p{
+  margin:0;
+  line-height:1.52;
+}
+@media(max-width:680px){
+  .orientation-grid{grid-template-columns:1fr}
+}
 .nav a.current-page{
   color:#fff;
   background:#213d79;

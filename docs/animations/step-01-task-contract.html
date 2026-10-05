@@ -73,11 +73,22 @@
     @media(max-width:560px) { header { display:block; } .tag { display:inline-block; margin-top:12px; } .flow { flex-wrap:wrap; } .box { flex-basis:40%; } .arrow { display:none; } .fields { grid-template-columns:1fr; } }
     body.final-scene .box,body.final-scene .arrow,body.final-scene .field { transition:none; animation:none; }
     @media(prefers-reduced-motion:reduce) { *,*::before,*::after { animation:none !important; transition:none !important; } }
+
+    .animation-orientation { border:1px solid #2e4962; border-radius:18px; background:#10253a; padding:18px; margin-bottom:18px; }
+    .animation-orientation .orientation-kicker { color:var(--cyan); font-size:.76rem; font-weight:800; letter-spacing:.12em; text-transform:uppercase; }
+    .animation-orientation h2 { margin:6px 0 12px; font-size:1.35rem; }
+    .animation-orientation-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:9px; }
+    .animation-orientation-item { border:1px solid #3b5770; border-radius:10px; background:#0b1b2d; padding:12px; }
+    .animation-orientation-item h3 { margin:0 0 5px; color:#aee9f4; font-size:.85rem; }
+    .animation-orientation-item p { margin:0; color:#d2e1ed; line-height:1.45; font-size:.84rem; }
+    body.embedded .animation-orientation { display:none; }
+    @media(max-width:680px) { .animation-orientation-grid { grid-template-columns:1fr; } }
   </style>
 </head>
 <body>
   <div class="shell">
     <header><div><div class="eyebrow">khosiness · visual lesson 01</div><h1>A task is a contract, not a chat message.</h1><p>Watch an open-ended request become a bounded task, fail early when invalid, and become portable when valid.</p></div><span class="tag">Step 1 · Task Contract</span></header>
+    <section class="animation-orientation" aria-label="Before the animation"><div class="orientation-kicker">Before the animation</div><h2>Step 1 in context</h2><div class="animation-orientation-grid"><div class="animation-orientation-item"><h3>What this step does</h3><p>Turn an open-ended request into a bounded Task with an identity, objective, workspace, constraints, success criteria, and step limit.</p></div><div class="animation-orientation-item"><h3>What it builds on</h3><p>Step 0 established that a task is not a conversation and that the harness, not the model, owns the work boundary.</p></div><div class="animation-orientation-item"><h3>Goal</h3><p>Reject unusable inputs before any model call and make the intended finish condition explicit.</p></div><div class="animation-orientation-item"><h3>End state</h3><p>A validated Task model, six tests, and ten benchmark templates exist. Templates still need a workspace before they are runnable Tasks.</p></div></div></section>
     <main class="layout">
       <section class="screen" aria-label="Conceptual task validation flow">
         <div class="screen-top"><span>One repository question, two possible outcomes</span><span class="concept">Conceptual animation</span></div>
@@ -182,6 +193,7 @@
     });
     $('narration').setAttribute('aria-live',playing?'off':'polite');scheduleFrame();
   </script>
+  <script>window.manualTutorContext = document.querySelector('.animation-orientation').textContent.trim() + '\n\n' + (window.manualTutorContext || '');</script>
   <script src="../manual/assets/manual.js"></script>
 </body>
 </html>

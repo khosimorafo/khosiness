@@ -1,0 +1,274 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Step 4 — Implement the Agent Loop</title>
+  <style>
+    :root { color-scheme:dark; font-family:Inter,ui-sans-serif,system-ui,sans-serif; background:#07111f; color:#edf5ff; --cyan:#65d9f5; --green:#85e4b2; --rose:#ff758d; --amber:#ffca78; --muted:#b4cadb; }
+    * { box-sizing:border-box; }
+    body { margin:0; background:radial-gradient(circle at 84% 0%,#173c54,transparent 35%),#07111f; }
+    .shell { max-width:1500px; margin:auto; padding:clamp(16px,2.5vw,34px); }
+    header { display:flex; justify-content:space-between; gap:16px; align-items:start; margin-bottom:20px; }
+    .eyebrow { color:var(--cyan); text-transform:uppercase; letter-spacing:.14em; font-size:.78rem; font-weight:800; }
+    h1 { margin:8px 0; font-size:clamp(1.7rem,3vw,3rem); line-height:1.08; }
+    header p { margin:0; max-width:69ch; color:var(--muted); line-height:1.5; }
+    .tag { border:1px solid #46617a; border-radius:999px; padding:8px 12px; white-space:nowrap; color:#c5d7e8; font-size:.8rem; }
+    .layout { display:grid; grid-template-columns:minmax(0,1.5fr) minmax(300px,.85fr); gap:18px; align-items:stretch; }
+    .screen,.sidebar { min-width:0; border:1px solid #2e4962; border-radius:20px; background:linear-gradient(145deg,#10253a,#0b1b2d); box-shadow:0 16px 45px #0005; }
+    .screen { padding:clamp(17px,2vw,25px); }
+    .screen-top { display:flex; justify-content:space-between; gap:12px; color:#b2c9dc; font-size:.74rem; text-transform:uppercase; letter-spacing:.1em; font-weight:800; }
+    .concept { color:var(--cyan); }
+    .flow { display:grid; grid-template-columns:minmax(0,1fr) 18px minmax(0,1fr) 18px minmax(0,1fr) 18px minmax(0,1fr); gap:4px; align-items:stretch; margin:20px 0 12px; }
+    .node { min-width:0; padding:11px 9px; border:2px solid #46627a; border-radius:12px; background:#142a40; opacity:.45; }
+    .node.active { opacity:1; border-color:var(--cyan); box-shadow:0 0 18px #65d9f533; }
+    .node.good.active { border-color:var(--green); box-shadow:0 0 18px #85e4b233; }
+    .node.bad.active { border-color:var(--rose); box-shadow:0 0 18px #ff758d33; }
+    .node strong { display:block; color:#f2f8ff; font-size:.82rem; }
+    .node span { display:block; margin-top:6px; color:#c9dce9; font-size:.71rem; line-height:1.37; }
+    .arrow { align-self:center; color:var(--cyan); opacity:.18; font-size:1.22rem; text-align:center; }
+    .arrow.active { opacity:1; }
+    .lower { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:8px; margin-bottom:12px; }
+    .lower .node { min-height:77px; }
+    .lower .node strong { color:#c8ecf6; }
+    .boards { display:grid; grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr); gap:9px; }
+    .board { border:1px dashed #69849a; border-radius:13px; padding:12px; background:#0a1b2d; min-width:0; }
+    .board-head { color:var(--amber); text-transform:uppercase; letter-spacing:.1em; font-size:.72rem; font-weight:800; margin-bottom:9px; }
+    .state-grid { display:grid; grid-template-columns:1fr 1fr; gap:7px; }
+    .state-cell { border:1px solid #456078; border-radius:8px; padding:8px; min-width:0; }
+    .state-cell b { display:block; color:#91e0ed; font:.69rem/1.3 ui-monospace,monospace; }
+    .state-cell span { display:block; color:#e5f0f8; font:.73rem/1.3 ui-monospace,monospace; margin-top:4px; min-height:2.6em; overflow-wrap:anywhere; }
+    .events { display:grid; gap:4px; }
+    .event { border:1px solid #456078; border-radius:7px; padding:5px 7px; opacity:.38; color:#c6d9e8; font:.68rem/1.3 ui-monospace,monospace; }
+    .event.active { opacity:1; border-color:var(--cyan); background:#15394a; }
+    .event.good.active { border-color:var(--green); background:#1d3e39; }
+    .event.bad.active { border-color:var(--rose); background:#412737; }
+    .trace-label { color:#93acc2; font-size:.7rem; text-transform:uppercase; letter-spacing:.1em; font-weight:800; margin-top:13px; }
+    .scene-stack { display:grid; }
+    .scene-pane { grid-area:1/1; min-width:0; visibility:hidden; opacity:0; }
+    .scene-pane.active { visibility:visible; opacity:1; }
+    pre { white-space:pre-wrap; overflow-wrap:anywhere; background:#061728; border:1px solid #38536d; border-radius:9px; padding:11px; margin:7px 0 0; color:#ade6d6; font:.75rem/1.43 ui-monospace,monospace; }
+    .screen-note { color:#a9bfd3; font-size:.78rem; line-height:1.45; margin:12px 0 0; }
+    .sidebar { padding:clamp(20px,2.4vw,30px); display:flex; flex-direction:column; }
+    .count { color:var(--cyan); font-size:.8rem; font-weight:800; letter-spacing:.1em; }
+    h2 { font-size:clamp(1.5rem,2.1vw,2.2rem); line-height:1.14; margin:18px 0 12px; }
+    .copy { color:#c8d9e8; line-height:1.57; margin:0; }
+    .rule { border-left:4px solid var(--cyan); background:#173143; border-radius:0 8px 8px 0; padding:12px 14px; margin:22px 0; line-height:1.45; font-weight:650; }
+    .scene-pane.error .rule { border-color:var(--rose); background:#3a2639; }
+    .controls { display:flex; gap:9px; align-items:center; flex-wrap:wrap; margin:16px 0 0; }
+    button { border:1px solid #4a6a82; background:#1a334c; color:#f0f7ff; border-radius:9px; padding:10px 14px; font:inherit; font-size:.9rem; font-weight:700; cursor:pointer; }
+    button:hover,button:focus-visible { outline:2px solid var(--cyan); outline-offset:2px; }
+    #play { background:#1a7188; }
+    .progress { height:8px; background:#29465b; border-radius:99px; flex:1; min-width:90px; overflow:hidden; }
+    .progress span { display:block; height:100%; width:0; background:var(--cyan); }
+    .dots { display:flex; gap:5px; }
+    .dot { width:30px; height:30px; padding:0; border:0; border-radius:50%; background:radial-gradient(circle,#55758a 0 4px,transparent 5px); }
+    .dot.active { background:radial-gradient(circle,var(--cyan) 0 7px,transparent 8px); }
+    .foot { color:#96aec2; font-size:.78rem; line-height:1.45; margin:7px 0 0; }
+    @media(max-width:1000px) { .layout { grid-template-columns:1fr; } }
+    @media(max-width:560px) { header { display:block; } .tag { display:inline-block; margin-top:12px; } .flow { grid-template-columns:1fr 1fr; } .flow .arrow { display:none; } .lower { grid-template-columns:1fr; } .lower .node { min-height:0; } .boards { grid-template-columns:1fr; } }
+    @media(prefers-reduced-motion:reduce) { *,*::before,*::after { animation:none !important; transition:none !important; } }
+
+    .animation-orientation { border:1px solid #2e4962; border-radius:18px; background:#10253a; padding:18px; margin-bottom:18px; }
+    .animation-orientation .orientation-kicker { color:var(--cyan); font-size:.76rem; font-weight:800; letter-spacing:.12em; text-transform:uppercase; }
+    .animation-orientation h2 { margin:6px 0 12px; font-size:1.35rem; }
+    .animation-orientation-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:9px; }
+    .animation-orientation-item { border:1px solid #3b5770; border-radius:10px; background:#0b1b2d; padding:12px; }
+    .animation-orientation-item h3 { margin:0 0 5px; color:#aee9f4; font-size:.85rem; }
+    .animation-orientation-item p { margin:0; color:#d2e1ed; line-height:1.45; font-size:.84rem; }
+    body.embedded .animation-orientation { display:none; }
+    @media(max-width:680px) { .animation-orientation-grid { grid-template-columns:1fr; } }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <header><div><div class="eyebrow">khosiness · visual lesson 04</div><h1>The loop owns the next turn.</h1><p>Trace one tool proposal, one observation, a final answer, and the bounded failure paths through state and factual events.</p></div><span class="tag">Step 4 · Agent Loop</span></header>
+    <section class="animation-orientation" aria-label="Before the animation"><div class="orientation-kicker">Before the animation</div><h2>Step 4 in context</h2><div class="animation-orientation-grid"><div class="animation-orientation-item"><h3>What this step does</h3><p>Coordinate one bounded turn at a time: build context, call the model, handle a proposed tool call or final text, update state, and record events.</p></div><div class="animation-orientation-item"><h3>What it builds on</h3><p>The Task sets the limit; the model adapter returns proposals; the event store preserves facts. Step 4 connects those separate boundaries.</p></div><div class="animation-orientation-item"><h3>Goal</h3><p>Make each transition observable and stop when a final answer or step limit is reached, without an endless hidden conversation.</p></div><div class="animation-orientation-item"><h3>End state</h3><p>RunState and a minimal run loop pass tests for a two-turn tool-then-answer path, a first-turn answer, a step limit, and a returned fake-tool failure. Real tools and policy come later.</p></div></div></section>
+    <main class="layout">
+      <section class="screen" aria-label="Conceptual agent loop diagram">
+        <div class="screen-top"><span>Observe → decide → act → record</span><span class="concept">Conceptual animation</span></div>
+        <div class="flow">
+          <div id="node-state" class="node"><strong>Task + RunState</strong><span>Step budget and current observations</span></div>
+          <div id="arrow-context" class="arrow" aria-hidden="true">→</div>
+          <div id="node-context" class="node"><strong>Context builder</strong><span>Messages for this turn</span></div>
+          <div id="arrow-model" class="arrow" aria-hidden="true">→</div>
+          <div id="node-model" class="node"><strong>Model adapter</strong><span>Text or tool proposals</span></div>
+          <div id="arrow-branch" class="arrow" aria-hidden="true">→</div>
+          <div id="node-branch" class="node"><strong>Harness branch</strong><span>Tool path, final text, or limit</span></div>
+        </div>
+        <div class="lower">
+          <div id="node-tools" class="node"><strong>Injected FakeTools</strong><span>Step 4 test double; real tool system comes later.</span></div>
+          <div id="node-events" class="node"><strong>JsonlEventStore</strong><span>Records model, tool, completion, and limit facts.</span></div>
+          <div id="node-checkpoint" class="node"><strong>save_state(state)</strong><span>Optional callback after each turn.</span></div>
+        </div>
+        <div class="boards">
+          <div class="board">
+            <div class="board-head">RunState · illustrative values</div>
+            <div class="state-grid">
+              <div class="state-cell"><b>step</b><span id="value-step">0 / 2</span></div>
+              <div class="state-cell"><b>observations</b><span id="value-observations">[]</span></div>
+              <div class="state-cell"><b>finished</b><span id="value-finished">false</span></div>
+              <div class="state-cell"><b>final_answer</b><span id="value-answer">None</span></div>
+            </div>
+          </div>
+          <div class="board">
+            <div class="board-head">Event trace · active facts</div>
+            <div class="events">
+              <div id="event-model-called" class="event">model_called</div>
+              <div id="event-model-responded" class="event">model_responded</div>
+              <div id="event-tool-requested" class="event">tool_requested</div>
+              <div id="event-tool-completed" class="event">tool_completed</div>
+              <div id="event-task-completed" class="event">task_completed</div>
+              <div id="event-limit" class="event">step_limit_reached</div>
+              <div id="event-tool-failed" class="event">tool_failed</div>
+            </div>
+          </div>
+        </div>
+        <div class="trace-label">Illustrative trace / code</div>
+        <div id="traces" class="scene-stack">
+          <pre class="scene-pane">task.max_steps = 2
+state = RunState(run_id="r1", step=0)
+while not state.finished and state.step &lt; task.max_steps:
+    state.step += 1</pre>
+          <pre class="scene-pane">messages = context_builder.build(task, state)
+events.append(Event(type="model_called", ...))
+response = model.generate(messages, tools.schemas())</pre>
+          <pre class="scene-pane">response.tool_calls = [ToolCall(name="echo", ...)]
+events: model_responded → tool_requested
+# A proposal enters the branch; no tool has run yet.</pre>
+          <pre class="scene-pane">result = fake_tools.execute(call)  # ok=True
+state.observations.append({"tool":"echo","result":...})
+events: tool_completed
+save_state(state)</pre>
+          <pre class="scene-pane">turn 2: model_called → model_responded
+response.text = "finished"; no tool calls
+state.finished = True; state.final_answer = "finished"
+events: task_completed; save_state(state)</pre>
+          <pre class="scene-pane">max_steps = 2; state.step = 2; state.finished = False
+loop stops; events: step_limit_reached
+# No final answer is invented.</pre>
+          <pre class="scene-pane">result = fake_tools.execute(call)  # ok=False
+state.observations.append({"result":{"ok":False,...}})
+events: tool_failed; save_state(state)
+# The failure becomes input for a later turn.</pre>
+        </div>
+        <p class="screen-note"><strong>Illustration only.</strong> The Step 4 loop is not yet implemented. Fake tools are injected for deterministic tests. The real tool system, permission policy, and durable recovery checkpoints are later stages; <code>save_state</code> here is only an optional callback.</p>
+      </section>
+      <aside id="narration" class="sidebar" aria-live="off">
+        <div id="count" class="count">01 / 07</div>
+        <div id="narratives" class="scene-stack">
+          <div class="scene-pane"><h2>Start from a bounded task</h2><p class="copy">The Task supplies max_steps; RunState tracks the current step, observations, whether the run has finished, and any final answer. The loop checks both finished and the step budget before each turn.</p><div class="rule">The harness owns current run state and decides when another turn is allowed.</div></div>
+          <div class="scene-pane"><h2>Build this turn's view</h2><p class="copy">The context builder turns the task and current state into messages. The loop increments the step, records model_called, and asks the provider-neutral model adapter for a response using offered tool schemas.</p><div class="rule">History is not fed wholesale to the model; the context builder chooses this turn's messages.</div></div>
+          <div class="scene-pane"><h2>The model proposes a tool call</h2><p class="copy">The loop records model_responded and tool_requested. A ToolCall is structured data from the model. In the Step 4 test, an injected FakeTools object handles the call; real tool validation and permission policy arrive later.</p><div class="rule">A proposal is not general authority to use the outside world.</div></div>
+          <div class="scene-pane"><h2>Act, observe, and save</h2><p class="copy">The injected fake returns a successful result. The loop adds that result to RunState.observations, records tool_completed, and calls save_state. The next turn can then build messages from the updated state.</p><div class="rule">The observation changes the next turn; the event records the fact durably.</div></div>
+          <div class="scene-pane"><h2>Final text completes the run</h2><p class="copy">On turn two the fake model returns text with no tool calls. The checkpoint loop marks finished, stores final_answer, records task_completed, and saves state. It stops after two turns. Later stages add stronger completion checks against task criteria.</p><div class="rule">Only the harness changes finished; model text is treated as the candidate answer.</div></div>
+          <div class="scene-pane error"><h2>The step limit stops an unfinished run</h2><p class="copy">If the model keeps asking for tools through max_steps, the loop exits with finished still false and emits step_limit_reached. It does not invent a successful final answer.</p><div class="rule">A bounded failure is an observable outcome, not silent endless work.</div></div>
+          <div class="scene-pane error"><h2>A tool error becomes an observation</h2><p class="copy">When the injected tool returns ok=False, the loop records tool_failed and stores the result in observations. The loop can continue on a later turn while the step budget permits. This is a returned failure result, not an exception thrown out of the loop.</p><div class="rule">Record the failed action so later reasoning can respond to it.</div></div>
+        </div>
+      </aside>
+    </main>
+    <nav class="controls" aria-label="Animation controls"><button id="previous" type="button">← Previous</button><button id="play" type="button">Pause</button><button id="next" type="button">Next →</button><div class="progress" aria-hidden="true"><span id="progress"></span></div><div id="dots" class="dots" aria-label="Scenes"></div></nav>
+    <p class="foot">Use ← and → to change scenes, or Space to pause. Ask about this lesson through the manual page's tutor.</p>
+  </div>
+  <script>
+    const embedded = new URLSearchParams(location.search).get('embedded') === '1';
+    if (embedded) {
+      document.body.classList.add('embedded');
+      const shell = document.querySelector('.shell');
+      const reportHeight = () => parent.postMessage({type:'khosiness-animation-height',height:Math.ceil(shell.getBoundingClientRect().bottom)+2},'*');
+      new ResizeObserver(reportHeight).observe(shell);
+      window.addEventListener('message', event => { if (event.source === parent && event.data?.type === 'khosiness-measure-animation') reportHeight(); });
+      window.addEventListener('load', reportHeight);
+    }
+    const scenes = [
+      {nodes:['state'], arrows:[], events:[], values:['0 / 2','[]','false','None'], title:'Start from a bounded task'},
+      {nodes:['state','context','model','events'], arrows:['context','model'], events:['model-called'], values:['1 / 2','[]','false','None'], title:"Build this turn's view"},
+      {nodes:['model','branch','events'], arrows:['branch'], events:['model-responded','tool-requested'], values:['1 / 2','[]','false','None'], title:'The model proposes a tool call'},
+      {nodes:['branch','tools','events','checkpoint','state'], arrows:[], events:['tool-completed'], values:['1 / 2','[echo: ok]','false','None'], title:'Act, observe, and save'},
+      {nodes:['state','context','model','branch','events','checkpoint'], arrows:['context','model','branch'], events:['model-called','model-responded','task-completed'], values:['2 / 2','[echo: ok]','true','"finished"'], title:'Final text completes the run'},
+      {nodes:['state','events'], arrows:[], events:['limit'], values:['2 / 2','[echo: ok]','false','None'], error:true, title:'The step limit stops an unfinished run'},
+      {nodes:['branch','tools','events','checkpoint','state'], arrows:[], events:['tool-failed'], values:['1 / 2','[echo: failed]','false','None'], error:true, title:'A tool error becomes an observation'}
+    ];
+    window.manualTutorContext = [
+      'Step 4 — Implement the Agent Loop. This animation is conceptual; inspect the live repository to verify implementation progress.',
+      'The checkpoint loop uses Task.max_steps, RunState(step, observations, finished, final_answer), context_builder.build, model.generate, injected tools.schemas/execute, JsonlEventStore, and optional save_state callback. The real tool system and policy arrive later. The bundled Step 4 test snapshot imports ToolResult from Step 5, so that dependency is not yet available in the live repository.',
+      ...[...document.querySelectorAll('#narratives .scene-pane')].map((pane,i)=>`Scene ${i+1}: ${pane.textContent.trim()}`)
+    ].join('\n\n');
+    const $ = id => document.getElementById(id);
+    const narratives = [...document.querySelectorAll('#narratives .scene-pane')];
+    const traces = [...document.querySelectorAll('#traces .scene-pane')];
+    let index = 0, playing = !matchMedia('(prefers-reduced-motion: reduce)').matches;
+    let started = performance.now(), pausedElapsed = 0, frameId = null;
+    scenes.forEach((scene,i) => {
+      const button = document.createElement('button');
+      button.type='button'; button.className='dot';
+      button.setAttribute('aria-label',`Go to scene ${i+1}: ${scene.title}`);
+      button.addEventListener('click', () => show(i));
+      $('dots').append(button);
+    });
+    function show(next) {
+      index = (next + scenes.length) % scenes.length;
+      const scene = scenes[index];
+      $('count').textContent = `${String(index+1).padStart(2,'0')} / ${String(scenes.length).padStart(2,'0')}`;
+      for (const name of ['state','context','model','branch','tools','events','checkpoint']) {
+        const node = $(`node-${name}`);
+        node.classList.toggle('active',scene.nodes.includes(name));
+        node.classList.toggle('bad',Boolean(scene.error) && ['branch','tools','state'].includes(name));
+        node.classList.toggle('good',!scene.error && name==='branch' && index===4);
+      }
+      for (const name of ['context','model','branch']) $(`arrow-${name}`).classList.toggle('active',scene.arrows.includes(name));
+      for (const name of ['model-called','model-responded','tool-requested','tool-completed','task-completed','limit','tool-failed']) {
+        const row = $(`event-${name}`);
+        row.classList.toggle('active',scene.events.includes(name));
+        row.classList.toggle('bad',Boolean(scene.error) && scene.events.includes(name));
+        row.classList.toggle('good',!scene.error && ['tool-completed','task-completed'].includes(name) && scene.events.includes(name));
+      }
+      ['step','observations','finished','answer'].forEach((name,i) => $(`value-${name}`).textContent=scene.values[i]);
+      narratives.forEach((pane,i) => pane.classList.toggle('active',i===index));
+      traces.forEach((pane,i) => pane.classList.toggle('active',i===index));
+      document.querySelectorAll('.dot').forEach((dot,i)=>dot.classList.toggle('active',i===index));
+      started = performance.now(); pausedElapsed = 0;
+      if (index===scenes.length-1) { setPlaying(false); $('progress').style.width='100%'; }
+      else $('progress').style.width='0%';
+      updatePlayButton();
+    }
+    function updatePlayButton() {
+      const label = !playing && index===scenes.length-1 ? 'Replay' : playing ? 'Pause' : 'Play';
+      $('play').textContent=label;
+      $('play').setAttribute('aria-label',label==='Replay'?'Replay animation':`${label} animation`);
+    }
+    function scheduleFrame() { if (playing && frameId===null) frameId=requestAnimationFrame(frame); }
+    function setPlaying(value) {
+      if (playing===value) return;
+      playing=value;
+      if (value) { started=performance.now()-pausedElapsed; scheduleFrame(); }
+      else { pausedElapsed=performance.now()-started; if (frameId!==null) { cancelAnimationFrame(frameId); frameId=null; } }
+      $('narration').setAttribute('aria-live',value?'off':'polite');
+      updatePlayButton();
+    }
+    function frame(now) {
+      frameId=null;
+      if (!playing) return;
+      const elapsed=now-started;
+      if (elapsed>=7000) show(index+1);
+      else $('progress').style.width=`${Math.min(100,elapsed/70)}%`;
+      scheduleFrame();
+    }
+    $('previous').addEventListener('click',()=>show(index-1));
+    $('next').addEventListener('click',()=>show(index+1));
+    $('play').addEventListener('click',()=>{if(!playing && index===scenes.length-1) show(0); setPlaying(!playing);});
+    document.addEventListener('keydown',event=>{
+      if (event.target.closest?.('textarea, input, [contenteditable], .manual-qa-panel')) return;
+      if (event.key==='ArrowRight') show(index+1);
+      if (event.key==='ArrowLeft') show(index-1);
+      if (event.code==='Space' && !(event.target instanceof HTMLButtonElement)) { event.preventDefault(); setPlaying(!playing); }
+    });
+    document.addEventListener('visibilitychange',()=>{if(document.hidden) setPlaying(false);});
+    show(0);
+    $('narration').setAttribute('aria-live',playing?'off':'polite');
+    scheduleFrame();
+  </script>
+  <script>window.manualTutorContext = document.querySelector('.animation-orientation').textContent.trim() + '\n\n' + (window.manualTutorContext || '');</script>
+  <script src="../manual/assets/manual.js"></script>
+</body>
+</html>

@@ -81,8 +81,8 @@ function createManualTutor() {
     <div class="manual-qa-messages" role="log" aria-live="polite" aria-relevant="additions text"></div>
     <div class="manual-qa-suggestions">
       <button type="button">What code is missing for this stage?</button>
-      <button type="button">Show the next three steps with code.</button>
-      <button type="button">What failure does this stage prevent?</button>
+      <button type="button">Show the current instruction with code.</button>
+      <button type="button">Explain this step, what it builds on, and its end state.</button>
       <button type="button">Quiz me on this stage.</button>
     </div>
     <form class="manual-qa-form">

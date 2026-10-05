@@ -22,7 +22,7 @@ a time.
 | Step 1 — Define the Task Contract | Complete |
 | Step 2 — Create the Model Adapter | Complete |
 | Step 3 — Build the Event Log | Complete |
-| Step 4 — Implement the Agent Loop | Pending |
+| Step 4 — Implement the Agent Loop | In progress — instruction 16/16 issued; 15/16 complete |
 | Step 5 — Build the Tool System | Pending |
 | Step 6 — Engineer the Context | Pending |
 | Step 7 — Repository Navigation | Pending |
@@ -718,3 +718,306 @@ event log`). Codex verified the seven committed files and clean working
 tree. After the commit, `pytest -q` reported fourteen passes and the
 checksum manifest passed. Step 3 is closed. Do not begin Step 4 until the
 human asks.
+
+## Active stage: Step 4 — Implement the Agent Loop
+
+The human opened Step 4 by requesting its conceptual animation first.
+Responsibility: coordinate a bounded observe → decide → act → record cycle
+across Task, RunState, context builder, model adapter, injected tools, event
+store, and an optional state-save callback.
+
+Failure mode addressed: an unbounded or opaque model/tool exchange that
+cannot explain which turn changed state, which fact was recorded, or why the
+run stopped.
+
+`docs/animations/step-04-agent-loop.html` is embedded in the matching
+manual page. Its seven conceptual scenes cover the initial state, context
+and model call, proposed tool call, fake-tool observation and save, final
+answer on turn two, step-limit stop, and returned tool failure. It labels
+the real tool system, permission policy, stronger completion checks, and
+durable recovery checkpoints as later work. The animation is a study aid.
+At its initial handoff, `src/khosiness/state.py`, `src/khosiness/loop.py`,
+and `tests/test_loop.py` did not exist. The human began the implementation
+on 2026-09-26; the instruction records below track its subsequent validation.
+Headless Chrome checks at 1440, 706, and 390 pixels found identical card
+dimensions across all seven scenes, one visible narration and trace per
+scene, and no horizontal overflow. Desktop and phone renderings were
+visually inspected. The manual iframe embed, JavaScript syntax, checksum
+manifest, whitespace, and existing fourteen tests pass.
+
+Known manual dependency discrepancy: the Step 4 test snapshot imports
+`khosiness.tools.base.ToolResult`, but that module is introduced in Step 5.
+When implementing Step 4, use a local test fake result or an equivalent
+minimal return object to keep the Step 4 tests runnable without importing
+Step 5 early. The manual's suggested event-trace command also uses a shell
+heredoc, which this human's zsh paste does not handle; use a temporary
+editor-written script for inspection instead.
+The manual lists a tool-error-as-observation test, but its checkpoint test
+file does not include one. Add a local fake-tool failure case during Step 4
+implementation so that stated gate is actually verified.
+
+Cross-stage learning aid: all nineteen multi-page manual steps now begin
+with a four-part primer covering purpose, prior foundations, goal, and end
+state before the animation or implementation section. Standalone animations
+for Steps 0–4 show the same primer; embedded copies hide it to avoid
+duplication. The local tutor receives the primer as context and offers a
+matching suggested question. `AGENTS.md` requires this for future steps.
+This changes study material only; Step 4 code progress remains 0.
+
+The index now opens with a preface explaining why LLMs enable agents:
+instruction following, context use, structured tool proposals, feedback,
+the harness boundary, bounded subagents, and explicit memory. A conceptual
+repository-read example distinguishes proposal, authorization, execution,
+and observation, with primary-source references for further reading.
+Chrome checks at 1440 and 390 pixels confirmed no horizontal overflow,
+placement before the usage guide, and inclusion of the full preface in
+the tutor's context. Desktop and mobile renderings were inspected.
+
+The preface also includes an original inline SVG relationship drawing:
+the agent encloses the model, harness, and tool runtime; numbered arrows
+show selected context, a proposed tool call, permitted dispatch, and the
+returned result. A rejection remains inside the harness, while runtime
+arrows cross to the external workspace/services. The drawing is labeled
+conceptual, includes an accessible description, and scrolls within its own
+keyboard-focusable region on narrow screens. Chrome checks at 1440 and
+390 pixels confirmed no page overflow and retained tutor context; the
+rendered labels were inspected and adjusted to stay inside their boxes.
+
+### Step 4 instruction plan
+
+Planned total: 16 human instructions, including validation and closeout.
+Codex read the complete Step 4 page, inspected the existing source and Git
+state, and confirmed the three implementation files are absent. Existing
+uncommitted changes are the authorized study-material work from this stage.
+
+1. Create `src/khosiness/state.py` with the minimal `RunState` contract.
+2. Implement `src/khosiness/loop.py` against the current contracts.
+3. Add local context/tool/result fakes and a task fixture to `tests/test_loop.py`.
+4. Add the tool-then-answer test, including events and state-save observations.
+5. Add the first-turn final-answer test.
+6. Add the step-limit test.
+7. Add the returned-tool-failure test.
+8. Run the stage-specific tests.
+9. Run the accumulated test suite.
+10. Create a temporary script for a deterministic two-turn trace.
+11. Run and inspect the actual state and event trace.
+12. Step through the loop in the debugger at the manual's three checkpoints.
+13. Prepare a temporary deliberate-failure inspection script.
+14. Predict, run, and inspect the failure state and event trace.
+15. Complete the human teach-back; retry gaps under the same number.
+16. Review the final diff/checks and commit the completed stage.
+
+### Instruction 1/16 — complete
+
+Create `src/khosiness/state.py` with the manual's five fields: `run_id`,
+`step`, `observations`, `finished`, and `final_answer`. `RunState` represents
+current run progress; it neither stores durable history nor persists itself.
+The step budget belongs to `Task.max_steps`, while `RunState.step` counts
+turns already taken. The human saved the file. Codex checked its fields,
+imports, and whitespace; an import/serialization probe showed two
+`RunState` instances have separate observation lists.
+
+### Instruction 2/16 — complete
+
+Implement the bounded loop in `src/khosiness/loop.py`, connecting current
+Task, RunState, model, injected context/tools, and JsonlEventStore.
+The human saved the file. Codex checked that it matches the Step 4
+contract, compiles, and has no whitespace errors. It records model,
+tool, completion, and limit events in the intended sequence. The
+event traces will be tested after the local fakes are added.
+
+### Instruction 3/16 — complete
+
+Create local context, result, and tool fakes plus a Task fixture in
+`tests/test_loop.py`. The result is local because Step 5's `ToolResult`
+does not exist yet. The context fake exposes the latest tool result to
+the second model turn without introducing the Step 6 context builder.
+The human saved the file. Codex checked imports, fixture shapes,
+compilation, and whitespace. The fake tool can return success or a
+failed result, and `MinimalContext` exposes only the latest observation.
+
+### Instruction 4/16 — complete
+
+Add a two-turn tool-then-answer test that checks the selected tool
+observation, event order, and state snapshots after each turn.
+The human saved the test. `pytest tests/test_loop.py::test_loop_executes_tool_then_finishes -q`
+passed (1 test); it confirms the second model call sees the tool result,
+the seven expected events are reloaded in order, and state snapshots
+show unfinished turn 1 and finished turn 2. Whitespace check passed.
+
+### Instruction 5/16 — complete
+
+Add the direct first-turn final-answer path: no tool execution, one
+checkpoint, and the three expected events.
+The human saved the test. Its focused pytest invocation passed (1 test),
+including no tool calls, one model call, one checkpoint, and the three
+expected events. Codex normalized its unusual six-space function-body
+indentation to four spaces; the behavior was already passing. Whitespace
+check passed.
+
+### Instruction 6/16 — complete
+
+Add a step-budget test that queues extra model responses but verifies the
+loop stops after two turns, remains unfinished, and records the limit.
+The human saved the test. Its focused pytest invocation passed (1 test).
+The third queued response remains unused, two tool calls occurred, two
+state saves occurred, and `step_limit_reached` is last in event history.
+Whitespace check passed.
+
+### Instruction 7/16 — complete
+
+Add the returned-tool-failure path. The fake tool returns `ok=False`;
+the loop must record a failed observation, pass it to the next model
+turn, and emit `tool_failed` without raising an exception.
+The human saved the test. Its focused pytest invocation passed (1 test).
+The failed result was stored as an observation, appeared in the second
+model call, and produced `tool_failed` in event history. Whitespace
+check passed. This covers returned failures; unexpected exceptions from
+tool execution are outside this minimal stage.
+
+### Instruction 8/16 — complete
+
+Run the complete Step 4 test module with `pytest tests/test_loop.py -q`.
+The human reported `4 passed in 0.13s`. This covers tool-then-answer,
+first-turn answer, step limit, and returned-tool failure. The manual's
+snapshot expects only three tests, but its own validation list requires
+the fourth failure path, which we added.
+
+### Instruction 9/16 — complete
+
+Run the accumulated suite with `pytest -q` to detect regressions in
+Steps 1–3.
+The human reported `18 passed in 0.21s`: the previous fourteen tests
+plus four Step 4 tests. No regression is reported.
+
+### Instruction 10/16 — complete
+
+Create `/tmp/khosiness_step4_trace.py` with a deterministic two-turn
+fake run that prints the resulting RunState, model requests, and each
+reloaded event type/payload. This script is temporary inspection work,
+not project source or a replacement for a test.
+The human saved it. Codex inspected the two-turn scenario, printed
+state/model/event sections, and verified Python compilation.
+
+### Instruction 11/16 — complete
+
+Run the temporary script from the repository root and inspect the
+actual sequence. Ask the human to predict the step count and the first
+and final event types before executing it.
+The human ran the script successfully. The first saved state is step 1,
+unfinished, with one successful `echo` observation. The second model
+request includes that observation. The second saved state is step 2,
+finished, with final answer `finished`. Seven actual events reload in
+the expected order from `model_called` to `task_completed`. No prediction
+was included in the reply; revisit that reasoning at the teach-back.
+Codex added the repo root to the temporary script's import path so it
+also runs directly from VS Code's Python debugger without a shell
+`PYTHONPATH` setting.
+
+### Instruction 12/16 — complete
+
+Use VS Code's Python debugger on `/tmp/khosiness_step4_trace.py` with
+breakpoints in `src/khosiness/loop.py` before the first model call
+(line 35), after the tool returns (line 66), and before completion
+(line 86). Observe `state`, `messages`, `result`, and `response` at
+those stops.
+First debugger attempt launched `loop.py` itself and raised
+`ImportError: attempted relative import with no known parent package`
+at `from .event_store import JsonlEventStore`. This is a debugger entry
+point issue, not a loop defect: `loop.py` is a package module and the
+temporary trace script is the program that imports it. Repeat 12/16
+with the trace script as the active file.
+The second debugger attempt launched the trace script but raised
+`ModuleNotFoundError: No module named 'khosiness'`. The local script's
+repo-root path covered test imports but not the `src/` layout, and VS
+Code used a Python environment without the editable package install.
+Codex added the repo's `src/` directory to the temporary script's
+import path and verified that the script now runs under both `.venv/bin/python`
+and the terminal's `python`. Repeat 12/16 with the refreshed script.
+The human reports the trace script is now debugging. Breakpoint
+observations have not yet been reported, so instruction 12/16 remains
+open at 11/16 complete.
+At the first stop before `model.generate`, the human observed
+`RunState(run_id='trace-run', step=1, observations=[], finished=False,
+final_answer=None)` and only the user objective in `messages`. This
+matches the expected initial turn. Await the post-tool, second-model,
+and pre-completion observations before closing 12/16.
+At line 66, immediately after the fake tool returned, the human saw
+`FakeToolResult(ok=True, content='hello')` while `RunState` still had
+`observations=[]`. This confirms the return precedes the next line's
+state mutation. Await the second model call and pre-completion stop.
+At the second stop on line 35, the human observed `step=2`, one stored
+successful `echo` observation, and `messages` containing the user
+objective followed by `{'role': 'tool', 'content': 'hello'}`. This
+confirms the prior observation became selected context for the second
+model turn. At line 86, the human observed `ModelResponse(text='finished',
+tool_calls=[])` while `RunState` still had `finished=False` and
+`final_answer=None`. The harness had not yet applied the completion
+transition. The three manual debugger checkpoints have been observed.
+
+### Instruction 13/16 — complete
+
+Prepare `/tmp/khosiness_step4_failure.py` to run a returned tool
+failure through the loop and print the observation, next model request,
+and event types. This remains a temporary learning trace.
+The human saved the script. Codex inspected its returned-failure
+scenario, import paths, and output sections, and confirmed it compiles.
+
+### Instruction 14/16 — complete
+
+Ask the human to predict the failed result's shape, the second model
+request's last message, and the event type for the failed tool. Then
+run `python /tmp/khosiness_step4_failure.py` and inspect the actual
+observation, state, and event trace.
+The human ran the script. The observation contains `ok=False` and
+`content='echo failed'`; the second request includes that content as a
+tool message; `tool_failed` records the failure; the model's final text
+then causes `task_completed`. The final state is step 2, finished, with
+that text as `final_answer`. The human again supplied output without a
+prior prediction. The teach-back will use a counterfactual to assess
+the missing prediction skill.
+
+### Instruction 15/16 — complete
+
+Ask the human to explain the tool/failure path in their own words,
+distinguish current state, event history, and selected context, and
+explain why a `task_completed` event follows a failed tool even though
+success criteria are not verified at Step 4. Ask the max_steps=1
+counterfactual: after one failed-tool response, what are `finished`,
+`step`, and the last event type?
+On 2026-10-05 the human correctly explained the returned-tool-failure path:
+the loop stores the failed observation, records `tool_failed`, and invokes
+the state-save callback; `MinimalContext` selects the failure content for
+the next model call. They distinguished current RunState, durable event
+history, and the selected messages, including that an omitted observation
+would remain recorded but unseen by the model. They correctly explained
+that Step 4's `task_completed` means the loop accepted final text, not that
+success criteria were verified. Their max_steps=1 prediction was correct:
+`finished=False`, `step=1`, no final answer, and `step_limit_reached` last.
+These four reasoning checks pass. The requested explanation of why
+`state.py`, `loop.py`, and `tests/test_loop.py` each exist was omitted;
+request that short remaining teach-back under the same instruction number.
+The human then correctly explained all three file responsibilities:
+`state.py` defines current run progress, `loop.py` coordinates bounded turns
+and their transitions, and `tests/test_loop.py` makes the completion, limit,
+and returned-failure behaviors explicit and repeatable. The Step 4
+understanding gate passes with no remaining gaps. Progress: 15/16 complete.
+
+### Instruction 16/16 — issued, awaiting stage commit
+
+Codex reviewed RunState, the loop, and all four tests against the manual
+checkpoint. The implementation preserves its contracts; the local fake
+result avoids the premature Step 5 import, and the tests additionally
+verify selected context, event order, state-save snapshots, and returned
+tool failure. No Step 4 implementation defect was found.
+Final checks on 2026-10-05 passed: four focused loop tests, eighteen
+accumulated tests, `git diff --check`, and every entry in `SHA256SUMS`.
+Earlier debugger and deliberate-failure trace inspections remain validated.
+The commit scope includes the three Step 4 Python files, this tracker,
+and the already authorized study-material updates recorded above: Step 4
+animation, manual primers, preface/drawing, tutor suggestions, AGENTS.md,
+and the corresponding checksum manifest. No files are currently staged.
+Issue one command to stage those paths and commit with message
+`step 4: implement the agent loop`. Await the human's result, inspect the
+commit and repository status, then record closeout and stop at the stage
+boundary. Progress: 15/16 complete; stage remains open pending the commit.

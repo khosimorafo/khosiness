@@ -88,6 +88,16 @@
       .caption { align-items: start; }
     }
     @media (prefers-reduced-motion: reduce) { .edge.active { animation: none; } * { scroll-behavior: auto !important; transition-duration: .01ms !important; } }
+
+    .animation-orientation { border:1px solid #2e4962; border-radius:18px; background:#10253a; padding:18px; margin-bottom:18px; }
+    .animation-orientation .orientation-kicker { color:var(--cyan); font-size:.76rem; font-weight:800; letter-spacing:.12em; text-transform:uppercase; }
+    .animation-orientation h2 { margin:6px 0 12px; font-size:1.35rem; }
+    .animation-orientation-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:9px; }
+    .animation-orientation-item { border:1px solid #3b5770; border-radius:10px; background:#0b1b2d; padding:12px; }
+    .animation-orientation-item h3 { margin:0 0 5px; color:#aee9f4; font-size:.85rem; }
+    .animation-orientation-item p { margin:0; color:#d2e1ed; line-height:1.45; font-size:.84rem; }
+    body.embedded .animation-orientation { display:none; }
+    @media(max-width:680px) { .animation-orientation-grid { grid-template-columns:1fr; } }
   </style>
 </head>
 <body>
@@ -101,6 +111,7 @@
       <div class="stage-tag">Step 0 · The Mental Model</div>
     </header>
 
+    <section class="animation-orientation" aria-label="Before the animation"><div class="orientation-kicker">Before the animation</div><h2>Step 0 in context</h2><div class="animation-orientation-grid"><div class="animation-orientation-item"><h3>What this step does</h3><p>Name the harness boundary and assign the six responsibilities: cognition, context, action, control, continuity, and measurement.</p></div><div class="animation-orientation-item"><h3>What it builds on</h3><p>Project Setup gives us a working Python package and CLI. There is no agent behavior yet to explain away.</p></div><div class="animation-orientation-item"><h3>Goal</h3><p>Know who proposes, who permits, who executes, who records, and who decides completion before writing a loop.</p></div><div class="animation-orientation-item"><h3>End state</h3><p>README.md and docs/architecture.md explain the ownership boundary, v0 non-goals, and three read-only repository tasks.</p></div></div></section>
     <main class="layout">
       <section class="screen" aria-label="Animated harness architecture" tabindex="0">
         <div class="screen-top"><span>Conceptual run · find the CLI version</span><span class="conceptual">Conceptual animation</span></div>
@@ -312,6 +323,7 @@
     $("lesson-narration").setAttribute("aria-live", playing ? "off" : "polite");
     requestAnimationFrame(frame);
   </script>
+  <script>window.manualTutorContext = document.querySelector('.animation-orientation').textContent.trim() + '\n\n' + (window.manualTutorContext || '');</script>
   <script src="../manual/assets/manual.js"></script>
 </body>
 </html>

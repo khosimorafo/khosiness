@@ -42,7 +42,120 @@
     </nav>
   </aside>
   <main class="content">
-    <header class="hero"><div class="eyebrow">Implementation manual</div><h1>khosiness — Harness Engineering From Scratch</h1><p>A first-principles build manual for constructing khosiness: a deeply personal agentic operating harness for one software engineer. Phase I builds the substrate; Part II evolves it into a continuously improving extension of the engineer. The shorthand/CLI name is kness.</p></header><div class="wrap"><section class="card"><h2>How to use the khosiness manual</h2><p class="lead">Phase I takes you from an empty Python repository to a measurable, recoverable agent harness. Work through it in order. Do not advance because the prose is finished; advance when the stage's code checkpoint, tests, trace inspection and exit criteria are all true.</p><div class="callout"><strong>Learning rule:</strong> type the important code yourself. The objective is to understand the mechanism well enough that you can later recognize it inside Codex, Claude Code, OpenHands, LangGraph or another harness.</div><div class="callout"><strong>Project identity:</strong> the project and harness are named <code>khosiness</code>; the shorthand and command name is <code>kness</code>.</div></section><section class="card phase-map-card">
+    <header class="hero"><div class="eyebrow">Implementation manual</div><h1>khosiness — Harness Engineering From Scratch</h1><p>A first-principles build manual for constructing khosiness: a deeply personal agentic operating harness for one software engineer. Phase I builds the substrate; Part II evolves it into a continuously improving extension of the engineer. The shorthand/CLI name is kness.</p></header><div class="wrap"><section class="card stage-orientation" id="preface" aria-labelledby="preface-title">
+  <div class="orientation-kicker">Preface · Before the first step</div>
+  <h2 id="preface-title">Why LLMs make agents possible</h2>
+  <p class="lead">A large language model (LLM) can translate a goal and the evidence available into a proposed next action. Put that capability inside a program that executes permitted actions, supplies their results, and repeats under limits, and you have the foundation of an agent.</p>
+
+  <figure class="agent-relationship" aria-labelledby="agent-relationship-caption">
+    <div class="agent-relationship-scroll" role="region" aria-label="Agent relationship drawing; scroll horizontally on small screens" tabindex="0">
+      <svg viewBox="0 0 1040 690" role="img" aria-labelledby="agent-diagram-title agent-diagram-desc" xmlns="http://www.w3.org/2000/svg">
+        <title id="agent-diagram-title">An agent combines a model, a harness, and tool execution</title>
+        <desc id="agent-diagram-desc">The outer boundary is the agent system. Inside it, the harness supplies context and tool descriptions to the model. The model returns a proposed tool call. The harness validates and authorizes it before dispatching it to the tool runtime. Tools interact with the workspace or other external systems and return results or errors. The harness records the outcome and selects context for the next turn. Denied calls do not execute. This is a conceptual relationship, not a claim that all components have been built.</desc>
+        <defs>
+          <marker id="agent-arrow-blue" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10Z" fill="#2457d6"/></marker>
+          <marker id="agent-arrow-green" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10Z" fill="#13795b"/></marker>
+        </defs>
+        <rect x="12" y="12" width="1016" height="536" rx="20" fill="#f8fafc" stroke="#526680" stroke-width="2"/>
+        <text x="36" y="47" font-size="24" font-weight="750" fill="#182230">Agent = the complete goal-directed system</text>
+        <text x="36" y="75" font-size="16" fill="#526175">Conceptual relationship · these responsibilities are built across the manual.</text>
+
+        <rect x="390" y="106" width="270" height="408" rx="16" fill="#eef4ff" stroke="#2457d6" stroke-width="2"/>
+        <text x="412" y="145" font-size="25" font-weight="750" fill="#173e91">Harness</text>
+        <text x="412" y="173" font-size="16" fill="#173e91">Coordinates and controls</text>
+        <path d="M410 190 H640" stroke="#b9ccee"/>
+        <text x="412" y="220" font-size="16" fill="#182230">Task + completion criteria</text>
+        <text x="412" y="249" font-size="16" fill="#182230">Select context and tools</text>
+        <text x="412" y="285" font-size="17" font-weight="700" fill="#173e91">Validate and authorize</text>
+        <text x="412" y="309" font-size="17" font-weight="700" fill="#173e91">Dispatch permitted calls</text>
+        <path d="M410 326 H640" stroke="#b9ccee"/>
+        <text x="412" y="350" font-size="16" fill="#182230">Own current run state</text>
+        <text x="412" y="378" font-size="16" fill="#182230">Record facts in event history</text>
+        <text x="412" y="407" font-size="16" fill="#182230">Enforce limits and decide</text>
+        <text x="412" y="429" font-size="16" fill="#182230">completion against criteria</text>
+        <rect x="408" y="450" width="234" height="48" rx="8" fill="#fff1f2" stroke="#f4b5bf"/>
+        <text x="420" y="470" font-size="15" font-weight="700" fill="#a32743">Denied? Record rejection.</text>
+        <text x="420" y="489" font-size="15" fill="#a32743">No tool execution.</text>
+
+        <rect x="36" y="200" width="224" height="222" rx="16" fill="#f4f0ff" stroke="#8156b3" stroke-width="2"/>
+        <text x="58" y="242" font-size="25" font-weight="750" fill="#573183">Model</text>
+        <text x="58" y="275" font-size="17" fill="#182230">Interprets the task</text>
+        <text x="58" y="302" font-size="17" fill="#182230">Uses supplied context</text>
+        <text x="58" y="329" font-size="17" fill="#182230">Proposes a next action</text>
+        <text x="58" y="376" font-size="16" font-weight="700" fill="#573183">Produces a proposal</text>
+        <text x="58" y="398" font-size="16" fill="#573183">or a candidate answer</text>
+
+        <rect x="790" y="200" width="224" height="222" rx="16" fill="#ecfdf5" stroke="#13795b" stroke-width="2"/>
+        <text x="810" y="242" font-size="24" font-weight="750" fill="#106147">Tool runtime</text>
+        <text x="810" y="275" font-size="17" fill="#182230">Runs a permitted tool</text>
+        <text x="810" y="299" font-size="17" fill="#182230">e.g. read_file</text>
+        <text x="810" y="345" font-size="17" fill="#182230">Returns a result</text>
+        <text x="810" y="369" font-size="17" fill="#182230">or an explicit error</text>
+        <text x="810" y="402" font-size="16" font-weight="700" fill="#106147">Performs the action</text>
+
+        <g fill="none" stroke-width="2.5">
+          <path d="M390 240 H262" stroke="#2457d6" marker-end="url(#agent-arrow-blue)"/>
+          <path d="M260 350 H388" stroke="#2457d6" marker-end="url(#agent-arrow-blue)"/>
+          <path d="M660 240 H788" stroke="#13795b" marker-end="url(#agent-arrow-green)"/>
+          <path d="M790 350 H662" stroke="#13795b" marker-end="url(#agent-arrow-green)"/>
+          <path d="M850 422 V586" stroke="#13795b" marker-end="url(#agent-arrow-green)"/>
+          <path d="M950 586 V424" stroke="#13795b" marker-end="url(#agent-arrow-green)"/>
+        </g>
+        <g font-size="15" text-anchor="middle" fill="#173e91">
+          <text x="325" y="199" font-weight="700">1. Context</text><text x="325" y="221">+ tool schemas</text>
+          <text x="325" y="309" font-weight="700">2. Tool call</text><text x="325" y="331">(proposal)</text>
+        </g>
+        <g font-size="15" text-anchor="middle" fill="#106147">
+          <text x="725" y="199" font-weight="700">3. Permitted</text><text x="725" y="221">operation</text>
+          <text x="725" y="309" font-weight="700">4. Result</text><text x="725" y="331">or error</text>
+        </g>
+        <text x="840" y="470" text-anchor="end" font-size="15" fill="#106147">Action</text>
+        <text x="960" y="470" font-size="15" fill="#106147">Result</text>
+        <rect x="790" y="588" width="224" height="80" rx="12" fill="#fff" stroke="#526680" stroke-width="2"/>
+        <text x="902" y="619" text-anchor="middle" font-size="19" font-weight="700" fill="#182230">Outside the agent</text>
+        <text x="902" y="647" text-anchor="middle" font-size="16" fill="#526175">Workspace · APIs · services</text>
+        <text x="36" y="590" font-size="19" font-weight="700" fill="#173e91">5. Feed the next turn</text>
+        <text x="36" y="619" font-size="17" fill="#182230">The harness records the outcome and selects relevant results as context.</text>
+        <text x="36" y="647" font-size="17" fill="#182230">Return to 1 until completion, a limit, or a stop condition.</text>
+      </svg>
+    </div>
+    <figcaption id="agent-relationship-caption"><strong>Tool calling is the request-and-result exchange.</strong> The model proposes; the harness authorizes and dispatches; the tool runtime executes. The agent is the complete system around this loop. On a small screen, scroll the drawing sideways to retain readable labels.</figcaption>
+  </figure>
+
+  <h3>What the model brings</h3>
+  <p>A language model generates tokens—pieces of text—conditioned on its input. Training on language and code gives it reusable patterns; additional training can improve how it follows instructions. This lets us describe work in ordinary language instead of writing a separate decision tree for every request. It still makes mistakes. <a href="https://arxiv.org/abs/2203.02155">Research: instruction following</a>.</p>
+  <div class="orientation-grid">
+    <div class="orientation-item"><h3>Interpret a request</h3><p>Turn “find where this CLI gets its version” into candidate steps such as locating the command, reading its imports, and following a definition.</p></div>
+    <div class="orientation-item"><h3>Use supplied context</h3><p>Read instructions, code, examples, and observations together. A newly supplied file can inform the answer without retraining the model.</p></div>
+    <div class="orientation-item"><h3>Propose structured actions</h3><p>Tool-capable models can select a named operation and supply arguments in a machine-readable format. Support and reliability vary by model.</p></div>
+    <div class="orientation-item"><h3>Adapt after feedback</h3><p>Use a search result or error to revise the next proposal. Repeated calls make it possible to investigate a task whose exact path was not known beforehand.</p></div>
+  </div>
+  <p>Interleaving model decisions with observations is the central idea explored by <a href="https://arxiv.org/abs/2210.03629">ReAct</a>. The program must arrange that feedback loop; a model response alone does not keep a task running.</p>
+
+  <h3>Tool calling: from a proposal to an operation</h3>
+  <p>A <strong>tool</strong> is an implemented operation, such as reading a file or searching a repository. The model receives its name, description, and argument schema—the allowed input shape. A <strong>tool call</strong> is the model's request to use it. The request does not execute itself. <a href="https://huggingface.co/docs/transformers/en/chat_extras">Reference: tool-use mechanics</a>.</p>
+  <ol>
+    <li><strong>Task:</strong> find the package version and cite its definition.</li>
+    <li><strong>Model proposal:</strong> request <code>read_file</code> with <code>{"path": "src/khosiness/__init__.py"}</code> after locating that file.</li>
+    <li><strong>Harness decision:</strong> validate the arguments and check that this path and operation are permitted.</li>
+    <li><strong>Runtime action:</strong> read the file; return its contents or an explicit error. The harness records the outcome.</li>
+    <li><strong>Next turn:</strong> include the relevant result in context so the model can answer with evidence or propose another lookup.</li>
+  </ol>
+  <p>If the path is outside the permitted workspace, reject it before reading. Valid JSON establishes an input shape; it does not establish permission or correctness. This is a conceptual example: the manual builds tools and policy in later steps.</p>
+
+  <h3>What makes the whole system an agent?</h3>
+  <p>Here, an <strong>agent</strong> is a goal-directed system that uses model proposals and environmental feedback to choose its next actions. A fixed workflow follows predefined branches; an agent can choose a route as evidence arrives. Both rely on ordinary software to execute and enforce limits. <a href="https://www.anthropic.com/engineering/building-effective-agents">Reference: workflows and agents</a>.</p>
+  <p>The <strong>harness</strong> owns the task contract, visible context, validation, permission checks, execution dispatch, state, history, and stopping rules. A model saying “done” is a candidate result; the harness decides completion against the task's criteria. The early loop is deliberately minimal; later stages strengthen its controls.</p>
+
+  <h3>Subagents: delegate a bounded piece of work</h3>
+  <p>A <strong>subagent</strong> is a separate agent run given a narrower task, selected context, tools, and limits. It can use the same model as its parent. For example, one child traces the CLI entry point while another checks version tests; the parent combines their evidence.</p>
+  <p>Separate contexts keep investigations focused, and independent work can run in parallel. Delegation adds cost and coordination, and the parent must assess returned claims. Context separation alone does not isolate filesystem access; the runtime and policy must enforce that. <a href="https://www.anthropic.com/engineering/multi-agent-research-system">Example: a multi-agent research system</a>.</p>
+
+  <h3>Why we are building a harness</h3>
+  <p>The model supplies adaptable proposals. Our software supplies accountable execution. We explicitly store history, select context, preserve state, and later retrieve cross-run memory. Supplying new context does not itself update model weights. Tests and evaluations tell us whether the combined system actually meets its task.</p>
+  <div class="callout"><strong>The governing rule:</strong> the model proposes; khosiness controls. The following steps build each responsibility until that rule is visible in code, tests, and traces.</div>
+</section>
+<section class="card"><h2>How to use the khosiness manual</h2><p class="lead">Phase I takes you from an empty Python repository to a measurable, recoverable agent harness. Work through it in order. Do not advance because the prose is finished; advance when the stage's code checkpoint, tests, trace inspection and exit criteria are all true.</p><div class="callout"><strong>Learning rule:</strong> type the important code yourself. The objective is to understand the mechanism well enough that you can later recognize it inside Codex, Claude Code, OpenHands, LangGraph or another harness.</div><div class="callout"><strong>Project identity:</strong> the project and harness are named <code>khosiness</code>; the shorthand and command name is <code>kness</code>.</div></section><section class="card phase-map-card">
 <h2>The khosiness development path</h2>
 <div class="phase-map">
 <div>

@@ -61,11 +61,22 @@
     @media(max-width:1000px) { .layout { grid-template-columns:1fr; } }
     @media(max-width:560px) { header { display:block; } .tag { display:inline-block; margin-top:12px; } .flow { grid-template-columns:1fr; } .arrow { display:none; } .ports { grid-template-columns:1fr; } }
     @media(prefers-reduced-motion:reduce) { *,*::before,*::after { animation:none !important; transition:none !important; } }
+
+    .animation-orientation { border:1px solid #2e4962; border-radius:18px; background:#10253a; padding:18px; margin-bottom:18px; }
+    .animation-orientation .orientation-kicker { color:var(--cyan); font-size:.76rem; font-weight:800; letter-spacing:.12em; text-transform:uppercase; }
+    .animation-orientation h2 { margin:6px 0 12px; font-size:1.35rem; }
+    .animation-orientation-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:9px; }
+    .animation-orientation-item { border:1px solid #3b5770; border-radius:10px; background:#0b1b2d; padding:12px; }
+    .animation-orientation-item h3 { margin:0 0 5px; color:#aee9f4; font-size:.85rem; }
+    .animation-orientation-item p { margin:0; color:#d2e1ed; line-height:1.45; font-size:.84rem; }
+    body.embedded .animation-orientation { display:none; }
+    @media(max-width:680px) { .animation-orientation-grid { grid-template-columns:1fr; } }
   </style>
 </head>
 <body>
   <div class="shell">
     <header><div><div class="eyebrow">khosiness · visual lesson 02</div><h1>One contract, replaceable models.</h1><p>See how a fake model and a provider transport can return the same harness-owned response without giving model output execution authority.</p></div><span class="tag">Step 2 · Model Adapter</span></header>
+    <section class="animation-orientation" aria-label="Before the animation"><div class="orientation-kicker">Before the animation</div><h2>Step 2 in context</h2><div class="animation-orientation-grid"><div class="animation-orientation-item"><h3>What this step does</h3><p>Give the harness one request and response shape for a model, regardless of which provider supplies the answer.</p></div><div class="animation-orientation-item"><h3>What it builds on</h3><p>Step 1 supplies a validated unit of work; the harness now needs model text or structured proposals without importing provider-specific objects into its core.</p></div><div class="animation-orientation-item"><h3>Goal</h3><p>Swap a deterministic fake for a provider transport without changing the harness-facing interface.</p></div><div class="animation-orientation-item"><h3>End state</h3><p>ToolCall, ModelResponse, a ModelAdapter protocol, FakeModel, a callable provider wrapper, and their tests are available. Tool calls remain proposals.</p></div></div></section>
     <main class="layout">
       <section class="screen" aria-label="Conceptual model adapter diagram">
         <div class="screen-top"><span>One repository question · two adapters</span><span class="concept">Conceptual animation</span></div>
@@ -224,6 +235,7 @@ assert result.input_tokens == 10</pre>
     $('narration').setAttribute('aria-live',playing?'off':'polite');
     scheduleFrame();
   </script>
+  <script>window.manualTutorContext = document.querySelector('.animation-orientation').textContent.trim() + '\n\n' + (window.manualTutorContext || '');</script>
   <script src="../manual/assets/manual.js"></script>
 </body>
 </html>

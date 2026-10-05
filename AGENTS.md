@@ -103,6 +103,15 @@ copy another educator's artwork, branding or narration.
 Embed each new stage animation on its matching multi-page manual page. Keep
 the standalone animation usable, including the optional local question tutor;
 the embedded view uses the manual page's question panel.
+Before every animation, place a short, stage-specific primer on the matching
+manual page that explains what the step does, what it builds on from earlier
+steps, its goal, and its concrete end state. Keep the same primer before the
+implementation section on pages whose animation has not been built yet.
+Show the same primer when an animation is opened on its own; hide that copy
+inside the embedded iframe so the manual page presents it only once.
+State clearly when a mechanism is still conceptual or belongs to a later
+step; avoid generic boilerplate that could fit any stage. Include the primer
+in the manual tutor's page context, including on standalone animation pages.
 
 When handing off a local HTML manual, animation, or other browser-viewable
 artifact, always include its complete absolute `file:///` URL so the human can

@@ -22,7 +22,7 @@ a time.
 | Step 1 — Define the Task Contract | Complete |
 | Step 2 — Create the Model Adapter | Complete |
 | Step 3 — Build the Event Log | Complete |
-| Step 4 — Implement the Agent Loop | In progress — instruction 16/16 issued; 15/16 complete |
+| Step 4 — Implement the Agent Loop | Complete |
 | Step 5 — Build the Tool System | Pending |
 | Step 6 — Engineer the Context | Pending |
 | Step 7 — Repository Navigation | Pending |
@@ -719,7 +719,7 @@ tree. After the commit, `pytest -q` reported fourteen passes and the
 checksum manifest passed. Step 3 is closed. Do not begin Step 4 until the
 human asks.
 
-## Active stage: Step 4 — Implement the Agent Loop
+## Completed stage: Step 4 — Implement the Agent Loop
 
 The human opened Step 4 by requesting its conceptual animation first.
 Responsibility: coordinate a bounded observe → decide → act → record cycle
@@ -1003,7 +1003,7 @@ and their transitions, and `tests/test_loop.py` makes the completion, limit,
 and returned-failure behaviors explicit and repeatable. The Step 4
 understanding gate passes with no remaining gaps. Progress: 15/16 complete.
 
-### Instruction 16/16 — issued, awaiting stage commit
+### Instruction 16/16 — complete
 
 Codex reviewed RunState, the loop, and all four tests against the manual
 checkpoint. The implementation preserves its contracts; the local fake
@@ -1020,4 +1020,13 @@ and the corresponding checksum manifest. No files are currently staged.
 Issue one command to stage those paths and commit with message
 `step 4: implement the agent loop`. Await the human's result, inspect the
 commit and repository status, then record closeout and stop at the stage
-boundary. Progress: 15/16 complete; stage remains open pending the commit.
+boundary. The human committed the reviewed stage as `a2d42b6`
+(`step 4: implement the agent loop`). Codex verified that commit contains
+the intended implementation and study materials and that the working tree
+is clean. Progress: 16/16 complete.
+
+### Stage boundary
+
+The implementation, focused and accumulated tests, actual debugger and
+failure traces, human understanding gate, and stage commit are complete.
+Step 4 is closed. Step 5 remains pending until the human asks to begin it.

@@ -1,0 +1,555 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>5. Build the Tool System — khosiness</title>
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<div class="site">
+  <aside class="sidebar">
+    <div class="brand">
+      <a href="../index.html">khosiness — Harness Engineering From Scratch</a>
+      <p>Personal agentic operating harness · Python + VS Code + Codex</p>
+    </div>
+    <div class="nav-title">Manual map</div>
+    <nav class="nav">
+      <a href="../index.html" class="">Overview</a>
+<div class="phase-nav-label">Phase I · Build khosiness</div>
+<a href="project-setup.html" class="">Setup. Project Setup</a>
+<a href="step-00-mental-model.html" class="">0. The Mental Model</a>
+<a href="step-01-task-contract.html" class="">1. Define the Task Contract</a>
+<a href="step-02-model-adapter.html" class="">2. Create the Model Adapter</a>
+<a href="step-03-event-log.html" class="">3. Build the Event Log</a>
+<a href="step-04-agent-loop.html" class="">4. Implement the Agent Loop</a>
+<a href="step-05-tool-system.html" class="current-page">5. Build the Tool System</a>
+<a href="step-06-context-engineering.html" class="">6. Engineer the Context</a>
+<a href="step-07-repository-navigation.html" class="">7. Repository Navigation</a>
+<a href="step-08-shell-sandbox.html" class="">8. Shell Execution and Sandbox</a>
+<a href="step-09-policy-approvals.html" class="">9. Policy and Human Approval</a>
+<a href="step-10-state-recovery.html" class="">10. State, Checkpoints and Recovery</a>
+<a href="step-11-memory.html" class="">11. Memory</a>
+<a href="step-12-context-compaction.html" class="">12. Context Compaction</a>
+<a href="step-13-skills.html" class="">13. Skills and Progressive Disclosure</a>
+<a href="step-14-subagents.html" class="">14. Subagents</a>
+<a href="step-15-evaluation.html" class="">15. Evaluation</a>
+<a href="step-16-learning-loop.html" class="">16. The Harness Learning Loop</a>
+<a href="step-17-final-architecture.html" class="">17. Assemble the First-Generation Architecture</a>
+<a href="step-18-twelve-week-plan.html" class="">18. 12-Week Build Plan — Complete Phase I</a>
+<div class="phase-nav-label">Part II · Personal khosiness</div>
+<a href="part-ii-personal-harness.html" class="">19. Building the Personal Harness</a>
+    </nav>
+  </aside>
+  <main class="content">
+    <div class="detail-layout"><div class="detail-main"><header class="hero"><div class="eyebrow">Step 5</div><h1>5. Build the Tool System</h1><p>Turn capabilities into validated, bounded contracts instead of arbitrary Python calls.</p></header><div class="wrap"><div class="pager"><a href="step-04-agent-loop.html">← 4. Implement the Agent Loop</a><a href="step-06-context-engineering.html">6. Engineer the Context →</a></div><section class="card stage-orientation" aria-labelledby="stage-orientation-title"><div class="orientation-kicker">Before the animation</div><h2 id="stage-orientation-title">Understand the step first</h2><p class="orientation-intro">Read these four anchors, then watch how the tool boundary behaves.</p><div class="orientation-grid"><div class="orientation-item"><h3>What this step does</h3><p>Introduce named tool contracts, a registry, workspace path checks, and structured results for read-only filesystem operations.</p></div><div class="orientation-item"><h3>What it builds on</h3><p>The Step 4 reference dispatches injected fake tools and records their results. Step 5 supplies concrete tools through that same interface.</p></div><div class="orientation-item"><h3>Goal</h3><p>Make a request resolve to a known operation, reject path escapes before the file read, and return usable evidence or an explicit failure.</p></div><div class="orientation-item"><h3>End state</h3><p>Tool, ToolResult, ToolRegistry, and list/search/read tools connect to the loop. Tests verify failures and bounded output. Typed arguments are validated at execution, reads support line ranges, and each discovered search target is checked. Approval policy comes in Step 9.</p></div></div></section><section class="card stage-animation"><h2>Watch the tool system</h2><p>Follow a file-read proposal through lookup, path checks, and structured results; compare unknown-name and path-escape failures. This is a conceptual simulation of Step 5. Use your tutoring conversation for questions about the lesson.</p><iframe src="../../animations/step-05-tool-system.html?embedded=1&amp;v=1" title="Step 5 animated tool system" loading="eager"></iframe><p><a href="../../animations/step-05-tool-system.html">Open the animation on its own</a></p></section><section class="card"><h2>Conceptual objective</h2><p class="lead">Turn capabilities into validated, bounded contracts instead of arbitrary Python calls.</p><div class="callout">At this stage you are constructing the irreducible harness core. Prefer deterministic code and fake-model tests. Do not introduce abstractions that solve problems you have not yet encountered.</div><h3>Files to create or modify</h3><div class="files"><code>src/khosiness/tools/base.py</code><code>src/khosiness/tools/registry.py</code><code>src/khosiness/tools/filesystem.py</code><code>tests/test_tools.py</code></div></section><section class="card"><h2>Implementation sequence</h2><div class="step"><div class="badge">1</div><div><h3>Define ToolResult.</h3><p>Implement this as the smallest version that makes the responsibility concrete. Keep provider/framework details outside the core boundary, add an event where the action changes run state, and make failure observable rather than silent.</p></div></div><div class="step"><div class="badge">2</div><div><h3>Define Tool with name, description, schema, risk and execute().</h3><p>Implement this as the smallest version that makes the responsibility concrete. Keep provider/framework details outside the core boundary, add an event where the action changes run state, and make failure observable rather than silent.</p></div></div><div class="step"><div class="badge">3</div><div><h3>Build a registry that rejects unknown tools.</h3><p>Implement this as the smallest version that makes the responsibility concrete. Keep provider/framework details outside the core boundary, add an event where the action changes run state, and make failure observable rather than silent.</p></div></div><div class="step"><div class="badge">4</div><div><h3>Implement list_directory, search_files and read_file.</h3><p>Implement this as the smallest version that makes the responsibility concrete. Keep provider/framework details outside the core boundary, add an event where the action changes run state, and make failure observable rather than silent.</p></div></div><div class="step"><div class="badge">5</div><div><h3>Constrain all paths to the task workspace.</h3><p>Implement this as the smallest version that makes the responsibility concrete. Keep provider/framework details outside the core boundary, add an event where the action changes run state, and make failure observable rather than silent.</p></div></div></section><section class="card"><h2>Starter implementation</h2><div class="callout"><strong>Executable reference boundaries:</strong> Pydantic argument models generate schemas and validate each filesystem request before I/O. Read ranges are 1-based and inclusive. Reads reject files over 1,000,000 bytes; returned content is capped at 20,000 characters; directory lists and searches stop at 100 entries/matches. A truncated result is incomplete evidence. Directory/search order is not guaranteed. Search checks each resolved target, including symlink files. These checks assume a stable local workspace: they do not prevent concurrent path replacement, bound total traversal time, or implement an OS sandbox. Those execution controls belong to later stages. Risk labels remain metadata; approval policy arrives in Step 9.</div><div class="callout warn"><strong>Do not paste blindly.</strong> Type this in VS Code, make it run, then explain every line before you add another layer.</div><pre><code>from pydantic import BaseModel, Field
+from abc import ABC, abstractmethod
+
+class ToolResult(BaseModel):
+    ok: bool
+    content: str
+    metadata: dict = Field(default_factory=dict)
+
+class Tool(ABC):
+    name: str
+    description: str
+    risk: str = "read_only"
+
+    @abstractmethod
+    def schema(self) -&gt; dict: ...
+
+    @abstractmethod
+    def execute(self, arguments: dict) -&gt; ToolResult: ...</code></pre></section><section class="card"><h2>Tests to perform</h2><ol><li>Unknown tool gives structured error.</li><li>Path traversal outside workspace is denied.</li><li>Missing file gives structured error.</li><li>Search output is bounded.</li><li>Line-range reads return only requested lines.</li><li>Malformed arguments fail before filesystem access.</li><li>Search rejects discovered symlink escapes before reading them.</li><li>Directory, search, read-output, and file-byte limits are tested.</li></ol><div class="callout green"><strong>Deliberate-failure rule:</strong> after the happy path works, deliberately trigger at least one failure and inspect the returned result, state change and event trace.</div></section><section class="card"><h2>What to inspect before moving on</h2><ul class="checks"><li>The component has one clear responsibility.</li><li>Failure is explicit and testable.</li><li>The event log shows the important transition.</li><li>No provider/framework object has leaked across an architectural boundary without a reason.</li><li>You can explain what problem this step solves without reading the code.</li></ul></section><section class="card"><h2>Suggested commit</h2><pre><code>git add .
+git commit -m "step 5: build the tool system"</code></pre><p>Tagging each stage separately makes later architectural comparison much easier.</p></section>
+<section class="card stage-checkpoint">
+<div class="checkpoint-kicker">Stage release checkpoint</div>
+<h2>End-state file contents</h2>
+<p class="lead">
+            Stop here and compare your repository with this checkpoint.
+            These are the <strong>complete contents</strong> of every file created
+            or modified in this stage—not fragments. Your implementation may
+            differ stylistically, but its contracts, tests and behavior should
+            be equivalent before you continue.
+          </p>
+<div class="snapshot-files">
+<details class="snapshot-file" open="">
+<summary>
+<code>src/khosiness/tools/base.py</code>
+<span>complete file</span>
+</summary>
+<div class="snapshot-body">
+<button class="copy-code" type="button">Copy file</button>
+<pre><code>from abc import ABC, abstractmethod
+
+from pydantic import BaseModel, Field
+
+
+class ToolResult(BaseModel):
+    ok: bool
+    content: str
+    metadata: dict = Field(default_factory=dict)
+
+
+class Tool(ABC):
+    name: str
+    description: str
+    risk: str = "read_only"
+
+    @abstractmethod
+    def schema(self) -&gt; dict:
+        ...
+
+    @abstractmethod
+    def execute(self, arguments: dict) -&gt; ToolResult:
+        ...</code></pre>
+</div>
+</details>
+<details class="snapshot-file">
+<summary>
+<code>src/khosiness/tools/registry.py</code>
+<span>complete file</span>
+</summary>
+<div class="snapshot-body">
+<button class="copy-code" type="button">Copy file</button>
+<pre><code>from khosiness.models.base import ToolCall
+
+from .base import Tool, ToolResult
+
+
+class ToolRegistry:
+    def __init__(self):
+        self._tools: dict[str, Tool] = {}
+
+    def register(self, tool: Tool) -&gt; None:
+        if tool.name in self._tools:
+            raise ValueError(f"duplicate tool: {tool.name}")
+        self._tools[tool.name] = tool
+
+    def schemas(self) -&gt; list[dict]:
+        return [tool.schema() for tool in self._tools.values()]
+
+    def execute(self, call: ToolCall) -&gt; ToolResult:
+        tool = self._tools.get(call.name)
+
+        if tool is None:
+            return ToolResult(
+                ok=False,
+                content=f"Unknown tool: {call.name}",
+            )
+
+        try:
+            return tool.execute(call.arguments)
+        except Exception as exc:
+            return ToolResult(
+                ok=False,
+                content=f"{type(exc).__name__}: {exc}",
+            )</code></pre>
+</div>
+</details>
+<details class="snapshot-file">
+<summary>
+<code>src/khosiness/tools/filesystem.py</code>
+<span>complete file</span>
+</summary>
+<div class="snapshot-body">
+<button class="copy-code" type="button">Copy file</button>
+<pre><code>from itertools import islice
+from pathlib import Path
+
+from pydantic import BaseModel, ConfigDict, Field, model_validator
+
+from .base import Tool, ToolResult
+
+
+MAX_FILE_BYTES = 1_000_000
+MAX_OUTPUT_CHARS = 20_000
+MAX_ENTRIES = 100
+MAX_MATCHES = 100
+
+
+class PathArguments(BaseModel):
+    model_config = ConfigDict(strict=True, extra="forbid")
+    path: str = Field(min_length=1)
+
+
+class ReadArguments(PathArguments):
+    start_line: int = Field(default=1, ge=1)
+    end_line: int | None = Field(default=None, ge=1)
+
+    @model_validator(mode="after")
+    def ordered_range(self):
+        if self.end_line is not None and self.end_line &lt; self.start_line:
+            raise ValueError("end_line must be at least start_line")
+        return self
+
+
+class SearchArguments(PathArguments):
+    query: str = Field(min_length=1)
+
+
+def safe_path(workspace: Path, relative_path: str) -&gt; Path:
+    workspace = workspace.resolve()
+    candidate = (workspace / relative_path).resolve()
+    if not candidate.is_relative_to(workspace):
+        raise ValueError("path escapes workspace")
+    return candidate
+
+
+def read_text_bounded(path: Path) -&gt; str:
+    if not path.is_file():
+        raise ValueError(f"not a file: {path.name}")
+    with path.open("rb") as stream:
+        data = stream.read(MAX_FILE_BYTES + 1)
+    if len(data) &gt; MAX_FILE_BYTES:
+        raise ValueError("file exceeds byte limit")
+    return data.decode("utf-8")
+
+
+def schema_for(tool: Tool, arguments: type[BaseModel]) -&gt; dict:
+    return {
+        "name": tool.name,
+        "description": tool.description,
+        "parameters": arguments.model_json_schema(),
+    }
+
+
+class ListDirectoryTool(Tool):
+    name = "list_directory"
+    description = "List at most 100 entries inside the workspace."
+
+    def __init__(self, workspace: Path):
+        self.workspace = workspace.resolve()
+
+    def schema(self) -&gt; dict:
+        return schema_for(self, PathArguments)
+
+    def execute(self, arguments: dict) -&gt; ToolResult:
+        args = PathArguments.model_validate(arguments)
+        path = safe_path(self.workspace, args.path)
+        if not path.is_dir():
+            raise ValueError(f"not a directory: {args.path}")
+        # Select a bounded subset, then sort it. Directory order is unspecified.
+        items = list(islice(path.iterdir(), MAX_ENTRIES + 1))
+        entries = sorted(
+            item.name + ("/" if not item.is_symlink() and item.is_dir() else "")
+            for item in items[:MAX_ENTRIES]
+        )
+        text = "\n".join(entries)
+        return ToolResult(
+            ok=True,
+            content=text[:MAX_OUTPUT_CHARS],
+            metadata={
+                "count": len(entries),
+                "truncated": len(items) &gt; MAX_ENTRIES or len(text) &gt; MAX_OUTPUT_CHARS,
+            },
+        )
+
+
+class ReadFileTool(Tool):
+    name = "read_file"
+    description = "Read a UTF-8 file; optional line bounds are 1-based and inclusive."
+
+    def __init__(self, workspace: Path):
+        self.workspace = workspace.resolve()
+
+    def schema(self) -&gt; dict:
+        return schema_for(self, ReadArguments)
+
+    def execute(self, arguments: dict) -&gt; ToolResult:
+        args = ReadArguments.model_validate(arguments)
+        path = safe_path(self.workspace, args.path)
+        text = read_text_bounded(path)
+        selected = "".join(text.splitlines(keepends=True)[args.start_line - 1:args.end_line])
+        return ToolResult(
+            ok=True,
+            content=selected[:MAX_OUTPUT_CHARS],
+            metadata={
+                "characters": len(text),
+                "start_line": args.start_line,
+                "end_line": args.end_line,
+                "truncated": len(selected) &gt; MAX_OUTPUT_CHARS,
+            },
+        )
+
+
+class SearchFilesTool(Tool):
+    name = "search_files"
+    description = "Search UTF-8 files; return at most 100 matches and 20,000 characters."
+
+    def __init__(self, workspace: Path):
+        self.workspace = workspace.resolve()
+
+    def schema(self) -&gt; dict:
+        return schema_for(self, SearchArguments)
+
+    def execute(self, arguments: dict) -&gt; ToolResult:
+        args = SearchArguments.model_validate(arguments)
+        root = safe_path(self.workspace, args.path)
+        if not root.is_dir():
+            raise ValueError(f"not a directory: {args.path}")
+        matches: list[str] = []
+        output_chars = 0
+        for path in root.rglob("*"):
+            # Validate every discovered target, including symlink files.
+            resolved = safe_path(self.workspace, str(path.relative_to(self.workspace)))
+            if not resolved.is_file():
+                continue
+            try:
+                lines = read_text_bounded(resolved).splitlines()
+            except UnicodeDecodeError:
+                continue
+            for number, line in enumerate(lines, start=1):
+                if args.query in line:
+                    match = f"{path.relative_to(self.workspace)}:{number}:{line.strip()}"
+                    matches.append(match)
+                    output_chars += len(match) + (1 if len(matches) &gt; 1 else 0)
+                    if len(matches) &gt;= MAX_MATCHES or output_chars &gt;= MAX_OUTPUT_CHARS:
+                        return ToolResult(
+                            ok=True,
+                            content="\n".join(matches)[:MAX_OUTPUT_CHARS],
+                            metadata={"truncated": True},
+                        )
+        return ToolResult(ok=True, content="\n".join(matches), metadata={"truncated": False})</code></pre>
+</div>
+</details>
+<details class="snapshot-file">
+<summary>
+<code>tests/test_tools.py</code>
+<span>complete file</span>
+</summary>
+<div class="snapshot-body">
+<button class="copy-code" type="button">Copy file</button>
+<pre><code>from khosiness.models.base import ToolCall
+from khosiness.tools.filesystem import (
+    ListDirectoryTool,
+    ReadFileTool,
+    SearchFilesTool,
+)
+from khosiness.tools.registry import ToolRegistry
+
+
+def test_registry_rejects_duplicate_tool(tmp_path):
+    registry = ToolRegistry()
+    tool = ReadFileTool(tmp_path)
+    registry.register(tool)
+
+    try:
+        registry.register(tool)
+        assert False, "expected duplicate registration to fail"
+    except ValueError:
+        pass
+
+
+def test_unknown_tool_returns_structured_error():
+    registry = ToolRegistry()
+
+    result = registry.execute(
+        ToolCall(
+            id="1",
+            name="missing",
+            arguments={},
+        )
+    )
+
+    assert result.ok is False
+    assert "Unknown tool" in result.content
+
+
+def test_read_file(tmp_path):
+    (tmp_path / "hello.txt").write_text(
+        "hello",
+        encoding="utf-8",
+    )
+    tool = ReadFileTool(tmp_path)
+
+    result = tool.execute({"path": "hello.txt"})
+
+    assert result.ok is True
+    assert result.content == "hello"
+
+
+def test_read_file_cannot_escape_workspace(tmp_path):
+    tool = ReadFileTool(tmp_path)
+
+    try:
+        tool.execute({"path": "../outside.txt"})
+        assert False, "expected path escape to fail"
+    except ValueError as exc:
+        assert "escapes workspace" in str(exc)
+
+
+def test_list_directory(tmp_path):
+    (tmp_path / "a.txt").write_text("a", encoding="utf-8")
+    (tmp_path / "folder").mkdir()
+
+    result = ListDirectoryTool(tmp_path).execute({"path": "."})
+
+    assert result.content.splitlines() == [
+        "a.txt",
+        "folder/",
+    ]
+
+
+def test_search_files(tmp_path):
+    (tmp_path / "config.py").write_text(
+        "RETRY_COUNT = 3\n",
+        encoding="utf-8",
+    )
+
+    result = SearchFilesTool(tmp_path).execute(
+        {"query": "RETRY", "path": "."}
+    )
+
+    assert "config.py:1:RETRY_COUNT = 3" in result.content
+
+def test_missing_file_returns_structured_error(tmp_path):
+    registry = ToolRegistry()
+    registry.register(ReadFileTool(tmp_path))
+    result = registry.execute(ToolCall(id="1", name="read_file", arguments={"path": "missing.txt"}))
+    assert result.ok is False
+    assert "not a file" in result.content
+
+
+def test_argument_validation_precedes_io(tmp_path):
+    registry = ToolRegistry()
+    registry.register(ReadFileTool(tmp_path))
+    for arguments in [{}, {"path": 7}, {"path": "a", "extra": True},
+                      {"path": "a", "start_line": 0}, {"path": "a", "start_line": "1"},
+                      {"path": "a", "start_line": 3, "end_line": 2}]:
+        result = registry.execute(ToolCall(id="1", name="read_file", arguments=arguments))
+        assert result.ok is False
+        assert "ValidationError" in result.content
+
+
+def test_read_line_range(tmp_path):
+    (tmp_path / "lines.txt").write_text("one\ntwo\nthree\nfour\n", encoding="utf-8")
+    result = ReadFileTool(tmp_path).execute({"path": "lines.txt", "start_line": 2, "end_line": 3})
+    assert result.content == "two\nthree\n"
+    assert result.metadata["truncated"] is False
+
+
+def test_read_output_and_byte_limits(tmp_path):
+    from khosiness.tools.filesystem import MAX_FILE_BYTES, MAX_OUTPUT_CHARS
+    path = tmp_path / "large.txt"
+    path.write_text("x" * (MAX_OUTPUT_CHARS + 1), encoding="utf-8")
+    result = ReadFileTool(tmp_path).execute({"path": path.name})
+    assert len(result.content) == MAX_OUTPUT_CHARS
+    assert result.metadata["truncated"] is True
+    path.write_bytes(b"x" * (MAX_FILE_BYTES + 1))
+    registry = ToolRegistry()
+    registry.register(ReadFileTool(tmp_path))
+    result = registry.execute(ToolCall(id="1", name="read_file", arguments={"path": path.name}))
+    assert result.ok is False
+    assert "byte limit" in result.content
+
+
+def test_search_match_limit(tmp_path):
+    (tmp_path / "many.txt").write_text("RETRY\n" * 101, encoding="utf-8")
+    result = SearchFilesTool(tmp_path).execute({"path": ".", "query": "RETRY"})
+    assert len(result.content.splitlines()) == 100
+    assert result.metadata["truncated"] is True
+
+
+def test_search_character_limit(tmp_path):
+    from khosiness.tools.filesystem import MAX_OUTPUT_CHARS
+    (tmp_path / "long.txt").write_text("RETRY" + "x" * MAX_OUTPUT_CHARS, encoding="utf-8")
+    result = SearchFilesTool(tmp_path).execute({"path": ".", "query": "RETRY"})
+    assert len(result.content) == MAX_OUTPUT_CHARS
+    assert result.metadata["truncated"] is True
+
+
+def test_directory_output_limit(tmp_path):
+    for index in range(101):
+        (tmp_path / f"file-{index:03}.txt").touch()
+    result = ListDirectoryTool(tmp_path).execute({"path": "."})
+    assert len(result.content.splitlines()) == 100
+    assert result.metadata["truncated"] is True
+
+
+def test_search_rejects_symlink_escape_before_read(tmp_path, monkeypatch):
+    import khosiness.tools.filesystem as filesystem
+    workspace = tmp_path / "workspace"
+    workspace.mkdir()
+    outside = tmp_path / "outside.txt"
+    outside.write_text("private data", encoding="utf-8")
+    (workspace / "link.txt").symlink_to(outside)
+
+    def forbidden_read(path):
+        raise AssertionError("read must not be reached")
+
+    monkeypatch.setattr(filesystem, "read_text_bounded", forbidden_read)
+    registry = ToolRegistry()
+    registry.register(SearchFilesTool(workspace))
+    result = registry.execute(ToolCall(id="1", name="search_files", arguments={"path": ".", "query": "private"}))
+    assert result.ok is False
+    assert "path escapes workspace" in result.content</code></pre>
+</div>
+</details>
+</div>
+</section>
+<section class="card validation-gate">
+<div class="checkpoint-kicker">Do not advance until this passes</div>
+<h2>Validation gate</h2>
+<p>
+            Run these checks from the repository root. A green unit test suite
+            is necessary but not sufficient; finish with the manual inspection
+            below so you also understand the behavior you just built.
+          </p>
+<div class="validation-table-wrap">
+<table class="validation-table">
+<thead>
+<tr>
+<th>Check</th>
+<th>Command</th>
+<th>Expected result</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Run tool tests</td>
+<td><pre class="command-pre"><code>pytest tests/test_tools.py -q</code></pre></td>
+<td>14 tests pass, covering registry errors, validated inputs, containment, line ranges, and output limits.</td>
+</tr>
+<tr>
+<td>Run all tests</td>
+<td><pre class="command-pre"><code>pytest -q</code></pre></td>
+<td>All accumulated tests pass.</td>
+</tr>
+<tr>
+<td>Check path escape protection</td>
+<td><pre class="command-pre"><code>pytest tests/test_tools.py::test_read_file_cannot_escape_workspace -q</code></pre></td>
+<td>The escape attempt is rejected.</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="callout green">
+<strong>Manual understanding check:</strong>
+            Call `SearchFilesTool` manually against a small repository. Inspect whether its output is evidence-sized rather than a full-file dump.
+          </div>
+<div class="callout checkpoint-pass">
+<strong>Stage passes only when:</strong>
+            the stage-specific tests pass, the complete accumulated suite passes,
+            the expected manual behavior is observed, and you can explain why
+            each changed file exists.
+          </div>
+</section>
+<div class="pager"><a href="step-04-agent-loop.html">← 4. Implement the Agent Loop</a><a href="step-06-context-engineering.html">6. Engineer the Context →</a></div><div class="footer">khosiness — Harness Engineering From Scratch · shorthand: kness · build deliberately, measure everything, earn autonomy.</div></div></div><aside aria-label="Developing project tree" class="project-tree-panel">
+<div class="project-tree-card">
+<div class="tree-kicker">Developing project</div>
+<h2>Project tree</h2>
+<p class="tree-help">Yellow marks the folders and files created or modified in this stage.</p>
+<div class="tree-box">
+<div class="tree-row tree-root">
+<span class="tree-icon">▾</span>
+<span class="tree-label">khosiness/</span>
+</div>
+<div class="tree-row" style="--depth:0"><span class="tree-icon">▾</span><span class="tree-label">benchmarks/</span></div><div class="tree-row" style="--depth:1"><span class="tree-icon">•</span><span class="tree-label">.gitkeep</span></div><div class="tree-row" style="--depth:1"><span class="tree-icon">•</span><span class="tree-label">tasks.json</span></div><div class="tree-row" style="--depth:0"><span class="tree-icon">▾</span><span class="tree-label">docs/</span></div><div class="tree-row" style="--depth:1"><span class="tree-icon">•</span><span class="tree-label">architecture.md</span></div><div class="tree-row affected" style="--depth:0"><span class="tree-icon">▾</span><span class="tree-label">src/</span></div><div class="tree-row affected" style="--depth:1"><span class="tree-icon">▾</span><span class="tree-label">khosiness/</span></div><div class="tree-row" style="--depth:2"><span class="tree-icon">▾</span><span class="tree-label">models/</span></div><div class="tree-row" style="--depth:3"><span class="tree-icon">•</span><span class="tree-label">base.py</span></div><div class="tree-row" style="--depth:3"><span class="tree-icon">•</span><span class="tree-label">fake.py</span></div><div class="tree-row" style="--depth:3"><span class="tree-icon">•</span><span class="tree-label">provider.py</span></div><div class="tree-row affected" style="--depth:2"><span class="tree-icon">▾</span><span class="tree-label">tools/</span></div><div class="tree-row affected" style="--depth:3"><span class="tree-icon">•</span><span class="tree-label">base.py</span></div><div class="tree-row affected" style="--depth:3"><span class="tree-icon">•</span><span class="tree-label">filesystem.py</span></div><div class="tree-row affected" style="--depth:3"><span class="tree-icon">•</span><span class="tree-label">registry.py</span></div><div class="tree-row" style="--depth:2"><span class="tree-icon">•</span><span class="tree-label">__init__.py</span></div><div class="tree-row" style="--depth:2"><span class="tree-icon">•</span><span class="tree-label">cli.py</span></div><div class="tree-row" style="--depth:2"><span class="tree-icon">•</span><span class="tree-label">event_store.py</span></div><div class="tree-row" style="--depth:2"><span class="tree-icon">•</span><span class="tree-label">events.py</span></div><div class="tree-row" style="--depth:2"><span class="tree-icon">•</span><span class="tree-label">loop.py</span></div><div class="tree-row" style="--depth:2"><span class="tree-icon">•</span><span class="tree-label">state.py</span></div><div class="tree-row" style="--depth:2"><span class="tree-icon">•</span><span class="tree-label">task.py</span></div><div class="tree-row affected" style="--depth:0"><span class="tree-icon">▾</span><span class="tree-label">tests/</span></div><div class="tree-row" style="--depth:1"><span class="tree-icon">•</span><span class="tree-label">__init__.py</span></div><div class="tree-row" style="--depth:1"><span class="tree-icon">•</span><span class="tree-label">test_event_store.py</span></div><div class="tree-row" style="--depth:1"><span class="tree-icon">•</span><span class="tree-label">test_loop.py</span></div><div class="tree-row" style="--depth:1"><span class="tree-icon">•</span><span class="tree-label">test_model_adapter.py</span></div><div class="tree-row" style="--depth:1"><span class="tree-icon">•</span><span class="tree-label">test_task.py</span></div><div class="tree-row affected" style="--depth:1"><span class="tree-icon">•</span><span class="tree-label">test_tools.py</span></div><div class="tree-row" style="--depth:0"><span class="tree-icon">•</span><span class="tree-label">.gitignore</span></div><div class="tree-row" style="--depth:0"><span class="tree-icon">•</span><span class="tree-label">pyproject.toml</span></div><div class="tree-row" style="--depth:0"><span class="tree-icon">•</span><span class="tree-label">README.md</span></div>
+</div>
+</div>
+</aside></div>
+  </main>
+</div>
+<script src="../assets/manual.js"></script>
+</body>
+</html>

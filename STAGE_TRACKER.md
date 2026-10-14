@@ -16,7 +16,7 @@ Step 0 question is withdrawn. The human has now begun fresh Project Setup.
 
 | Stage | Status |
 | --- | --- |
-| Project Setup | In progress — instruction 3/16 issued; 2/16 complete |
+| Project Setup | In progress — 14/16 complete; technical corrections verified; understanding and closeout pending |
 | Step 0 — The Mental Model | Pending |
 | Step 1 — Define the Task Contract | Pending |
 | Step 2 — Create the Model Adapter | Pending |
@@ -81,7 +81,7 @@ issuing the next instruction. Planned total: 16 human instructions.
 12. Run the intentionally empty test suite.
 13. Inspect the deliberate environment/import distinction.
 14. Complete the setup understanding check.
-15. Review the intended files and Git diff.
+15. Review the intended files and remove mistakenly tracked generated artifacts from the index.
 16. Commit, verify the baseline, and close Project Setup.
 
 ### Instructions 1/16 and 2/16 — complete
@@ -92,11 +92,78 @@ commits, Python 3.14.0 in .venv, and pip 26.2.1 installed inside that
 environment. The shell output confirms activation. These are the first
 two completed instructions in the new pass.
 
-### Instruction 3/16 — issued, awaiting scaffold creation
+### Instruction 3/16 — complete
 
 The human asked whether the manual's mkdir/touch block is correct from
 the existing khosiness directory. It is: create src/khosiness, tests, and
 benchmarks, then the seven empty files named in the setup checkpoint.
 Codex verified that those directories do not exist yet. Confirm the block
 without running it on the human's behalf. Await the human's result before
-introducing file contents. Progress: 2/16 complete.
+introducing file contents. The human ran the block. Codex verified all
+seven files exist and were empty before the requested edits below.
+
+### Instructions 4/16, 5/16, and 8/16 — complete by explicit delegation
+
+The human supplied the manual's pyproject.toml, .gitignore, and README.md
+contents and explicitly asked Codex to fill those three files. Codex wrote
+them exactly, verified TOML parsing, version 0.1.0, the kness entry point,
+pytest as the dev extra, generated-artifact ignore rules, and whitespace.
+This explicit batch request supersedes one-instruction editing for these
+three files only. Progress: 6/16 complete; no new human instruction issued.
+
+### Early commands requiring correction — historical observation
+
+Before these files had contents, the human ran an editable install, import,
+pytest, and a root commit. Codex observed khosiness 0.0.0 installed without
+the dev extra, and no pytest package in .venv. The successful import only
+established that the empty package could be found. These actions do not
+pass the intended install, CLI, import, or test gates yet.
+The root commit ff7bfa8 contains generated egg-info and bytecode because
+.gitignore was empty at commit time. The new ignore rules prevent new
+tracking but do not remove existing tracked files. Correct that in
+instruction 15 and finish with a follow-up commit; do not rewrite history.
+At that inspection src/khosiness/__init__.py and cli.py were empty. The
+corrections below supersede those earlier defects.
+
+### Instructions 6/16, 7/16, and 9/16–13/16 — complete by explicit delegation
+
+The human asked Codex to make all necessary corrections before Step 0.
+This authorizes the remaining technical setup work as a batch. Codex filled
+the version and CLI files with the manual checkpoint and reinstalled
+`.[dev]` into .venv, replacing version 0.0.0 with 0.1.0 and installing
+Pydantic and pytest. The initial sandboxed pip attempt could not resolve
+PyPI; the authorized unrestricted retry succeeded.
+
+Checks passed: kness --version prints khosiness 0.1.0; help lists --version;
+package import resolves to this src/khosiness/__init__.py; installed metadata
+reports 0.1.0; pytest is installed in .venv; pip check finds no broken
+requirements. The real .venv pytest collects zero tests and returns status 5,
+which is expected at Setup. No dummy test was added.
+
+For the deliberate import distinction, the same .venv interpreter succeeds
+normally but raises ModuleNotFoundError with -I -S, which disables project
+path and site-package discovery. This demonstrates source existence versus
+import configuration; it does not establish that a separate global Python
+installation lacks the package. The human understanding gate remains open.
+
+### Instruction 15/16 — complete by explicit delegation
+
+Codex reviewed the five setup-file changes, verified clean whitespace, and
+removed previously tracked egg-info and bytecode with git rm --cached.
+The files remain on disk and are ignored by the new rules; no history was
+rewritten. No virtual-environment files were tracked.
+Progress: 14/16 complete (instructions 1–13 and 15).
+
+### Instruction 16/16 — in progress, corrective baseline commit
+
+Commit the corrected technical baseline and documentation as a follow-up
+commit, preserving ff7bfa8. Verify that generated files are absent from the
+index and the working tree is clean. Formal stage closeout remains pending
+until instruction 14's human understanding check passes.
+
+### Instruction 14/16 — issued, awaiting human understanding
+
+Ask the human to explain what .venv isolates and how the editable install
+makes kness import the source package while declaring Pydantic and pytest
+in separate dependency groups. Do not grant understanding credit from
+Codex's own explanation. Step 0 remains pending.

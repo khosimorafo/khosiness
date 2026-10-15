@@ -17,8 +17,8 @@ Step 0 question is withdrawn. The human has now begun fresh Project Setup.
 | Stage | Status |
 | --- | --- |
 | Project Setup | Technical checks passed; understanding and formal closeout deferred when the human requested Step 0 |
-| Step 0 — The Mental Model | In progress — instruction 6/6 issued; 5/6 complete |
-| Step 1 — Define the Task Contract | Pending |
+| Step 0 — The Mental Model | Complete — 6/6; documents, validation and understanding verified; commit 3832279 |
+| Step 1 — Define the Task Contract | In progress — instruction 9/10 issued; 8/10 complete |
 | Step 2 — Create the Model Adapter | Pending |
 | Step 3 — Build the Event Log | Pending |
 | Step 4 — Implement the Agent Loop | Pending |
@@ -217,7 +217,7 @@ method. Native Chrome keyboard checks passed for submission, newline,
 empty input, composition, Ctrl+Enter, and the Ask button's Enter behavior.
 The placeholder documents the shortcuts. No harness-stage progress changed.
 
-## Active stage: Step 0 — The Mental Model
+## Step 0 — The Mental Model — complete
 
 On 2026-10-15 the human explicitly requested "LEts do step 0". Proceed with
 that stage while retaining the unpassed Setup understanding check as a
@@ -369,3 +369,201 @@ Ask the human to stage only README.md, docs/architecture.md and this tracker.
 Verify the index before issuing the commit command under instruction 6/6.
 Stage completion remains pending commit and verification. Setup's deferred
 understanding check remains open.
+
+The human reported staging done. Codex verified the index contains exactly
+README.md, docs/architecture.md, and STAGE_TRACKER.md; staged whitespace
+checks pass and both staged exercise documents preserve the reviewed
+contracts. The tracker also retains earlier Setup/manual-companion records.
+Issue the Step 0 commit command under instruction 6/6, then await and verify
+the resulting commit. Progress remains 5/6 until closeout verification.
+
+### Instruction 6/6 — complete
+
+Verified HEAD is 3832279, "step 0: define harness boundaries and scope".
+The commit contains exactly README.md, docs/architecture.md, and the staged
+tracker record. Both exercise documents match HEAD. Documentation inspection,
+expected empty exercise-suite collection, and human understanding gates are
+satisfied. Progress: 6/6 complete. Step 0 is closed; Step 1 remains pending
+human instruction. Setup's deferred understanding gap remains open.
+
+This post-commit closeout record and CURRENT_STATE.md refresh are working-tree
+documentation updates. Earlier manual/tutor changes also remain uncommitted;
+a clean whole-repository working tree is not claimed.
+
+## Active stage: Step 1 — Define the Task Contract
+
+The human explicitly requested Step 1. Codex read its dedicated manual page
+in full, project history, seed brief, and current status, and inspected the
+source/test/benchmark files. No task model, task tests, or benchmark JSON
+exists yet. Step 0 is complete; Setup understanding remains deferred.
+
+Responsibility: validate a bounded unit of work before model/tool use.
+Failure mode: beginning work with a blank objective, unusable workspace,
+or invalid step budget. Constraints and success criteria are data here;
+the Task model does not enforce tool policy or prove task success. There
+is no model, loop, or event store yet; inspect validation errors rather
+than inventing event traces.
+
+Planned total: ten human instructions.
+
+1. Create src/khosiness/task.py using the validated checkpoint model.
+2. Create tests/test_task.py with the six contract tests.
+3. Create benchmarks/tasks.json with ten task templates.
+4. Run the stage-specific tests.
+5. Run the accumulated exercise suite.
+6. Validate benchmark JSON and template count.
+7. Inspect a deliberate missing-workspace validation failure.
+8. Complete the human task-contract understanding check.
+9. Review and stage the intended stage files.
+10. Commit, verify, and close Step 1.
+
+### Instruction 1/10 — issued, awaiting task model
+
+Give an editor command and full task.py checkpoint. Explain field
+validation at construction, separate list defaults, normalized workspace,
+and the difference between declaring limits and enforcing them later.
+Await the saved-file report. Progress: 0/10 complete.
+
+The human reported "saved". Codex inspected src/khosiness/task.py: its
+fields, separate list defaults, objective trimming/rejection, resolved
+existing-directory validation, and positive step-budget validation match
+the checkpoint. Instruction 1/10 is complete by file inspection; behavioral
+verification remains pending the tests. Progress: 1/10 complete.
+
+### Instruction 2/10 — issued, awaiting task tests
+
+Codex confirmed tests/test_task.py is absent. Ask the human to create the
+six checkpoint tests: valid workspace, missing workspace, file workspace,
+blank objective, zero steps, and JSON round-trip. Explain tmp_path isolation
+and observable validation failures. Await the saved-file report before
+moving to benchmark templates. Progress: 1/10 complete.
+
+The human reported "saved". Codex inspected tests/test_task.py and confirmed
+all six checkpoint cases and their expected assertions. Instruction 2/10
+is complete by file inspection; test execution is pending instructions 4
+and 5. Progress: 2/10 complete.
+
+### Instruction 3/10 — issued, awaiting benchmark templates
+
+Ask the human to create benchmarks/tasks.json with the ten manual checkpoint
+templates. These declare objectives, constraints, and success criteria but
+omit workspace, so they are not runnable Task instances. Several require
+a suitable application repository or supplied test/bug evidence; do not
+claim they apply to the current khosiness scaffold. They establish future
+evaluation inputs, not completed evaluations. Await the saved-file report.
+
+The human reported "saved". Codex inspected benchmarks/tasks.json and
+confirmed the ten checkpoint templates, including objectives, constraints,
+and success criteria. Formatting differs only in indentation. Instruction
+3/10 is complete by inspection; JSON parsing/count validation remains
+instruction 6/10. Progress: 3/10 complete.
+
+### Instruction 4/10 — issued, awaiting stage test output
+
+Ask the human to run .venv/bin/python -m pytest tests/test_task.py -q.
+Expected: six tests pass, exit status 0. Unlike Setup and Step 0, empty
+collection is now a failure to satisfy this stage. Await the output before
+proceeding to the accumulated suite. Progress: 3/10 complete.
+
+The human reported .venv/bin/python -m pytest tests/test_task.py -q:
+"6 passed in 0.22s". All six stage contract tests pass. Instruction 4/10
+is complete; progress 4/10 complete.
+
+### Instruction 5/10 — issued, awaiting accumulated suite output
+
+Ask the human to run .venv/bin/python -m pytest -q from the repository root.
+Expected: all accumulated exercise tests pass (currently six). Documentation
+companion tests are separate and do not count as harness exercise progress.
+Await the output before proceeding. Progress: 4/10 complete.
+
+The human reported .venv/bin/python -m pytest -q: "6 passed in 0.13s".
+The accumulated exercise suite passes. Instruction 5/10 is complete;
+progress 5/10 complete.
+
+### Instruction 6/10 — issued, awaiting benchmark validation output
+
+Give one Python command that parses benchmarks/tasks.json, asserts the root
+is a list containing ten templates, and prints the count. Parsing failure
+or an unexpected count must produce an error. These are template checks,
+not Task validation or evaluation runs. Await the result. Progress: 5/10.
+
+The human reported "10 benchmark templates validated" from the supplied
+JSON parsing/count command. Instruction 6/10 is complete; progress 6/10.
+
+### Instruction 7/10 — issued, awaiting deliberate failure inspection
+
+Use the manual's interactive Python validation gate. Ask the human to start
+.venv/bin/python; after the prompt is reported, give the missing-workspace
+Task construction under the same instruction number. Codex verified
+/tmp/khosiness-step1-missing-workspace does not exist at this inspection.
+Inspect the resulting ValidationError before granting credit. No model,
+tool, run state, or event log exists to trace here. Progress: 6/10.
+
+The human confirmed the interactive prompt with "got it". Continue
+instruction 7/10 with the import and one Task construction using the
+verified missing path. Await the actual validation error; opening the REPL
+alone does not complete this check. Progress remains 6/10.
+
+The human supplied the actual REPL traceback: Task construction raises
+pydantic_core.ValidationError on workspace, with "workspace does not exist:
+/tmp/khosiness-step1-missing-workspace". The error occurs inside Pydantic
+validation during construction. No model/tool call is present; no Task
+instance is successfully returned. Instruction 7/10 is complete, progress
+7/10 complete. No event trace or run-state change is claimed.
+
+### Instruction 8/10 — understanding gate issued
+
+Ask the human why workspace validation belongs at Task construction rather
+than waiting for a model/tool call. Require their own reasoning before
+credit. Continue under instruction 8/10 as needed to assess declared
+constraints versus enforced policy, success criteria versus proven success,
+and benchmark templates versus runnable Tasks. Progress: 7/10 complete.
+
+The human answered "Early rejection saves a useless model or tool call".
+This correctly explains why validating known prerequisites at construction
+avoids wasted downstream work. Clarified that it also keeps an invalid task
+out of execution. Continue instruction 8/10 with whether a declared
+"Do not modify files" constraint itself blocks a write. No enforcement
+mechanism is implemented in the Task data model. Progress remains 7/10.
+
+The human answered "No. That is merely the contract definition. Harness
+Policy still need to enforce rules". This correctly distinguishes declared
+constraints from enforcement. Continue instruction 8/10 with whether stored
+success criteria establish that the task succeeded, and what evidence is
+needed. Progress remains 7/10 complete.
+
+The human answered "The merely describes what a success condition should
+contain". This correctly identifies the criterion as a declaration, but
+does not yet explain evidence needed to establish satisfaction. Ask what
+would verify a model's proposed defining-file answer under instruction
+8/10; do not supply the answer and award credit. Progress remains 7/10.
+
+The human explained that verification requires an allowed workspace read
+showing the file and specific defining contents, plus the setting name where
+the recorded criterion requires it. They explicitly distinguished a model
+claim from evidence and noted that Step 1 has no model, tools, or completion
+checker. This satisfies the success-criteria/evidence understanding check.
+The harness controls dispatch and assessment; the tool/runtime performs the
+permitted read when introduced. Continue instruction 8/10 with the final
+benchmark-template versus runnable Task distinction. Progress remains 7/10.
+
+The human correctly explained that benchmark entries omit the required
+workspace, that it must be an existing directory, and that max_steps has a
+default of 30. They distinguished contract validation from later runtime
+enforcement and success assessment. Instruction 8/10 is complete; progress
+8/10 complete.
+
+### Instruction 9/10 — review and staging in progress
+
+Codex reviewed all three exercise files: the validated Task model, six
+contract tests, and ten benchmark templates with unique IDs and no workspace.
+They match the manual checkpoint semantics. No files are currently staged.
+The last reported terminal was still in the Python REPL, so first ask the
+human to exit it under instruction 9/10, then issue the precise staging
+command after confirmation. Preserve earlier uncommitted manual/tutor work.
+Progress: 8/10 complete.
+
+The human confirmed returning to the shell. Continue instruction 9/10 by
+staging exactly src/khosiness/task.py, tests/test_task.py,
+benchmarks/tasks.json, and STAGE_TRACKER.md. Await the result and inspect
+the index before issuing a commit command. Progress remains 8/10 complete.

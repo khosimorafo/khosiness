@@ -1,0 +1,105 @@
+[
+    {
+        "id": "locate-retry-config",
+        "objective": "Find where database connection retries are configured.",
+        "constraints": [
+            "Do not modify files."
+        ],
+        "success_criteria": [
+            "Name the defining file.",
+            "Name the retry setting."
+        ]
+    },
+    {
+        "id": "explain-config-flow",
+        "objective": "Explain how application configuration reaches the database layer.",
+        "constraints": [
+            "Use repository evidence.",
+            "Do not modify files."
+        ],
+        "success_criteria": [
+            "Identify the main files involved."
+        ]
+    },
+    {
+        "id": "trace-create-session",
+        "objective": "Find every project-owned caller of create_session().",
+        "constraints": [
+            "Do not modify files."
+        ],
+        "success_criteria": [
+            "List the caller files."
+        ]
+    },
+    {
+        "id": "diagnose-test",
+        "objective": "Explain why the supplied failing unit test fails.",
+        "constraints": [
+            "Do not change code."
+        ],
+        "success_criteria": [
+            "Identify the likely root cause."
+        ]
+    },
+    {
+        "id": "propose-only",
+        "objective": "Propose a fix for the configuration bug.",
+        "constraints": [
+            "Do not modify files.",
+            "Do not execute commands."
+        ],
+        "success_criteria": [
+            "Describe the smallest proposed change."
+        ]
+    },
+    {
+        "id": "locate-entrypoint",
+        "objective": "Locate the application's primary entry point.",
+        "constraints": [
+            "Do not modify files."
+        ],
+        "success_criteria": [
+            "Name the file and callable."
+        ]
+    },
+    {
+        "id": "trace-auth",
+        "objective": "Trace how authentication is enforced for an incoming request.",
+        "constraints": [
+            "Do not modify files."
+        ],
+        "success_criteria": [
+            "Identify the enforcing component."
+        ]
+    },
+    {
+        "id": "find-env",
+        "objective": "Identify all environment variables used by the application.",
+        "constraints": [
+            "Do not modify files."
+        ],
+        "success_criteria": [
+            "Return the variable names and source files."
+        ]
+    },
+    {
+        "id": "explain-storage",
+        "objective": "Explain the storage layer's public interface.",
+        "constraints": [
+            "Do not modify files."
+        ],
+        "success_criteria": [
+            "Name the public methods."
+        ]
+    },
+    {
+        "id": "locate-timeout",
+        "objective": "Find where request timeouts are configured.",
+        "constraints": [
+            "Do not modify files."
+        ],
+        "success_criteria": [
+            "Name the file, setting and value."
+        ]
+    }
+]

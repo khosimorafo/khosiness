@@ -18,8 +18,8 @@ Step 0 question is withdrawn. The human has now begun fresh Project Setup.
 | --- | --- |
 | Project Setup | Technical checks passed; understanding and formal closeout deferred when the human requested Step 0 |
 | Step 0 — The Mental Model | Complete — 6/6; documents, validation and understanding verified; commit 3832279 |
-| Step 1 — Define the Task Contract | In progress — instruction 9/10 issued; 8/10 complete |
-| Step 2 — Create the Model Adapter | Pending |
+| Step 1 — Define the Task Contract | Complete — 10/10; six tests, templates, failure inspection and understanding verified; commit 69e85b7 |
+| Step 2 — Create the Model Adapter | In progress — instruction 11/12 issued; 10/12 complete |
 | Step 3 — Build the Event Log | Pending |
 | Step 4 — Implement the Agent Loop | Pending |
 | Step 5 — Build the Tool System | Pending |
@@ -390,7 +390,7 @@ This post-commit closeout record and CURRENT_STATE.md refresh are working-tree
 documentation updates. Earlier manual/tutor changes also remain uncommitted;
 a clean whole-repository working tree is not claimed.
 
-## Active stage: Step 1 — Define the Task Contract
+## Step 1 — Define the Task Contract — complete
 
 The human explicitly requested Step 1. Codex read its dedicated manual page
 in full, project history, seed brief, and current status, and inspected the
@@ -567,3 +567,248 @@ The human confirmed returning to the shell. Continue instruction 9/10 by
 staging exactly src/khosiness/task.py, tests/test_task.py,
 benchmarks/tasks.json, and STAGE_TRACKER.md. Await the result and inspect
 the index before issuing a commit command. Progress remains 8/10 complete.
+
+The human reported staging done. Codex verified the index contains exactly
+STAGE_TRACKER.md, benchmarks/tasks.json, src/khosiness/task.py, and
+tests/test_task.py. Staged whitespace checks pass, and the three exercise
+files have no unstaged changes. Instruction 9/10 is complete; progress 9/10.
+
+### Instruction 10/10 — commit and closeout in progress
+
+Issue git commit -m "step 1: define the task contract". Await the output,
+verify commit contents and exercise-file state, then record completion.
+Other uncommitted documentation tooling remains separate. Do not begin
+Step 2 without human instruction. Progress: 9/10 complete.
+
+### Instruction 10/10 — complete
+
+Verified HEAD is 69e85b7, "step 1: define the task contract", containing
+exactly the three exercise files and staged tracker record. The exercise
+files match HEAD. Stage and accumulated tests each passed (six tests), ten
+benchmark templates parsed successfully, the human inspected the actual
+missing-workspace ValidationError, and the understanding gate is satisfied.
+Progress: 10/10 complete. Step 1 is closed; Step 2 awaits human instruction.
+Setup's deferred understanding check remains open.
+
+This post-commit closeout record and CURRENT_STATE.md refresh are uncommitted
+documentation updates, alongside earlier manual/tutor work. No clean whole-
+repository working tree or implemented model/tool runtime is claimed.
+
+## Active stage: Step 2 — Create the Model Adapter
+
+The human requested continuation after Step 1. Codex read the complete
+dedicated Step 2 manual page, current state, and tracker, and inspected the
+source/test files. There is no models directory or adapter test file yet.
+Step 1 is complete; the Setup understanding gap remains deferred.
+
+Responsibility: keep model requests and responses provider-neutral behind
+a replaceable adapter boundary. Failure mode: provider SDK objects leaking
+into harness logic, or tests requiring live nondeterministic model calls.
+ToolCall describes a proposal only. No tools execute in this stage.
+The callable wrapper accepts a supplied transport; no SDK, credentials,
+network call, event store, or agent loop is introduced.
+
+Planned total: twelve human instructions.
+
+1. Create the models directory.
+2. Define ToolCall, ModelResponse, and ModelAdapter in models/base.py.
+3. Implement the deterministic FakeModel in models/fake.py.
+4. Implement CallableProviderAdapter in models/provider.py.
+5. Create the four checkpoint adapter tests.
+6. Run adapter tests.
+7. Run the accumulated exercise suite.
+8. Inspect provider isolation.
+9. Inspect FakeModel.calls and deliberate empty-queue failure interactively.
+10. Complete the human adapter-boundary understanding check.
+11. Review and stage intended stage files.
+12. Commit, verify, and close Step 2.
+
+### Instruction 1/12 — issued, awaiting directory creation
+
+Ask the human to run mkdir -p src/khosiness/models. Await the result and
+verify before giving the base.py edit. Progress: 0/12 complete.
+
+On 2026-10-16 the human reported "done". Codex verified that the models
+directory exists and contains no source files yet. Instruction 1/12 is
+complete. Progress: 1/12 complete.
+
+### Instruction 2/12 — issued, awaiting base interface
+
+Ask the human to create models/base.py with ToolCall, ModelResponse, and
+the ModelAdapter protocol from the checkpoint. Explain that the protocol
+describes the interface for type checking, not runtime permission checking;
+Pydantic response models validate shape, not tool authority or correctness.
+Await the saved-file report. Progress: 1/12 complete.
+
+The human reported "saved". Codex inspected models/base.py and confirmed
+ToolCall, ModelResponse, and the ModelAdapter protocol match the checkpoint.
+Instruction 2/12 is complete by inspection; runtime tests remain pending.
+Progress: 2/12 complete.
+
+### Instruction 3/12 — issued, awaiting deterministic fake
+
+Ask the human to create models/fake.py with the checkpoint FakeModel:
+queued ModelResponse objects, recorded generate inputs, FIFO responses,
+and an explicit RuntimeError when exhausted. Explain that it performs no
+inference or tool execution and that calls records the supplied objects,
+not immutable snapshots. Await the saved-file report. Progress: 2/12.
+
+The human reported "saved". Codex inspected models/fake.py: it queues
+responses with deque, records inputs before checking exhaustion, returns
+FIFO responses, and raises the checkpoint RuntimeError on an empty queue.
+Instruction 3/12 is complete by inspection; tests remain pending.
+Progress: 3/12 complete.
+
+### Instruction 4/12 — issued, awaiting provider wrapper
+
+Ask the human to create models/provider.py with CallableProviderAdapter
+from the checkpoint. The injected transport handles provider communication
+and translation into a neutral dictionary; the wrapper validates that
+dictionary as ModelResponse. No SDK or real provider call is added here.
+Transport and validation failures propagate to the caller. Await the
+saved-file report. Progress: 3/12 complete.
+
+The human reported "saved". Codex inspected models/provider.py and verified
+the supplied transport is called with messages and tools, then its result
+is validated into ModelResponse. This matches the checkpoint semantics;
+the shorter docstring accurately describes the injected transport boundary.
+Instruction 4/12 is complete by inspection. Progress: 4/12 complete.
+
+### Instruction 5/12 — issued, awaiting adapter tests
+
+Codex confirmed tests/test_model_adapter.py is absent. Ask the human to
+create the four checkpoint tests for queued text/call recording, structured
+tool proposals, empty-queue failure, and callable transport normalization.
+The transport in the test is a local function, not a live provider call.
+Await the saved-file report. Progress: 4/12 complete.
+
+The human reported "saved". Codex inspected tests/test_model_adapter.py;
+all four checkpoint tests and their assertions are present. Instruction
+5/12 is complete by inspection; execution remains pending. Progress: 5/12.
+
+### Instruction 6/12 — issued, awaiting adapter test output
+
+Ask the human to run .venv/bin/python -m pytest tests/test_model_adapter.py -q.
+Expected: four passing tests, exit status 0. Await the output before issuing
+the accumulated-suite instruction. Progress: 5/12 complete.
+
+The human reported "4 passed in 0.20s" from the adapter test command.
+Instruction 6/12 is complete. Progress: 6/12 complete.
+
+### Instruction 7/12 — issued, awaiting accumulated suite output
+
+Ask the human to run .venv/bin/python -m pytest -q. Expected: ten tests
+pass, comprising six task tests and four adapter tests. Await the output
+before proceeding to provider isolation. Progress: 6/12 complete.
+
+The human reported "10 passed in 0.13s" from the accumulated exercise
+suite. Instruction 7/12 is complete. Progress: 7/12 complete.
+
+### Instruction 8/12 — issued, awaiting provider-isolation search
+
+Ask the human to search Python source for openai or anthropic references
+using rg. No matches are expected; rg exit status 1 means no matches, not
+a failing test. This is the manual's provider-reference check, supplemented
+by source inspection, not proof against all possible provider coupling.
+Await the output before interactive inspection. Progress: 7/12 complete.
+
+The human reported zsh could not find rg and explicitly requested its
+installation. Codex found apt-get; its own rg is supplied by Codex's private
+PATH and does not establish availability in the human shell. Attempted
+sudo apt-get install -y ripgrep with system-install approval, but sudo
+requires the human's terminal password. No installation was completed.
+Ask the human to run that installation command in their terminal, then
+verify installation and resume the same instruction 8/12. Progress 7/12.
+
+The human supplied successful apt installation output for ripgrep and reran
+the provider-reference search with no output. Codex also verified /usr/bin/rg
+is installed. Instruction 8/12 is complete: the expected source search has
+no matches. Progress: 8/12 complete. No unrelated package maintenance is
+needed for this stage.
+
+### Instruction 9/12 — interactive inspection in progress
+
+Ask the human to open .venv/bin/python. After confirmation, use pdb to
+inspect FakeModel.calls after a generate call, checking the exact messages
+and tool schemas. Then inspect the explicit empty-queue failure and the
+recorded failed attempt under this same instruction number. No tool
+execution, event history, or run state is implied. Progress: 8/12 complete.
+
+The human confirmed the Python prompt. Continue instruction 9/12 by
+constructing a fake with one text response, supplying a user message and
+read_file schema, calling generate, and entering pdb. Await the debugger
+prompt before giving the inspection command. Progress remains 8/12.
+
+The human supplied the REPL transcript showing the message/schema setup,
+generate call, and pdb prompt at the breakpoint. Ask them to run
+pp fake.calls to inspect the recorded inputs. Await the output; do not
+mark the inspection complete from reaching the breakpoint alone.
+
+The human supplied pp fake.calls output showing exactly one entry with the
+specified user message and read_file parameter schema. The recorded-input
+debugger inspection is satisfied. The single queued response has been
+consumed; ask for a second generate call using pdb's ! command to inspect
+the explicit exhaustion error. Instruction 9/12 remains open, progress 8/12.
+
+The human reported pdb output "*** RuntimeError: FakeModel has no queued
+response" on the second generate call. This is the expected deliberate
+failure. Ask for pp fake.calls to inspect whether the failed attempt was
+recorded before exhaustion was checked. Await the output before closing
+instruction 9/12. Progress remains 8/12 complete.
+
+The human supplied pp fake.calls output showing two entries after the
+second call failed. Both preserve the supplied message and schema. This
+confirms an attempted call is recorded before the empty-queue check, not
+that a response or tool execution succeeded. The debugger input inspection
+and deliberate-failure inspection are satisfied. Instruction 9/12 is
+complete; progress 9/12 complete. The human remains at the pdb prompt.
+
+### Instruction 10/12 — understanding gate issued
+
+Ask the human why FakeModel and CallableProviderAdapter exposing the same
+generate interface helps keep provider details out of harness logic.
+Continue one question at a time under this instruction as needed to assess
+protocol versus implementation, transport translation versus response
+validation, and tool proposals versus execution authority. Require their
+own explanation before granting understanding credit. Progress: 9/12.
+
+The human explained that the harness can call generate without knowing
+which adapter it received, that the fake provides deterministic responses
+and recorded requests, and that the callable wrapper converts the
+transport dictionary into ModelResponse. They also correctly stated that
+ToolCall remains a proposal without execution permission. Replaceability
+and authority understanding are satisfied. Continue instruction 10/12
+with who translates a provider-specific SDK response into the neutral
+dictionary versus who validates it. Progress remains 9/12 complete.
+
+The human correctly identified injected transport ownership of SDK-to-
+dictionary translation and CallableProviderAdapter.generate ownership of
+ModelResponse.model_validate(raw). They explicitly noted no specific SDK
+transport exists. This satisfies the translation/validation distinction.
+Continue instruction 10/12 with whether ModelAdapter's Protocol supplies
+a working generate implementation or enforces runtime conformance.
+Progress remains 9/12 complete.
+
+The human correctly explained that ModelAdapter's Protocol provides the
+expected interface, no working generate implementation, and no automatic
+runtime checking. They identified each adapter's own behavior, including
+the fake's exhaustion error. Instruction 10/12 understanding is complete.
+Progress: 10/12 complete.
+
+The human confirmed continuing out of pdb to the Python prompt. Continue
+instruction 11/12 by asking them to exit Python, then await shell
+confirmation before staging. Progress remains 10/12 complete.
+
+### Instruction 11/12 — review and staging in progress
+
+Codex reviewed the three adapter source files and four tests against the
+checkpoint. Contracts are preserved; no provider SDK or execution authority
+is introduced. No files are staged. Earlier manual/tutor changes remain
+separate. The human was last at pdb; first ask for continue (c), then exit
+Python after confirmation, before giving the precise staging command.
+Progress: 10/12 complete.
+
+The human confirmed exiting Python to the shell. Continue instruction
+11/12 by staging exactly models/base.py, models/fake.py, models/provider.py,
+tests/test_model_adapter.py, and STAGE_TRACKER.md. Await the result and
+inspect the index before committing. Progress remains 10/12 complete.

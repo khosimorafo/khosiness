@@ -20,8 +20,8 @@ Step 0 question is withdrawn. The human has now begun fresh Project Setup.
 | Step 0 — The Mental Model | Complete — 6/6; documents, validation and understanding verified; commit 3832279 |
 | Step 1 — Define the Task Contract | Complete — 10/10; six tests, templates, failure inspection and understanding verified; commit 69e85b7 |
 | Step 2 — Create the Model Adapter | Complete — 12/12; four adapter tests, ten accumulated tests, inspection and understanding verified; commit ce29485 |
-| Step 3 — Build the Event Log | In progress — instruction 10/11 issued; 9/11 complete |
-| Step 4 — Implement the Agent Loop | Pending |
+| Step 3 — Build the Event Log | Complete — 11/11; fourteen accumulated tests, JSONL/failure inspections and understanding verified; commit f49e53f |
+| Step 4 — Implement the Agent Loop | In progress — instruction 11/12 issued; 10/12 complete |
 | Step 5 — Build the Tool System | Pending |
 | Step 6 — Engineer the Context | Pending |
 | Step 7 — Repository Navigation | Pending |
@@ -839,7 +839,7 @@ awaits human instruction. Setup's deferred understanding gap remains open.
 Post-commit closeout records and earlier manual/tutor work remain uncommitted.
 No live provider transport, tool runtime, or event store was implemented.
 
-## Active stage: Step 3 — Build the Event Log
+## Step 3 — Build the Event Log — complete
 
 On 2026-10-17 the human explicitly requested Step 3. Codex read the complete
 dedicated manual page and current state and inspected source/test files.
@@ -1013,3 +1013,315 @@ the checkpoint. Envelope defaults, append/newline/flush, ordered validated
 reload, and all four test cases match. No files are staged. Ask the human
 to stage exactly these three files and STAGE_TRACKER.md, then inspect the
 index. Earlier manual/tutor changes remain separate. Progress: 9/11 complete.
+
+The human reported staging done. Codex verified exactly events.py,
+event_store.py, tests/test_event_store.py, and STAGE_TRACKER.md are staged.
+Staged whitespace checks pass and the three exercise files have no
+unstaged changes. Instruction 10/11 is complete; progress 10/11 complete.
+
+### Instruction 11/11 — commit and closeout in progress
+
+Issue git commit -m "step 3: build the event log". Await the result and
+verify commit contents and exercise files before recording completion.
+Step 4 requires human instruction. Progress: 10/11 complete.
+
+### Instruction 11/11 — complete
+
+Verified HEAD is f49e53f, "step 3: build the event log", containing exactly
+events.py, event_store.py, tests/test_event_store.py, and the staged tracker
+record. The three exercise files match HEAD. Four stage tests and fourteen
+accumulated tests passed; JSONL/newline inspection, completed-append writer
+termination, malformed-record failure, and human understanding checks are
+satisfied. Progress: 11/11 complete. Step 3 is closed; Step 4 awaits human
+instruction. Setup's deferred understanding gap remains open.
+
+Post-commit closeout records and earlier manual/tutor work remain uncommitted.
+This stage adds event storage, not loop emission, context selection, replay,
+automatic recovery, or a power-loss durability guarantee.
+
+## Active stage: Step 4 — Implement the Agent Loop
+
+On 2026-10-17 the human explicitly requested Step 4. Codex read its complete
+dedicated manual page, current state and tracker, and inspected source/test
+paths. No state.py, loop.py, or test_loop.py exists. Step 3 is complete;
+Setup understanding remains deferred.
+
+Responsibility: coordinate bounded context/model/tool/state/event turns.
+Failure mode: unbounded model calls, lost observations, or unclear ownership
+of continuation and stopping. This stage uses local fake tools/context;
+real tool validation and policy arrive later. A returned ok=False result
+is recorded without crashing; thrown exceptions are not caught here.
+Final text with no tool calls is accepted as completion, not proof of task
+success. save_state is an injected callback, defaulting to a no-op; durable
+checkpoint storage is not implemented. max_steps bounds turns, not the
+number or duration of tool calls within one response.
+
+Planned total: twelve human instructions.
+
+1. Define RunState in src/khosiness/state.py.
+2. Implement run in src/khosiness/loop.py.
+3. Create four checkpoint loop tests with local context/tool fakes.
+4. Run loop tests.
+5. Run accumulated exercise tests.
+6. Create the temporary trace inspection script.
+7. Predict and inspect the successful two-turn state/event trace.
+8. Inspect returned tool failure and step-limit behavior.
+9. Step through state transitions in the debugger.
+10. Complete human state/history/context and completion understanding checks.
+11. Review and stage intended stage files.
+12. Commit, verify, and close Step 4.
+
+### Instruction 1/12 — issued, awaiting RunState
+
+Give an editor command and full state.py checkpoint. Explain current step,
+observations, finished flag and final answer as working run state, distinct
+from event history, selected context and cross-run memory. Await the saved
+file report. Progress: 0/12 complete.
+
+The human reported "saved". Codex inspected state.py and confirmed the
+checkpoint fields and independent observation-list default. Instruction
+1/12 is complete by inspection. Progress: 1/12 complete.
+
+### Instruction 2/12 — issued, awaiting loop implementation
+
+Give the full loop.py checkpoint. Explain per-turn step increment/context
+selection/model events, tool dispatch and observations, returned failure
+events, final-text completion, injected save callback, and step-limit stop.
+Do not imply implemented tool policy, caught exceptions, durable state
+storage, or verified success criteria. Await the saved-file report.
+Progress: 1/12 complete.
+
+The human reported "saved". Codex inspected loop.py and confirmed the
+checkpoint semantics: bounded turns, context building, model/tool events,
+observations, final-text completion, save callback, and step-limit event.
+The compact conditional formatting is equivalent. Instruction 2/12 is
+complete by inspection. Progress: 2/12 complete.
+
+### Instruction 3/12 — issued, awaiting loop tests
+
+Give the full checkpoint test_loop.py with MinimalContext, FakeToolResult,
+FakeTools, make_task, and four tests. Check two-turn execution, immediate
+final text, bounded unfinished run, and returned tool failure. Assertions
+cover selected context, observations, event order, and copied save-callback
+states where applicable. No Step 5 tool imports. Await saved-file report.
+Progress: 2/12 complete.
+
+The human reported "saved". Codex inspected test_loop.py and confirmed all
+four checkpoint tests, local fakes, context selection assertions, event
+ordering, and deep-copied save-callback snapshots. Instruction 3/12 is
+complete by inspection; execution remains pending. Progress: 3/12 complete.
+
+### Instruction 4/12 — issued, awaiting loop test output
+
+Ask the human to run .venv/bin/python -m pytest tests/test_loop.py -q.
+Expected: four tests pass. Await output before the accumulated-suite check.
+Progress: 3/12 complete.
+
+The human reported "4 passed in 0.15s" from the loop-test command.
+Instruction 4/12 is complete. Progress: 4/12 complete.
+
+### Instruction 5/12 — issued, awaiting accumulated suite output
+
+Ask the human to run .venv/bin/python -m pytest -q. Expected: eighteen
+passing exercise tests (six task, four adapter, four event store, four
+loop). Await output before trace inspection. Progress: 4/12 complete.
+
+The human reported "18 passed in 0.19s" from the accumulated exercise
+suite. Instruction 5/12 is complete. Progress: 5/12 complete.
+
+### Instruction 6/12 — issued, awaiting trace script
+
+Ask the human to create /tmp/khosiness_loop_trace.py with the manual's
+two-turn echo/final-text scenario, printing final state and reloaded event
+types. Codex verified the path does not exist before issuing this edit.
+Use the current local test fakes; no real tools or provider are introduced.
+Await saved-file report before prediction and execution. Progress: 5/12.
+
+The human reported "saved". Codex inspected the temporary trace script:
+it runs the real loop with one echo proposal then final text, and prints
+RunState and reloaded event types. It matches the manual checkpoint.
+Instruction 6/12 is complete. Progress: 6/12 complete.
+
+### Instruction 7/12 — prediction and trace inspection in progress
+
+Before running the script, ask the human to predict the final step count
+and ordered event types. Assess their prediction, then give the execution
+command under the same instruction number. Await actual output before
+granting trace inspection credit. Progress: 6/12 complete.
+
+The human predicted "1, echo". This confuses a tool name with event types
+and counts the tool action rather than both model turns. Clarified that
+the tool proposal consumes turn 1 and final text consumes turn 2, so final
+step is 2; echo is the tool name, not an event type. Ask for a short retry
+of event order using loop.py, under instruction 7/12. Prediction was
+prompted/corrected, not independently correct. Progress remains 6/12.
+
+The human answered "tool_requsted and tool_completed" for events around
+successful tool execution. Accept the obvious spelling typo as
+tool_requested: the before/after execution pair is correct. Turn 1 also
+has model_called and model_responded before that pair. Continue the same
+instruction with turn 2 final-text event prediction. Progress remains 6/12.
+
+The human correctly predicted turn 2 as model_called, model_responded,
+task_completed. Together with the prompted correction and successful
+tool-event pair, the predicted two-turn trace is now established. Give
+the actual script execution command with repository/src on PYTHONPATH
+and the .venv interpreter. Await output; instruction 7/12 remains open
+until actual state and reloaded events are inspected. Progress: 6/12.
+
+The human supplied the real script output: step=2, one successful echo
+observation, finished=True, final_answer='finished', and the seven expected
+event types in order. Instruction 7/12 actual trace inspection is complete;
+prediction initially needed correction, which remains recorded above.
+Progress: 7/12 complete.
+
+The human reported "saced" (interpreted as saved). Codex verified the
+temporary script uses FakeTools(fail=True), retains default task limits,
+and still queues final text 'finished'. Give the same trace execution
+command and await actual failure observation/events. Instruction 8/12
+remains open; progress 7/12 complete.
+
+The human supplied the returned-failure trace: step=2, one observation with
+ok=False and content='echo failed', finished=True and final_answer='finished'.
+Reloaded events include tool_failed and later task_completed. This verifies
+the returned error does not crash the loop and final text is accepted;
+it does not establish successful task criteria. Continue instruction 8/12
+by setting max_steps=1 in the temporary script, retaining failing tools
+and the queued second response. Await the saved-file report. Progress 7/12.
+
+The human reported "saved". Inspection instead found
+make_task(workspace, step=1), an unsupported keyword; the failing tools and
+queued final text remain correct. Ask the human to change step=1 to
+max_steps=1 before execution. Instruction 8/12 remains open. Progress: 7/12.
+
+### Instruction 8/12 — returned failure and limit inspection in progress
+
+Ask the human to change only tools=FakeTools() to tools=FakeTools(fail=True)
+in the temporary trace script. Keep the queued final text so the trace
+demonstrates minimal completion despite a failed tool result. After saved
+verification, run and inspect actual state/events, then inspect max_steps=1
+under this same instruction. No exercise source changes are required.
+Progress: 7/12 complete.
+
+The corrected saved-file report is verified: the temporary script now uses
+make_task(workspace, max_steps=1), retains FakeTools(fail=True), and queues
+final text on the second response. Give the execution command and await
+actual state/events before completing instruction 8/12. Progress: 7/12.
+
+The human supplied the one-turn trace: step=1, failed observation retained,
+finished=False, final_answer=None, and events model_called, model_responded,
+tool_requested, tool_failed, step_limit_reached. This verifies the second
+queued response is not reached. Returned-failure and step-limit inspections
+are complete. Instruction 8/12 is complete; progress 8/12 complete.
+
+### Instruction 9/12 — debugger state inspection in progress
+
+Use pdb to step through the existing successful two-turn test, inspecting
+state before the first model call, after the tool observation, and before
+completion. This is the terminal-debugger equivalent of the manual's VS
+Code debugger gate and uses the same real run function. First launch pdb
+on the single pytest test; await its prompt before giving breakpoints.
+Do not rerun the whole suite. Progress: 8/12 complete.
+
+The human supplied the pdb startup prompt at pytest/__main__.py. Continue
+instruction 9/12 by setting a breakpoint at loop.py:35 and continuing to
+the first model call. Await the actual stop before inspecting state.
+Progress remains 8/12 complete.
+
+The human supplied the actual debugger stop at loop.py:35 before
+model.generate. Ask for pp state.model_dump() to inspect current working
+state before the first model call. Await actual values; instruction 9/12
+remains open. Progress: 8/12 complete.
+
+The human supplied first-stop state: run_id='run-1', step=1, observations=[],
+finished=False, final_answer=None. This confirms the turn increment precedes
+the model call. Next disable breakpoint 1, set loop.py:75, and continue to
+the point after the tool observation is appended. Await stop and state
+inspection. Instruction 9/12 remains open; progress 8/12 complete.
+
+The human supplied the actual stop at loop.py:75 after the observation
+append and before the tool outcome event append. Ask for
+pp state.model_dump() at this boundary. Await actual values before
+proceeding to the completion boundary. Progress remains 8/12 complete.
+
+The human supplied post-tool state: step=1, one echo observation containing
+ok=True and content='hello', finished=False, final_answer=None. The tool
+result changed observations, not completion. Next disable breakpoint 2,
+set loop.py:87, and continue to the final-text branch before finished is
+set. Await actual stop/state inspection. Progress remains 8/12 complete.
+
+The human supplied the actual stop at loop.py:87, before
+state.finished=True. Ask for a combined inspection of state.model_dump()
+and response.model_dump() to establish the second-turn state and final
+text that selects this branch. Await values. Progress remains 8/12.
+
+The human supplied pre-completion state/response: step=2, the prior echo
+observation retained, finished=False, final_answer=None; response.text is
+'finished' and tool_calls is empty. All three debugger boundaries have
+been inspected. Ask the human to continue the test and report its result
+before closing instruction 9/12. Progress remains 8/12 complete.
+
+The human reported the inspected test passed with exit status 0; pdb then
+returned to its restart prompt. The elapsed time includes manual debugger
+pauses and is not a runtime benchmark. All requested state boundaries and
+successful test completion were inspected. Instruction 9/12 is complete;
+progress 9/12 complete. The human remains in pdb at the restart prompt.
+
+### Instruction 10/12 — understanding gate issued
+
+Ask one question at a time about who stores failed tool results and who
+selects their visibility to the next model call; task_completed versus
+verified success; turn-limit behavior; and injected save callback versus
+durable storage. Require human explanations, recording any corrections.
+Progress: 9/12 complete.
+
+The human answered "event store" to the failed-result recording/context
+ownership question. This identifies durable history ownership only.
+Clarified that run() updates RunState.observations and requests the
+tool_failed append from the event store. Ask specifically which component
+selects whether the next model call sees the stored failure; do not grant
+the full distinction yet. Instruction 10/12 remains open, progress 9/12.
+
+The human answered "Context builder", correctly identifying who selects
+the failed observation for model messages. Durable history ownership was
+identified independently; loop observation/event coordination needed the
+recorded correction. Continue instruction 10/12 with what task_completed
+establishes versus success-criteria verification. Progress remains 9/12.
+
+The human said task_completed establishes steps were performed but not
+success. The lack of success proof is correct; "steps were performed" is
+too broad. Clarified the exact trigger: final text without tool calls is
+accepted and finished/final_answer are set. Ask a short retry identifying
+the response shape that triggers completion. Progress remains 9/12.
+
+The human correctly restated the completion trigger: non-None text and
+empty tool_calls, followed by finished/final_answer changes and the
+task_completed event, without success-criteria verification. This satisfies
+the completion distinction after correction. Continue instruction 10/12
+with one-turn returned failure and stopping state. Progress remains 9/12.
+
+The human correctly explained that the step limit stops the run after
+one turn, with the failed result preserved, tool_failed recorded, step=1,
+finished=False, final_answer=None, then step_limit_reached. Turn-budget
+understanding is satisfied. Continue instruction 10/12 with whether the
+default save_state callback provides durable checkpoints. Progress 9/12.
+
+The human correctly explained that the default save_state is a no-op,
+RunState is still updated/returned, events are persisted separately, and
+restart recovery requires an additional mechanism. Instruction 10/12
+understanding is complete, with the earlier corrections retained as
+prompted recovery. Progress: 10/12 complete.
+
+### Instruction 11/12 — review and staging in progress
+
+Codex reviewed state.py, loop.py, and the four test_loop.py cases against
+the checkpoint and prior validations. Contracts are preserved. No files
+are staged; earlier manual/tutor work remains separate. The human was
+last at pdb's post-test restart prompt: first ask them to quit pdb, then
+stage only the three exercise files and this tracker after confirmation.
+Progress: 10/12 complete.
+
+The human confirmed returning to the shell. Continue instruction 11/12
+with the exact staging command for state.py, loop.py, test_loop.py, and
+STAGE_TRACKER.md. Await the result and verify the index before committing.
+Progress remains 10/12 complete.

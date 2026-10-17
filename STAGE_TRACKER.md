@@ -19,8 +19,8 @@ Step 0 question is withdrawn. The human has now begun fresh Project Setup.
 | Project Setup | Technical checks passed; understanding and formal closeout deferred when the human requested Step 0 |
 | Step 0 — The Mental Model | Complete — 6/6; documents, validation and understanding verified; commit 3832279 |
 | Step 1 — Define the Task Contract | Complete — 10/10; six tests, templates, failure inspection and understanding verified; commit 69e85b7 |
-| Step 2 — Create the Model Adapter | In progress — instruction 11/12 issued; 10/12 complete |
-| Step 3 — Build the Event Log | Pending |
+| Step 2 — Create the Model Adapter | Complete — 12/12; four adapter tests, ten accumulated tests, inspection and understanding verified; commit ce29485 |
+| Step 3 — Build the Event Log | In progress — instruction 10/11 issued; 9/11 complete |
 | Step 4 — Implement the Agent Loop | Pending |
 | Step 5 — Build the Tool System | Pending |
 | Step 6 — Engineer the Context | Pending |
@@ -594,7 +594,7 @@ This post-commit closeout record and CURRENT_STATE.md refresh are uncommitted
 documentation updates, alongside earlier manual/tutor work. No clean whole-
 repository working tree or implemented model/tool runtime is claimed.
 
-## Active stage: Step 2 — Create the Model Adapter
+## Step 2 — Create the Model Adapter — complete
 
 The human requested continuation after Step 1. Codex read the complete
 dedicated Step 2 manual page, current state, and tracker, and inspected the
@@ -812,3 +812,204 @@ The human confirmed exiting Python to the shell. Continue instruction
 11/12 by staging exactly models/base.py, models/fake.py, models/provider.py,
 tests/test_model_adapter.py, and STAGE_TRACKER.md. Await the result and
 inspect the index before committing. Progress remains 10/12 complete.
+
+The human reported staging done. Codex verified exactly the three adapter
+source files, tests/test_model_adapter.py, and STAGE_TRACKER.md are staged.
+Staged whitespace checks pass and the four exercise files have no unstaged
+changes. Instruction 11/12 is complete; progress 11/12 complete.
+
+### Instruction 12/12 — commit and closeout in progress
+
+Issue git commit -m "step 2: create the model adapter". Await the output
+and verify the commit and exercise files before recording completion.
+Earlier manual/tutor changes remain separate; Step 3 requires human
+instruction. Progress: 11/12 complete.
+
+### Instruction 12/12 — complete
+
+On reinspection requested by the human, Codex found an empty index and HEAD
+ce29485, "step 2: create the model adapter". Verified the commit contains
+exactly the three adapter source files, four-test adapter file, and staged
+tracker record. The exercise files match HEAD. Four adapter tests and ten
+accumulated exercise tests passed; provider-reference search, debugger
+request inspection, empty-queue failure inspection, and human understanding
+checks are satisfied. Progress: 12/12 complete. Step 2 is closed; Step 3
+awaits human instruction. Setup's deferred understanding gap remains open.
+
+Post-commit closeout records and earlier manual/tutor work remain uncommitted.
+No live provider transport, tool runtime, or event store was implemented.
+
+## Active stage: Step 3 — Build the Event Log
+
+On 2026-10-17 the human explicitly requested Step 3. Codex read the complete
+dedicated manual page and current state and inspected source/test files.
+No events.py, event_store.py, or test_event_store.py exists yet. Step 2 is
+complete; Setup understanding remains deferred.
+
+Responsibility: preserve factual events in append order as inspectable JSONL.
+Failure mode: losing the record of actions/results or confusing durable
+history with selected model context. This stage builds storage; Step 4
+will emit actual loop events. Flush does not guarantee power-loss durability
+(no fsync), and this is not a concurrent-writer or automatic replay system.
+
+Planned total: eleven human instructions.
+
+1. Define the Event envelope in src/khosiness/events.py.
+2. Implement JsonlEventStore in src/khosiness/event_store.py.
+3. Create the four checkpoint event-store tests.
+4. Run the stage-specific tests.
+5. Run the accumulated exercise suite.
+6. Write and inspect a real JSONL file including newline termination.
+7. Verify a completed append survives writer-process termination.
+8. Inspect explicit failure on a malformed JSONL record.
+9. Complete human history/context and persistence understanding checks.
+10. Review and stage intended stage files.
+11. Commit, verify, and close Step 3.
+
+### Instruction 1/11 — issued, awaiting event envelope
+
+Give an editor command and complete events.py checkpoint. Explain generated
+identity, run grouping, event type, UTC timestamp, and per-instance payload.
+The typed envelope does not verify the truth of a payload or supply a fixed
+event-type vocabulary. Await the saved-file report. Progress: 0/11 complete.
+
+The human reported "saved", but inspection found no src/khosiness/events.py
+and no events-named file in the repository. Keep instruction 1/11 open;
+ask the human to save at the exact absolute repository path. Progress
+remains 0/11 complete; no event model has been verified.
+
+The next saved-file report is verified: events.py exists and defines the
+checkpoint fields and per-instance UUID, UTC timestamp, and payload
+defaults. The single-line timestamp formatting is equivalent. Instruction
+1/11 is complete by inspection; behavioral checks remain pending.
+Progress: 1/11 complete.
+
+### Instruction 2/11 — issued, awaiting JSONL store
+
+Ask the human to create event_store.py with the checkpoint JsonlEventStore.
+Explain append mode, one JSON object per newline, flush, ordered reload,
+empty-list behavior for a missing file, and propagated malformed-record
+errors. Flush moves Python buffers to the OS; it is not an fsync power-loss
+guarantee. Await the saved-file report. Progress: 1/11 complete.
+
+The human reported "saved". Codex inspected event_store.py and verified
+parent-directory creation, append/newline/flush behavior, missing-file
+handling, ordered reload, blank-line skipping, and Event validation match
+the checkpoint. Instruction 2/11 is complete by inspection; tests remain
+pending. Progress: 2/11 complete.
+
+### Instruction 3/11 — issued, awaiting event-store tests
+
+Codex confirmed tests/test_event_store.py is absent. Ask the human to create
+the four checkpoint tests: empty store, append order, payload round-trip,
+and 1,000-event reload. Deliberate corruption and process-termination checks
+remain separate planned inspections. Await the saved-file report.
+Progress: 2/11 complete.
+
+The human reported "saved". Codex inspected tests/test_event_store.py and
+confirmed all four checkpoint tests and their assertions. Instruction 3/11
+is complete by inspection; execution remains pending. Progress: 3/11.
+
+### Instruction 4/11 — issued, awaiting stage test output
+
+Ask the human to run .venv/bin/python -m pytest tests/test_event_store.py -q.
+Expected: four passing tests. Await output before issuing the accumulated
+suite check. Progress: 3/11 complete.
+
+The human reported "4 passed in 0.21s" from the event-store test command.
+Instruction 4/11 is complete. Progress: 4/11 complete.
+
+### Instruction 5/11 — issued, awaiting accumulated suite output
+
+Ask the human to run .venv/bin/python -m pytest -q. Expected: fourteen
+passing exercise tests (six task, four adapter, four event-store tests).
+Await output before the direct JSONL inspection. Progress: 4/11 complete.
+
+The human reported "14 passed in 0.18s" from the accumulated exercise
+suite. Instruction 5/11 is complete. Progress: 5/11 complete.
+
+### Instruction 6/11 — issued, awaiting direct JSONL inspection
+
+Give one command that creates a unique temporary directory, appends a
+synthetic demo event through JsonlEventStore, and prints the file path,
+raw JSONL text, and repr of its final character. This avoids overwriting
+existing run evidence. Expected: one complete event object and a newline
+terminator. The event is a manually supplied fact for inspection, not a
+loop-generated event. Await the output. Progress: 5/11 complete.
+
+The human supplied /tmp/khosiness-events-326vohvq/events.jsonl output with
+one complete inspection_started event and final character '\n'. The actual
+JSONL record and newline termination are verified. Instruction 6/11 is
+complete; progress 6/11 complete.
+
+### Instruction 7/11 — issued, awaiting process-termination inspection
+
+Give a parent Python command that creates a unique temporary file and
+launches a child using the same interpreter. The child appends a demo event,
+then sends SIGKILL to itself only after append returns. The parent checks
+the signal exit code and reloads the event. This inspects completed append
+survival after process termination, not mid-write atomicity, flush-specific
+causality, or OS/power-loss durability. Await output. Progress: 6/11 complete.
+
+The human reported "Completed append survived writer termination" and
+/tmp/khosiness-kill-check-i0ps_b3k/events.jsonl. The command verified child
+SIGKILL status and reloaded the single completed event. Instruction 7/11
+is complete; progress 7/11 complete. This does not prove power-loss
+durability or atomic writes.
+
+### Instruction 8/11 — issued, awaiting malformed-record failure
+
+Give one command that creates a unique temporary demo log, appends one valid
+event, deliberately adds a non-JSON second line to that demo file, and calls
+load_all. Expected: explicit Pydantic ValidationError rather than silent
+skipping or returned partial history. Existing logs remain untouched. Await
+the error output. Progress: 7/11 complete.
+
+The human supplied the actual traceback for the unique demo file
+/tmp/khosiness-corruption-check-q7ofef70/events.jsonl: load_all raises a
+Pydantic ValidationError with json_invalid for input 'not-json'. The error
+comes from Event.model_validate_json; no partial list was returned and
+the loader did not repair or skip the bad line. Instruction 8/11 is
+complete. Progress: 8/11 complete.
+
+### Instruction 9/11 — understanding gate issued
+
+Ask one question at a time to assess why persisted events are not model
+context, why malformed nonblank records should not silently disappear,
+and what flush/completed-append inspection establishes versus power-loss
+durability. Require the human's own reasoning. No loop or replay/recovery
+mechanism exists yet. Progress: 8/11 complete.
+
+The human explained that events.jsonl is a factual event account and a
+later context generator chooses relevant events for model context. This
+correctly distinguishes stored history from selected context. The store
+persists what callers submit; it does not independently verify payload
+truth. Continue instruction 9/11 with why malformed nonblank records should
+raise rather than be silently skipped. Progress remains 8/11 complete.
+
+The human answered that raising helps identify damaged entries in the
+file. This correctly identifies explicit corruption detection. Clarified
+that silently skipping would make an incomplete history appear complete.
+Continue instruction 9/11 with the limits of the completed-append/SIGKILL
+inspection and flush versus power-loss durability. Progress remains 8/11.
+
+The human correctly said process-termination survival does not prove
+power-loss durability, but described flush as "process level checking".
+Clarified that flush transfers Python-buffered data to the OS rather than
+performing verification; data may remain in OS buffers. Ask for a short
+restatement of where data goes and what remains unguaranteed before closing
+instruction 9/11. Progress remains 8/11 complete.
+
+The human corrected their answer to "flush sends data to the OS". Together
+with the earlier explicit recognition that power-loss survival is not
+guaranteed, this satisfies the persistence-boundary check. History/context
+and corruption-detection checks are also satisfied. Instruction 9/11 is
+complete; progress 9/11 complete.
+
+### Instruction 10/11 — review and staging in progress
+
+Codex reviewed events.py, event_store.py, and test_event_store.py against
+the checkpoint. Envelope defaults, append/newline/flush, ordered validated
+reload, and all four test cases match. No files are staged. Ask the human
+to stage exactly these three files and STAGE_TRACKER.md, then inspect the
+index. Earlier manual/tutor changes remain separate. Progress: 9/11 complete.

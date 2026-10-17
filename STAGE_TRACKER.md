@@ -21,8 +21,8 @@ Step 0 question is withdrawn. The human has now begun fresh Project Setup.
 | Step 1 — Define the Task Contract | Complete — 10/10; six tests, templates, failure inspection and understanding verified; commit 69e85b7 |
 | Step 2 — Create the Model Adapter | Complete — 12/12; four adapter tests, ten accumulated tests, inspection and understanding verified; commit ce29485 |
 | Step 3 — Build the Event Log | Complete — 11/11; fourteen accumulated tests, JSONL/failure inspections and understanding verified; commit f49e53f |
-| Step 4 — Implement the Agent Loop | In progress — instruction 11/12 issued; 10/12 complete |
-| Step 5 — Build the Tool System | Pending |
+| Step 4 — Implement the Agent Loop | Complete — 12/12; eighteen tests, traces, debugger inspection and understanding verified; commit 40237f9 |
+| Step 5 — Build the Tool System | In progress — instruction 12/13 issued; 11/13 complete |
 | Step 6 — Engineer the Context | Pending |
 | Step 7 — Repository Navigation | Pending |
 | Step 8 — Shell Execution and Sandbox | Pending |
@@ -1039,7 +1039,7 @@ Post-commit closeout records and earlier manual/tutor work remain uncommitted.
 This stage adds event storage, not loop emission, context selection, replay,
 automatic recovery, or a power-loss durability guarantee.
 
-## Active stage: Step 4 — Implement the Agent Loop
+## Step 4 — Implement the Agent Loop — complete
 
 On 2026-10-17 the human explicitly requested Step 4. Codex read its complete
 dedicated manual page, current state and tracker, and inspected source/test
@@ -1325,3 +1325,256 @@ The human confirmed returning to the shell. Continue instruction 11/12
 with the exact staging command for state.py, loop.py, test_loop.py, and
 STAGE_TRACKER.md. Await the result and verify the index before committing.
 Progress remains 10/12 complete.
+
+The human reported staging done. Codex verified exactly state.py, loop.py,
+tests/test_loop.py, and STAGE_TRACKER.md are staged. Staged whitespace checks
+pass and the three exercise files have no unstaged changes. Instruction
+11/12 is complete; progress 11/12 complete.
+
+### Instruction 12/12 — commit and closeout in progress
+
+Issue git commit -m "step 4: implement the agent loop". Await and verify
+the resulting commit and exercise-file state before recording completion.
+Step 5 requires human instruction. Progress: 11/12 complete.
+
+### Instruction 12/12 — complete
+
+Verified HEAD is 40237f9, "step 4: implement the agent loop", containing
+exactly state.py, loop.py, tests/test_loop.py, and the staged tracker record.
+The three exercise files match HEAD. Four loop tests and eighteen accumulated
+tests passed. Successful two-turn, returned-failure, and one-turn-limit
+traces were inspected; the debugger inspection covered pre-model,
+post-observation, and pre-completion state, and its test passed. Human
+understanding checks are satisfied, with prompted corrections preserved
+above rather than treated as independent first answers.
+Progress: 12/12 complete. Step 4 is closed; Step 5 awaits human instruction.
+Setup's deferred understanding check remains open.
+
+Post-commit closeout records and earlier manual/tutor work remain uncommitted.
+Real tools/policy, durable state checkpoints, and success-criteria verification
+are not provided by this minimal loop.
+
+## Active stage: Step 5 — Build the Tool System
+
+On 2026-10-17 the human explicitly requested Step 5. Codex read the complete
+dedicated manual page and tracker and inspected source/test paths. There
+is no tools directory or test_tools.py. Step 4 is complete; Setup
+understanding remains deferred.
+
+Responsibility: turn named tool proposals into validated, bounded read-only
+operations with structured results. Failure mode: dispatching unknown names,
+accepting malformed arguments, reading outside the workspace, or returning
+unbounded evidence. The registry handles lookup and exception conversion;
+tool argument models and resolved-path checks precede file content access.
+Risk labels are metadata, not approval enforcement. This stage assumes a
+stable local workspace, with no protection against concurrent replacement,
+no total traversal-time bound, and no OS sandbox. Do not claim otherwise.
+
+Planned total: thirteen human instructions.
+
+1. Create src/khosiness/tools.
+2. Define ToolResult and the Tool abstract interface in tools/base.py.
+3. Implement ToolRegistry in tools/registry.py.
+4. Implement typed arguments and bounded filesystem tools in tools/filesystem.py.
+5. Create the fourteen checkpoint tool tests.
+6. Run tool tests, including path-escape protection.
+7. Run the accumulated exercise suite.
+8. Inspect manual search output against a small repository.
+9. Connect the registry to the existing loop and inspect a successful trace.
+10. Inspect rejected requests and their loop observations/events.
+11. Complete human validation/authority/containment/bounds understanding checks.
+12. Review and stage intended stage files.
+13. Commit, verify, and close Step 5.
+
+### Instruction 1/13 — issued, awaiting tool-directory creation
+
+Ask the human to run mkdir -p src/khosiness/tools. Await the result and
+verify before giving the base.py edit. Progress: 0/13 complete.
+
+The human reported "done". Codex verified src/khosiness/tools exists and
+contains no source files yet. Instruction 1/13 is complete. Progress: 1/13.
+
+### Instruction 2/13 — issued, awaiting shared tool contract
+
+Give the complete tools/base.py checkpoint defining ToolResult and the
+Tool ABC. Explain structured outcomes, per-result metadata defaults,
+schemas as descriptions rather than enforcement, abstract method
+implementation requirements, and risk as metadata rather than permission.
+Await the saved-file report. Progress: 1/13 complete.
+
+The human reported "saved". Codex inspected tools/base.py: ToolResult,
+independent metadata default, Tool ABC, risk label, and both abstract
+methods match the checkpoint. Single-line ellipsis formatting is equivalent.
+Instruction 2/13 is complete by inspection. Progress: 2/13 complete.
+
+### Instruction 3/13 — issued, awaiting registry implementation
+
+Give the complete tools/registry.py checkpoint. Explain duplicate-name
+rejection, schema collection, exact name lookup, structured unknown-name
+failure, and conversion of ordinary execution exceptions to ToolResult.
+Known-tool arguments are validated by the concrete tools, not by schema
+publication or registry lookup alone. Await the saved-file report.
+Progress: 2/13 complete.
+
+The human reported "saved". Codex inspected registry.py and verified
+duplicate rejection, schema collection, name lookup, unknown-tool results,
+and ordinary exception conversion match the checkpoint. Instruction 3/13
+is complete by inspection. Progress: 3/13 complete.
+
+### Instruction 4/13 — issued, awaiting filesystem tools
+
+Give the complete filesystem.py checkpoint: strict argument models,
+resolved-path containment, bounded UTF-8 reads, generated schemas, directory
+listing, inclusive line-range reads, and bounded substring search with
+per-discovered-target checks. Explain output and byte limits, truncation
+as incomplete evidence, and stable-workspace assumptions. No OS sandbox,
+concurrent replacement protection, or total traversal-time guarantee.
+Await the saved-file report. Progress: 3/13 complete.
+
+The human reported "saved". Codex inspected filesystem.py and confirmed
+the checkpoint argument models, path checks, bounded reads, schemas, three
+tools, and truncation metadata. Formatting differences preserve semantics.
+Instruction 4/13 is complete by inspection; behavior tests remain pending.
+Progress: 4/13 complete.
+
+### Instruction 5/13 — issued, awaiting tool tests
+
+Give tests/test_tools.py with fourteen checkpoint-equivalent cases for
+duplicate/unknown tools, read/list/search, traversal/missing-file errors,
+argument validation, line ranges, byte/output/result limits, and discovered
+symlink escape rejection before read. Use pytest.raises for expected
+exceptions rather than manual try/assert-false. Keep the no-read monkeypatch
+for symlink containment. Await saved-file report. Progress: 4/13 complete.
+
+The human reported "saved". Codex inspected test_tools.py and confirmed
+all fourteen checkpoint-equivalent cases and assertions, including the
+discovered-symlink no-read check. Instruction 5/13 is complete by inspection;
+execution remains pending. Progress: 5/13 complete.
+
+### Instruction 6/13 — issued, awaiting tool test output
+
+Ask the human to run .venv/bin/python -m pytest tests/test_tools.py -q.
+Expected: fourteen tests pass, including path traversal rejection. Await
+output before the accumulated-suite check. Progress: 5/13 complete.
+
+The human reported "14 passed in 0.25s" from the tool-test command.
+Instruction 6/13 is complete, including the path-escape validation check.
+Progress: 6/13 complete.
+
+### Instruction 7/13 — issued, awaiting accumulated suite output
+
+Ask the human to run .venv/bin/python -m pytest -q. Expected: thirty-two
+exercise tests pass (eighteen existing plus fourteen tool tests). Await
+output before manual search inspection. Progress: 6/13 complete.
+
+The human reported "32 passed in 0.24s" from the accumulated exercise
+suite. Instruction 7/13 is complete. Progress: 7/13 complete.
+
+### Instruction 8/13 — issued, awaiting manual search inspection
+
+Ask the human to invoke SearchFilesTool manually with the project root as
+workspace, path src/khosiness, and literal query __version__. Print content
+and metadata so file/line evidence and truncation can be inspected. Codex
+confirmed the query appears in the current source. Restrict search to the
+small source tree rather than traversing .venv or all teaching artifacts.
+Await actual output. Progress: 7/13 complete.
+
+The human supplied three __version__ matches with workspace-relative paths,
+line numbers and source text, plus metadata truncated=False. This satisfies
+the manual search/evidence-size inspection. Instruction 8/13 is complete;
+progress 8/13 complete.
+
+### Instruction 9/13 — registry/loop integration in progress
+
+Ask the human to create /tmp/khosiness_tool_loop_trace.py (verified absent)
+with a small temporary workspace containing config.py, a registry with all
+three concrete tools, the existing run function, MinimalContext, and a
+FakeModel that proposes a line-range read then final text. Print the final
+state, selected second-call messages and reloaded events. No exercise loop
+changes or real provider needed. Verify the saved script, then execute and
+inspect actual output before completing instruction 9/13. Progress: 8/13.
+
+The human reported "saved". Codex inspected the temporary integration
+script and verified registry registration, line-2 read request, existing
+loop/context integration, and state/messages/event inspection. Give the
+execution command with project/src on PYTHONPATH. Await actual output;
+instruction 9/13 remains open. Progress: 8/13 complete.
+
+The human supplied the actual successful integration trace: step=2,
+read_file observation contains only 'RETRY_COUNT = 3\n', line bounds 2/2,
+truncated=False; second-call messages include that content; events show
+tool_requested/tool_completed then a second model turn and task_completed.
+Instruction 9/13 is complete. Progress: 9/13 complete.
+
+### Instruction 10/13 — rejected request trace in progress
+
+Ask the human to change only the proposed read path in the temporary
+integration script from config.py to ../outside.txt. The registry should
+convert containment ValueError into ok=False, and the loop should preserve
+the error observation and record tool_failed. The queued final text stays
+fixed, illustrating that fake responses and minimal completion do not
+verify success. Verify saved edit before execution, then inspect results.
+Unknown and malformed requests are already covered by the passing suite.
+Progress: 9/13 complete.
+
+The human reported "saved". Codex verified the read_file proposal uses
+../outside.txt while the objective and queued final response remain fixed.
+Give the integration-script execution command and await actual rejected
+result, selected error context, and event history. Progress remains 9/13.
+
+The human supplied the actual rejection trace: read_file returned ok=False,
+content='ValueError: path escapes workspace', metadata={}; the observation
+and second-call messages preserve that error; events contain tool_failed.
+The fixed fake final text was accepted on turn 2, demonstrating completion
+is not verification. Instruction 10/13 is complete. Progress: 10/13 complete.
+
+### Instruction 11/13 — understanding gate issued
+
+Ask one question at a time about lookup versus argument validation, resolved
+containment and symlinks, direct exceptions versus registry ToolResult,
+schema/risk metadata versus permission enforcement, and truncation versus
+complete evidence. Preserve stable-workspace and unbounded-traversal limits.
+Require human reasoning and record corrections. Progress: 10/13 complete.
+
+The human correctly identified safe_path as the resolved-containment check
+and ToolRegistry.execute as the exception-to-ToolResult boundary, rejecting
+the escape before outside-file content is read. This ownership distinction
+is satisfied. Continue instruction 11/13 with schema publication versus
+actual argument validation. Progress remains 10/13 complete.
+
+The human correctly explained schema publication is descriptive, while
+ReadArguments.model_validate in ReadFileTool.execute rejects the integer
+path before path resolution/read under strict validation; the registry
+converts the error. Argument-validation understanding is satisfied.
+Continue instruction 11/13 with why search validates each discovered
+resolved target as well as its starting directory. Progress: 10/13.
+
+The human correctly explained an in-workspace discovered symlink can
+resolve outside, so each target must be checked before reading. They
+identified the explicit error/registry result and relevant test. Symlink
+containment understanding is satisfied for the documented stable-workspace
+assumption. Continue instruction 11/13 with truncation and complete-evidence
+claims. Progress remains 10/13 complete.
+
+The human correctly explained ok=True versus truncated=True and why all-
+reference completeness is not established. Clarified that character limits
+can also cut the final line, so returned text is not necessarily complete
+line evidence. Continue instruction 11/13 with risk metadata versus actual
+approval/permission enforcement. Progress remains 10/13 complete.
+
+The human correctly explained risk is metadata, approvals arrive later,
+and current constraints are registration, argument validation, resolved
+containment, per-target search checks, byte/output limits, and structured
+failures. They explicitly distinguished these from an OS sandbox or
+approval system. Instruction 11/13 understanding is complete. The documented
+stable-workspace assumption and lack of total traversal-time bounds remain.
+Progress: 11/13 complete.
+
+### Instruction 12/13 — review and staging in progress
+
+Codex reviewed the three tool source files and fourteen test cases against
+the checkpoint and inspected successful/rejected real-registry loop traces.
+No files are staged. Ask the human to stage exactly tools/base.py,
+tools/registry.py, tools/filesystem.py, tests/test_tools.py, and this tracker.
+Preserve earlier manual/tutor changes separately. Await and inspect the
+index before committing. Progress: 11/13 complete.

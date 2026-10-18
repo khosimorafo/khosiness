@@ -22,8 +22,8 @@ Step 0 question is withdrawn. The human has now begun fresh Project Setup.
 | Step 2 — Create the Model Adapter | Complete — 12/12; four adapter tests, ten accumulated tests, inspection and understanding verified; commit ce29485 |
 | Step 3 — Build the Event Log | Complete — 11/11; fourteen accumulated tests, JSONL/failure inspections and understanding verified; commit f49e53f |
 | Step 4 — Implement the Agent Loop | Complete — 12/12; eighteen tests, traces, debugger inspection and understanding verified; commit 40237f9 |
-| Step 5 — Build the Tool System | In progress — instruction 12/13 issued; 11/13 complete |
-| Step 6 — Engineer the Context | Pending |
+| Step 5 — Build the Tool System | Complete — 13/13; thirty-two tests, search/integration/rejection inspections and understanding verified; commit 0b51887 |
+| Step 6 — Engineer the Context | In progress — instruction 10/11 issued; 9/11 complete |
 | Step 7 — Repository Navigation | Pending |
 | Step 8 — Shell Execution and Sandbox | Pending |
 | Step 9 — Policy and Human Approval | Pending |
@@ -1354,7 +1354,7 @@ Post-commit closeout records and earlier manual/tutor work remain uncommitted.
 Real tools/policy, durable state checkpoints, and success-criteria verification
 are not provided by this minimal loop.
 
-## Active stage: Step 5 — Build the Tool System
+## Step 5 — Build the Tool System — complete
 
 On 2026-10-17 the human explicitly requested Step 5. Codex read the complete
 dedicated manual page and tracker and inspected source/test paths. There
@@ -1578,3 +1578,279 @@ No files are staged. Ask the human to stage exactly tools/base.py,
 tools/registry.py, tools/filesystem.py, tests/test_tools.py, and this tracker.
 Preserve earlier manual/tutor changes separately. Await and inspect the
 index before committing. Progress: 11/13 complete.
+
+The human supplied successful staging commands. Codex verified the index
+contains exactly the three tool source files, tests/test_tools.py, and
+STAGE_TRACKER.md. Staged whitespace checks pass and the four exercise
+files have no unstaged changes. Repeating git add did not duplicate files.
+Instruction 12/13 is complete; progress 12/13 complete.
+
+### Instruction 13/13 — commit and closeout in progress
+
+Issue git commit -m "step 5: build the tool system". Await and verify the
+resulting commit and exercise-file state before recording completion.
+Step 6 requires human instruction. Progress: 12/13 complete.
+
+### Instruction 13/13 — complete
+
+Verified HEAD is 0b51887, "step 5: build the tool system", containing exactly
+the three tool source files, tests/test_tools.py, and staged tracker record.
+The four exercise files match HEAD. Fourteen tool tests and thirty-two
+accumulated tests passed. Manual search produced focused file/line evidence;
+real-registry success and containment-rejection loop traces were inspected;
+human understanding checks are satisfied. Progress: 13/13 complete.
+Step 5 is closed; Step 6 awaits human instruction. Setup's deferred
+understanding check remains open.
+
+Post-commit closeout records and earlier manual/tutor work remain uncommitted.
+The tools assume a stable local workspace; concurrent path replacement,
+total traversal time, OS sandboxing, and approval policy are not solved.
+
+## Active stage: Step 6 — Engineer the Context
+
+The human explicitly requested Step 6. Codex read the complete dedicated
+manual page, tracker and current state, and inspected source/test paths.
+No context directory or context-builder tests exist. Step 5 is complete;
+Setup understanding remains deferred.
+
+Responsibility: deterministically select task information and a bounded
+recent-observation window for each model call. Failure mode: blindly
+injecting accumulated observations, noise, and excessive tool output.
+This is recency selection, not semantic retrieval or secret redaction.
+Per-observation character limits are not a global token budget. History
+and RunState observations must remain unchanged when context omits data.
+ContextStats is local last-build metadata, not a durable event in the
+checkpoint. Do not claim metrics are emitted by the existing loop.
+
+Reference issues to address within this stage: Python [-0:] selects all
+observations, so explicitly handle zero and reject negative budgets;
+the validation command uses a heredoc contrary to tutoring cadence; prose
+claims emitted metrics although the checkpoint only updates last_stats.
+Preserve checkpoint semantics for valid positive settings while improving
+these boundaries and matching manual guidance.
+
+Planned total: eleven human instructions.
+
+1. Create src/khosiness/context.
+2. Define ContextStats and ContextBuilder in context/builder.py.
+3. Create context-builder tests, including budget edge cases.
+4. Run context tests.
+5. Run the accumulated exercise suite.
+6. Inspect exact selected messages, omissions, truncation, and last_stats.
+7. Inspect ContextBuilder with the existing loop and fake model.
+8. Inspect invalid-budget failure and preservation of source state.
+9. Complete human context-selection and metrics/budget understanding checks.
+10. Review and stage intended stage files.
+11. Commit, verify, and close Step 6.
+
+### Instruction 1/11 — issued, awaiting context directory
+
+Ask the human to run mkdir -p src/khosiness/context. Await the result and
+verify before the builder edit. Progress: 0/11 complete.
+
+### Step 6 visual lesson — documentation companion
+
+The human noted the missing Step 6 animation, then requested continuation
+of that work on 2026-10-18. Added one original eight-scene context lesson
+and embedded it after the matching primer. It simulates the CLI-version
+task, recency selection, omitted-but-retained observations, repr clipping,
+message assembly, local statistics, and a clearly proposed invalid-budget
+guard. No Step 6 Python implementation or understanding credit is granted.
+Standalone lessons retain the optional tutor; embedded lessons use the
+manual's panel. Playback starts paused and stops at the final scene.
+
+Browser checks cover eight scenes, desktop/mobile width, selection,
+truncation, stats, keyboard isolation in the tutor, embedded primer/panel
+and height, served manual, no-JavaScript readability, reduced motion, and
+playback stop. All 32 exercise tests pass. Documentation checks now have
+29 passing tests, including a regression for long tracker evidence.
+
+Review identified that the growing tracker exceeded the tutor's prefix
+limit and hid the active instructions. The bounded excerpt now retains the
+progress-table prefix and newest notes, with omitted history labeled.
+Playback label after leaving the final scene was corrected as well.
+Checksum entries are refreshed after final documentation changes.
+Stage progress remains 0/11; instruction 1/11 awaits the human's result.
+
+Final general and focused security reviews report no actionable issues.
+The full documentation suite passes 29 tests; the exercise suite passes 32.
+The checksum manifest and whitespace checks pass. The existing user-run
+tutor server was left running; it needs a restart to load the Python
+tracker-excerpt fix, while a page refresh loads the new HTML lesson.
+
+### Instruction 1/11 — complete on resumed inspection
+
+The human requested resuming Step 6. Codex verified the context directory
+now exists and no builder or context-test source exists. Directory creation
+is established by repository inspection. Progress: 1/11 complete.
+
+### Instruction 2/11 — issued, awaiting context builder
+
+Give the checkpoint builder with explicit non-negative integer budget
+validation and zero-window handling. These improve invalid-input behavior
+and prevent [-0:] from including the entire observation history; positive
+budget message/selection/stat semantics remain the same. Zero character
+budget retains only the truncation marker for a nonempty observation.
+No persistent metric emission, global token limit, or state mutation is
+introduced. Await the saved-file report. Progress: 1/11 complete.
+
+The human reported "saved". Codex inspected context/builder.py: integer/
+non-negative configuration validation, explicit zero window, repr clipping,
+three messages, and local exact character/message statistics are present.
+Formatting differs only stylistically. Instruction 2/11 is complete by
+inspection; execution and understanding checks remain pending. Progress 2/11.
+
+Manual correction: both Step 6 editions now include the improved builder
+checkpoint and zero-window starter, distinguish local stats from emitted
+events, remove the nonexistent builder event-trace requirement, and use a
+direct command instead of a heredoc. The conceptual animation now describes
+the updated reference contract without claiming the builder is still absent
+or that the guard is merely proposed. No validation credit from these edits.
+
+### Instruction 3/11 — issued, awaiting context tests
+
+Ask the human to create tests/test_context_builder.py with task/criteria/
+step presence and determinism, recency selection without source mutation,
+exact prefix/marker clipping with source preservation, exact local stats,
+zero-window and zero-character behavior, and six invalid-budget cases.
+This yields twelve collected test cases. After saved verification, align
+the manual's test snapshot and gate counts. Await the saved-file report.
+Progress: 2/11 complete.
+
+The human reported "saved". Codex inspected tests/test_context_builder.py
+and verified the six direct tests and six parameterized invalid-budget
+cases. Assertions cover deterministic task messages, source preservation,
+exact clipping/stats, and both zero settings. Both manual editions now
+include this checkpoint and expect twelve cases. Instruction 3/11 is
+complete by inspection; execution remains pending. Progress: 3/11 complete.
+
+### Instruction 4/11 — issued, awaiting context test output
+
+Ask the human to run .venv/bin/python -m pytest tests/test_context_builder.py -q.
+Expected: twelve passing cases. Await output before the accumulated-suite
+check. Progress: 3/11 complete.
+
+The human reported "12 passed in 0.14s" from the context-test command.
+Instruction 4/11 is complete. Progress: 4/11 complete.
+
+### Instruction 5/11 — issued, awaiting accumulated suite output
+
+Ask the human to run .venv/bin/python -m pytest -q. Expected: forty-four
+exercise tests pass (thirty-two existing plus twelve context cases).
+Await output before exact-message inspection. Progress: 4/11 complete.
+
+The human reported "44 passed in 0.30s" from the accumulated exercise
+suite. Instruction 5/11 is complete. Progress: 5/11 complete.
+
+### Instruction 6/11 — exact-message inspection in progress
+
+Ask the human to create /tmp/khosiness_context_inspection.py (verified
+absent) with a real ContextBuilder and four explicitly illustrative
+observations, selecting the latest two and clipping a large one. Print
+the exact messages, last_stats, source observation count, and state-copy
+equality. These are synthetic inputs, not claimed tool executions. Verify
+the saved script before giving its execution command and await actual
+output before granting inspection credit. Progress: 5/11 complete.
+
+The human reported "saved". Codex inspected the temporary script and
+verified the real builder, four labeled synthetic observations, latest-two
+selection, 100-character prefix cap, and exact-message/stat/source-state
+inspection. Give its execution command and await actual output. Instruction
+6/11 remains open; progress 5/11 complete.
+
+The human supplied actual inspection output: three messages, task details
+and step 3 present, the two latest observations selected, the large one
+clipped with a marker, ContextStats(messages=3, characters=427), four source
+observations, and unchanged source state=True. Instruction 6/11 is complete.
+Progress: 6/11 complete.
+
+### Instruction 7/11 — loop/context integration in progress
+
+Ask the human to create /tmp/khosiness_context_loop_trace.py (verified
+absent), connecting the real ContextBuilder, existing run(), registry and
+read_file to a deterministic two-turn FakeModel. Print exact messages for
+each model call, final state, last-build stats, and reloaded event types.
+Verify saved script before execution. No live provider or persistent
+context-size events are introduced. Progress: 6/11 complete.
+
+The human reported "saved". The integration script matches the supplied
+Python code but has an extra final prose line beginning "This lets us
+inspect...", which is invalid Python. Ask the human to remove that line
+under instruction 7/11; do not run it yet. Progress remains 6/11 complete.
+
+The corrected saved-file report is verified: the prose line is removed,
+the file ends with the event print, and Python AST parsing succeeds. Give
+the integration execution command and await actual messages/state/stats/
+events. Instruction 7/11 remains open; progress 6/11 complete.
+
+The human supplied the real integration output: call 1 has empty recent
+observations and step 1; call 2 includes the read_file observation and
+step 2. Final state is finished at step 2 with the retained observation.
+last_stats is ContextStats(messages=3, characters=467); reloaded events
+show the existing seven-event success trace and no context-size event.
+Instruction 7/11 is complete; progress 7/11 complete.
+
+### Instruction 8/11 — invalid-budget inspection in progress
+
+Ask the human to construct ContextBuilder(max_recent_observations=-1)
+in a direct Python command and inspect the ValueError. Source preservation
+was already observed in instruction 6 and tested in the context suite;
+constructor validation must fail before a build or model call. Await the
+actual error before completing instruction 8/11. Progress: 7/11 complete.
+
+The human supplied the actual constructor traceback: ValueError,
+"max_recent_observations must be a non-negative integer", raised in
+ContextBuilder.__init__ before building messages. Combined with the prior
+source-preservation inspection and tests, instruction 8/11 is complete.
+Progress: 8/11 complete.
+
+### Instruction 9/11 — understanding gate issued
+
+Ask one question at a time about omitted observations versus source state/
+history, recency versus relevance, per-observation caps versus total token
+budgets, local last_stats versus durable metrics, and why each message
+belongs in the next decision. Record human reasoning and corrections; do
+not award understanding solely from supplied explanations. Progress: 8/11.
+
+The human correctly explained that omitted observations stay in RunState,
+durable event history remains intact, and the builder changes only the
+next model messages without emitting/deleting events. Source/view ownership
+is understood. Continue instruction 9/11 with recency versus relevance.
+Progress remains 8/11 complete.
+
+The human correctly distinguished position-based recency from relevance:
+an important old observation may be omitted. Clarified that full observation
+content remains in RunState, while the event store retains its recorded
+payloads, which do not necessarily contain the full tool output. Continue
+instruction 9/11 with per-observation character caps versus a global token
+budget. Progress remains 8/11 complete.
+
+The human correctly explained the observation prefix cap, additional
+truncation marker and other message contents, lack of a total request cap,
+and character counts versus tokens. Budget-scope understanding is satisfied.
+Continue instruction 9/11 with last_stats lifetime and durable metrics.
+Progress remains 8/11 complete.
+
+The human correctly explained that each build replaces last_stats and
+statistics are not automatically persisted as events. Metrics lifetime
+and storage ownership are understood. Continue instruction 9/11 with the
+manual gate: explain the purpose of each of the three selected messages.
+Progress remains 8/11 complete.
+
+The human correctly explained all three message purposes: system evidence
+guidance without execution authority; task details/step as the decision
+anchor without policy enforcement; and selected bounded observations as
+data, with recency limitations. Instruction 9/11 understanding is complete.
+Progress: 9/11 complete.
+
+### Instruction 10/11 — review and staging in progress
+
+Codex reviewed builder.py and twelve context test cases. Both manual
+editions' code checkpoints are AST-equivalent to the exercise source/tests;
+checksum and whitespace checks pass. Stage tests, accumulated tests, exact
+message/source-state inspection, real loop integration, constructor failure,
+and human understanding are recorded above. No files are currently staged.
+Ask the human to stage only context/builder.py, test_context_builder.py,
+and this tracker for the exercise commit; documentation companion/manual
+changes remain with earlier uncommitted documentation work. Await and
+inspect the index before committing. Progress: 9/11 complete.

@@ -198,6 +198,8 @@ Therefore:
 
 ## Safety / operational rules
 
+- Develop directly on `main`, as requested on 2026-10-19. Do not recreate
+  `master` or introduce a feature-branch workflow unless the human asks.
 - Do not use destructive Git commands (`reset --hard`, forced checkout, history rewriting) without explicit human instruction.
 - Do not commit generated `*.egg-info/`, `__pycache__/`, virtual environments or run artifacts.
 - Keep secrets out of source, traces and prompts.

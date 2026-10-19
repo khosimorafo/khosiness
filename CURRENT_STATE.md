@@ -70,7 +70,10 @@ Use the tracker for subsequent instruction results and understanding checks.
 
 Use STAGE_TRACKER.md for the canonical instruction and validation record.
 The manual and animations are reference material, not completed exercises.
-The remote GitHub repository has not been changed by the restart.
+The restarted project and documentation were published to GitHub as master.
+The human has requested consolidation onto main and removal of master.
+Develop directly on main; preserve the current tested project, the prior remote
+history, and its MIT license. Unfinished Step 8 base.py remains uncommitted.
 
 Planned/runtime identity: khosiness; CLI: kness; source: src/khosiness/.
 

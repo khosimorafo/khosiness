@@ -2652,3 +2652,16 @@ for a local commit. All 74 documentation tests pass with localhost socket
 access; the restricted run could not create sockets. Existing manifest hashes
 and whitespace checks passed. Stage 7 runtime is already in commit 90c9773.
 No next stage instruction or implementation work was performed in this interlude.
+
+
+Branch consolidation, 2026-10-19: the human explicitly requested merging
+master into main, developing directly on main, and discarding master locally
+and remotely. Fetched origin/main and inspected its separate history: an older
+implementation and MIT license. Current master 88b639c is the tested restarted
+project. Created local main from that current tree and joined origin/main with
+an ours-strategy merge, preserving both commit histories without reintroducing
+the older implementation. Retained origin/main's LICENSE. Added the standing
+main-only development instruction to AGENTS.md. No force push or history
+rewrite is used. Publish main and verify ancestry before deleting master.
+Unfinished src/khosiness/sandbox/base.py remains outside the commit; Step 8
+stays 1/12, with instruction 2 awaiting the human's saved/validation report.

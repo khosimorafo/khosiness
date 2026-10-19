@@ -1,0 +1,114 @@
+[
+  {
+    "id": "repo-locate-retry",
+    "objective": "Locate the retry setting and report its value.",
+    "expected": ["src/db/config.py defines DB_RETRY_COUNT = 3."],
+    "evidence": [{"path": "src/db/config.py", "start_line": 1, "end_line": 1}]
+  },
+  {
+    "id": "repo-locate-timeout",
+    "objective": "Locate the timeout setting and report its value.",
+    "expected": ["src/db/config.py defines DB_TIMEOUT_SECONDS = 5."],
+    "evidence": [{"path": "src/db/config.py", "start_line": 2, "end_line": 2}]
+  },
+  {
+    "id": "repo-locate-session-factory",
+    "objective": "Locate the session factory definition and describe what it returns.",
+    "expected": ["src/db/session.py defines create_session().", "The function returns a dictionary with retries and timeout keys."],
+    "evidence": [{"path": "src/db/session.py", "start_line": 3, "end_line": 4}]
+  },
+  {
+    "id": "repo-trace-worker-call",
+    "objective": "Identify how the worker uses the session factory.",
+    "expected": ["src/service/worker.py imports create_session from src.db.session.", "run() returns the result of create_session()."],
+    "evidence": [{"path": "src/service/worker.py", "start_line": 1, "end_line": 4}]
+  },
+  {
+    "id": "repo-trace-health-call",
+    "objective": "Identify how the health check uses the session factory.",
+    "expected": ["src/api/health.py imports create_session from src.db.session.", "readiness() assigns create_session() to session before checking timeout."],
+    "evidence": [{"path": "src/api/health.py", "start_line": 1, "end_line": 5}]
+  },
+  {
+    "id": "repo-trace-session",
+    "objective": "Find every source call site of create_session() in the fixture, excluding definitions, imports, and comments.",
+    "expected": ["src/service/worker.py:4 calls create_session() inside run().", "src/api/health.py:4 calls create_session() inside readiness().", "src/db/session.py:3 is a definition and src/service/notes.py:1 is a comment, not additional callers.", "A source call site does not establish that it executed."],
+    "evidence": [
+      {"path": "src/service/worker.py", "start_line": 1, "end_line": 4},
+      {"path": "src/api/health.py", "start_line": 1, "end_line": 5},
+      {"path": "src/db/session.py", "start_line": 3, "end_line": 4},
+      {"path": "src/service/notes.py", "start_line": 1, "end_line": 1}
+    ]
+  },
+  {
+    "id": "repo-explain-config",
+    "objective": "Explain how the retry and timeout settings reach the session factory's returned dictionary.",
+    "expected": ["src/db/config.py defines DB_RETRY_COUNT and DB_TIMEOUT_SECONDS.", "src/db/session.py imports both settings from .config.", "create_session() maps DB_RETRY_COUNT to retries and DB_TIMEOUT_SECONDS to timeout."],
+    "evidence": [
+      {"path": "src/db/config.py", "start_line": 1, "end_line": 2},
+      {"path": "src/db/session.py", "start_line": 1, "end_line": 4}
+    ]
+  },
+  {
+    "id": "repo-locate-cli-entry",
+    "objective": "Locate the CLI callable defined in source.",
+    "expected": ["src/cli.py defines main() on line 3."],
+    "evidence": [{"path": "src/cli.py", "start_line": 3, "end_line": 4}]
+  },
+  {
+    "id": "repo-trace-cli-handoff",
+    "objective": "Explain which worker function the CLI delegates to.",
+    "expected": ["src/cli.py imports run from src.service.worker.", "main() returns run().", "src/service/worker.py defines that run() function."],
+    "evidence": [
+      {"path": "src/cli.py", "start_line": 1, "end_line": 4},
+      {"path": "src/service/worker.py", "start_line": 3, "end_line": 4}
+    ]
+  },
+  {
+    "id": "repo-locate-declared-script",
+    "objective": "Identify the declared command name and its target callable without running or installing it.",
+    "expected": ["pyproject.toml declares fixture-check under [project.scripts].", "Its target is src.cli:main.", "The declaration alone does not prove successful installation or execution."],
+    "evidence": [{"path": "pyproject.toml", "start_line": 5, "end_line": 6}]
+  },
+  {
+    "id": "repo-explain-readiness",
+    "objective": "Explain the readiness condition from source without claiming the check has run.",
+    "expected": ["src/api/health.py defines readiness().", "It obtains session from create_session() and returns whether session[\"timeout\"] is greater than zero."],
+    "evidence": [{"path": "src/api/health.py", "start_line": 3, "end_line": 5}]
+  },
+  {
+    "id": "repo-follow-readme-pointer",
+    "objective": "Follow the README's retry-configuration pointer and verify it against source.",
+    "expected": ["README.md points to src/db/config.py for retry configuration.", "src/db/config.py confirms DB_RETRY_COUNT = 3; the documentation pointer alone is not verification."],
+    "evidence": [
+      {"path": "README.md", "start_line": 3, "end_line": 3},
+      {"path": "src/db/config.py", "start_line": 1, "end_line": 1}
+    ]
+  },
+  {
+    "id": "repo-reject-comment-caller",
+    "objective": "Determine whether the create_session() mention in service notes is an executable call site.",
+    "expected": ["src/service/notes.py:1 begins with # and contains only a planned-call comment.", "It is a text match, not an executable caller."],
+    "evidence": [{"path": "src/service/notes.py", "start_line": 1, "end_line": 1}]
+  },
+  {
+    "id": "repo-check-design-claim",
+    "objective": "Check the design note's claim that the database layer creates sessions from configuration.",
+    "expected": ["docs/design.md states that the database layer creates sessions from configuration.", "src/db/session.py supports this by importing retry and timeout settings and using them in create_session().", "The source creates a dictionary; it does not demonstrate an actual database connection."],
+    "evidence": [
+      {"path": "docs/design.md", "start_line": 3, "end_line": 3},
+      {"path": "src/db/session.py", "start_line": 1, "end_line": 4}
+    ]
+  },
+  {
+    "id": "repo-trace-cli-config-chain",
+    "objective": "Trace the source-level chain from main() to the retry setting and describe the returned data without executing the fixture.",
+    "expected": ["src/cli.py main() returns worker.run().", "src/service/worker.py run() returns create_session().", "src/db/session.py create_session() returns retries from DB_RETRY_COUNT and timeout from DB_TIMEOUT_SECONDS.", "src/db/config.py defines those values as 3 and 5 respectively.", "This establishes a source-level chain, not evidence that it ran."],
+    "evidence": [
+      {"path": "src/cli.py", "start_line": 1, "end_line": 4},
+      {"path": "src/service/worker.py", "start_line": 1, "end_line": 4},
+      {"path": "src/db/session.py", "start_line": 1, "end_line": 4},
+      {"path": "src/db/config.py", "start_line": 1, "end_line": 2}
+    ]
+  }
+]

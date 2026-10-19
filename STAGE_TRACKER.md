@@ -23,8 +23,8 @@ Step 0 question is withdrawn. The human has now begun fresh Project Setup.
 | Step 3 — Build the Event Log | Complete — 11/11; fourteen accumulated tests, JSONL/failure inspections and understanding verified; commit f49e53f |
 | Step 4 — Implement the Agent Loop | Complete — 12/12; eighteen tests, traces, debugger inspection and understanding verified; commit 40237f9 |
 | Step 5 — Build the Tool System | Complete — 13/13; thirty-two tests, search/integration/rejection inspections and understanding verified; commit 0b51887 |
-| Step 6 — Engineer the Context | In progress — instruction 10/11 issued; 9/11 complete |
-| Step 7 — Repository Navigation | Pending |
+| Step 6 — Engineer the Context | Complete — 11/11; forty-four tests, message/integration/failure inspections and understanding verified; commit 2e3f832 |
+| Step 7 — Repository Navigation | In progress — 13/14 validated; staged scope/content/format checked, commit pending |
 | Step 8 — Shell Execution and Sandbox | Pending |
 | Step 9 — Policy and Human Approval | Pending |
 | Step 10 — State, Checkpoints and Recovery | Pending |
@@ -1606,7 +1606,7 @@ Post-commit closeout records and earlier manual/tutor work remain uncommitted.
 The tools assume a stable local workspace; concurrent path replacement,
 total traversal time, OS sandboxing, and approval policy are not solved.
 
-## Active stage: Step 6 — Engineer the Context
+## Step 6 — Engineer the Context — complete
 
 The human explicitly requested Step 6. Codex read the complete dedicated
 manual page, tracker and current state, and inspected source/test paths.
@@ -1854,3 +1854,710 @@ Ask the human to stage only context/builder.py, test_context_builder.py,
 and this tracker for the exercise commit; documentation companion/manual
 changes remain with earlier uncommitted documentation work. Await and
 inspect the index before committing. Progress: 9/11 complete.
+
+The human reported staging done. Codex verified exactly context/builder.py,
+tests/test_context_builder.py, and STAGE_TRACKER.md are staged. Staged
+whitespace checks pass and the two exercise files have no unstaged changes.
+Instruction 10/11 is complete; progress 10/11 complete.
+
+### Instruction 11/11 — commit and closeout in progress
+
+Issue git commit -m "step 6: engineer the context". Await and verify the
+resulting commit and exercise files before recording completion. Step 7
+requires human instruction. Progress: 10/11 complete.
+
+### Instruction 11/11 — complete
+
+Verified HEAD is 2e3f832, "step 6: engineer the context", containing exactly
+context/builder.py, tests/test_context_builder.py, and staged tracker record.
+The two exercise files match HEAD. Twelve context cases and forty-four
+accumulated tests passed; exact message/source-state, real loop integration,
+and constructor-failure inspections and human understanding are complete.
+Both manual checkpoints match the source/tests. Progress: 11/11 complete.
+Step 6 is closed; Step 7 awaits human instruction. Setup understanding
+remains deferred, not passed.
+
+Post-commit closeout records and earlier manual/animation/tutor changes
+remain uncommitted. ContextStats is local metadata; semantic retrieval,
+redaction, global token budgeting, and persistent context metrics are not
+implemented by this stage.
+
+### Step 7 visual lesson — documentation companion only
+
+The human explicitly requested an animation for Step 7. Add one original
+eight-scene lesson and embed it after the matching stage primer. It follows
+a fixture retry-setting question through shallow listing, scoped search,
+numbered reads, candidate caller verification, truncation, workspace escape
+rejection, and evidence/key-fact assessment. All outputs/traces are labeled
+illustrations. No tools, provider calls, or benchmark grading run here.
+Step 7 coding and understanding remain pending; no N/Y plan is started.
+
+The primer warns that the older Step 7 filesystem snapshot must retain
+Step 5 strict validation, per-target containment, byte/output limits. It
+also distinguishes the 15-task goal from the three benchmark examples and
+output limits from total traversal/read bounds. Do not overwrite live
+tools or claim numbered/structured/configurable additions already exist.
+
+Step 7 animation verification: all eight scenes, selected tree nodes,
+numbered read, truncated subset, path rejection, and evidence ledger pass
+in a real headless browser. Desktop/mobile have no horizontal overflow;
+embedded primer and tutor duplication are suppressed; iframe resizing,
+standalone tutor keyboard isolation, reduced motion, no-JavaScript static
+reading, and final-scene playback stop pass. Screenshots inspected. All
+44 exercise tests and 32 documentation tests pass. JavaScript syntax,
+checksum manifest, and whitespace checks pass. Scoped general review
+reports no actionable defects. No harness-stage progress was awarded.
+
+Focused security review reports no actionable vulnerabilities. Both review
+passes are clean. The optional tutor remains user-triggered; the lesson
+itself initiates no tool/provider calls. Documentation changes are
+uncommitted. Step 7 implementation and human understanding remain pending.
+
+### Step 6/7 animation layout correction — documentation companion
+
+The human reported that stacking the diagram and narration made each
+scene require scrolling, unlike earlier lessons. Clarified that the
+animation layout itself was the problem. Restored side-by-side diagram/
+narration on desktop and kept controls alongside. Step 6 uses a compact
+source/result layout with an explicit policy strip; Step 7 puts its map
+over the request/result pair and removes repeated blank display lines.
+Text is neither scaled nor clipped. A shared Expand lesson control uses
+native fullscreen for narrow manual embeds; normal primers remain before
+the lesson and mobile/static reading remain available. Harness-stage
+progress and understanding credit are unchanged.
+
+Browser checks verify all 48 scenes across Steps 6/7 at 1366x768, 1440x900,
+and 1920x1080 fit with visible controls and no clipped code. Expanded manual
+entry/exit and all eight scenes per lesson pass at 1366x768. Mobile widths
+and no-JavaScript reading also pass. Screenshots of the new layout inspected.
+
+Final layout validation: all 44 exercise tests and 34 documentation tests
+pass. Fullscreen exit-button and blocked-fullscreen feedback checks pass.
+Review found unsafe vertical centering on short fullscreen viewports;
+changed to start alignment and 10px padding. At 1366x768 both tallest
+expanded scenes have scrollHeight=clientHeight=768 and all content visible.
+At 1366x500 the diagram top and bottom controls remain reachable by scrolling.
+The follow-up general review and focused security review report no
+actionable issues. Checksum and whitespace checks pass. Changes remain
+uncommitted; no harness implementation or tutoring stage was advanced.
+
+### Standing animation layout preference — approved 2026-10-18
+
+The human approved the corrected Step 6/7 layout and requested that later
+steps retain it. Encoded the standing standard in AGENTS.md and the manual
+README: side-by-side desktop scenes with controls visible on one screen,
+readable native-size text, shared layout assets, accessible fullscreen,
+mobile stacking, and browser verification of every scene at the recorded
+desktop sizes. The primer is outside the active-scene fit target. This is
+a documentation preference; Step 7 coding and understanding remain pending.
+
+### Steps 8–10 animations — documentation companions, 2026-10-18
+
+The human explicitly requested animations for all three steps. Read each
+complete manual page and created one eight-scene conceptual lesson per
+stage, with the approved side-by-side desktop layout and shared playback
+controls. Each matching multi-page manual embeds its lesson after the
+stage primer; standalone lessons retain the primer and optional tutor.
+No harness runtime, stage instruction plan, or understanding credit changed.
+Steps 7–10 implementation remain pending.
+
+Step 8 follows a fixture test through argv/cwd/environment launch checks,
+zero/nonzero exit, timeout, and output/isolation limits. Step 9 shows
+trusted risk classification, allow/ask/deny, unanswered/declined approval,
+exact-action approval, and the missing loop gate. Step 10 separates state,
+events, and context; shows atomic replacement, interrupted temporary write,
+validated resume, finished-run guard, uncertain side effects, and damaged
+committed-state rejection. Every output and trace is illustrative.
+
+Manual reference notes explicitly distinguish local process constraints
+from OS isolation, helper decisions from enforced dispatch, and atomic
+snapshots from power-loss durability or exactly-once effects. No shell,
+approval, checkpoint, replay, or success-checking mechanism runs in HTML.
+
+Verification: all 44 accumulated exercise tests and 45 documentation tests
+pass. The latter include the three matching tutor-stage contexts and all
+new lesson/page/asset routes. Browser checks verify all 72 scene/desktop
+size combinations at 1366x768, 1440x900, and 1920x1080, visible controls,
+no clipped code, and no horizontal overflow. All scenes pass embedded
+fullscreen and mobile/static-reading checks. Keyboard navigation, tutor
+input isolation, reduced motion, final-scene playback stop, primer/tutor
+embedding, iframe resizing, fullscreen failure feedback, and short-window
+scroll access also pass. Representative screenshots inspected. General
+read-only review reports no actionable defects.
+
+Focused security review also reports no actionable vulnerabilities.
+JavaScript syntax, local links, unique IDs, refreshed checksum manifest,
+and whitespace checks pass. No src/ or exercise-test files changed. The
+existing localhost tutor server is preserved; only the isolated verification
+browser is closed. Documentation remains uncommitted.
+
+### Remaining visual curriculum — documentation companions, 2026-10-18
+
+The human requested the rest of the animations after Steps 8–10. Created
+one eight-scene lesson for each Step 11–18 and the Part II overview: nine
+lessons, 72 scenes. Read the matching reference pages, preserved the approved
+diagram/narration desktop layout, and reused existing playback/fullscreen
+controls. Extracted the established theme into a shared stylesheet for these
+new pages. Each standalone lesson keeps its stage-specific primer and
+optional tutor; each matching multi-page manual embeds it after the primer.
+No harness implementation, experiment data, personal profile, learning
+assessment, or stage completion was created.
+
+Added a static visual-lesson directory linking all 20 lessons (Steps 0–18
+plus Part II), reachable from the manual overview and new lesson headers.
+All local links resolve. New reference notes distinguish planned integration
+from working code: keyword memory from relevance/injection, summaries from
+retained evidence, skill discovery from tool authority, declared child limits
+from enforcement, final text from grading, illustrative experiment counts
+from measured improvements, and target architecture/autonomy from runtime.
+
+Local review identified an important evidence-retention gap: current tool
+outcome events contain only name and ok, not result contents. Corrected the
+compaction lesson and related manual notes so they do not promise that the
+event log can reconstruct discarded tool contents. Full results must be
+explicitly retained before observations are dropped. The compaction
+snapshot's list[str] unresolved field also conflicts with dict-valued
+pending_actions; the lesson and manual now expose this existing reference
+issue for reconciliation during stage work. Runtime files were not changed.
+
+Verification: 118 tests pass (44 exercise + 74 documentation), including all
+new routes, matching standalone tutor references, and Part II's correct
+no-code-checkpoint mapping. Browser verification passed all 216 desktop
+scene/size combinations across 1366x768, 1440x900, and 1920x1080. All scenes
+also passed embedded fullscreen, mobile horizontal-overflow, and static
+no-JavaScript reading checks. Keyboard navigation, input isolation, reduced
+motion, final-scene playback stop, iframe resizing, primer/tutor separation,
+and short-window fullscreen access passed for every new lesson. Directory
+checks passed on desktop/mobile and file/HTTP URLs; updated compaction scenes
+were rechecked, as was fullscreen access with 200% text. Screenshots inspected.
+
+Two initial browser suites competed for fullscreen; rerunning the full sweep
+alone passed. A selector-quoting error in an extra verification script was
+corrected; that extra sweep then passed. These were test orchestration issues,
+not lesson changes. The requested read-only Codex review was attempted but
+interrupted by the CLI usage limit; it did not produce a completed review.
+Local contract/content/security checks were performed, but automated review
+must not be recorded as clean or complete. No repeated quota-blocked review
+was launched. All coding stages from Step 7 remain pending, as before.
+
+## Active stage: Step 7 — Repository Navigation
+
+The human requested the next coding step after completing the visual
+curriculum. Step 6 remains complete; animation work provided no coding or
+understanding credit. Read the entire Step 7 page and inspected live tools,
+existing tests, current state, history/brief, and the working tree before
+issuing instruction 1. benchmarks/repo_tasks.json and repository-navigation
+tests do not exist yet. The last verified exercise suite has 44 passing tests.
+
+Responsibility: retrieve source evidence through shallow bounded listings,
+numbered reads, and structured path/line/text search matches. Failure mode:
+guessing code behavior, losing citation locations, or treating an incomplete
+retrieval as exhaustive. These boundaries belong in filesystem tools; context
+selection and completion assessment keep their separate responsibilities.
+
+Preserve Step 5 strict Pydantic validation, resolved containment including
+search targets, file-byte limits, and output limits. Reconcile the older
+manual snapshot with those existing guards. Keep listings shallow (depth 1);
+this supplies a fixed depth bound without introducing recursive listing.
+Use configurable limits within the existing 100-entry/100-match ceilings,
+and a new maximum/default 200 returned read lines. Limits on returned
+results do not imply a total traversal or runtime bound. Metadata must not
+become an unbounded copy of tool output. The benchmark target is 15 tasks,
+not the older snapshot's three examples. Do not implement Step 8 runtime.
+
+Planned total: fourteen human instructions.
+1. Define strict, bounded listing/read/search arguments and the read-line cap.
+2. Add configurable shallow directory listing with preserved output guards.
+3. Return bounded numbered reads with honest source/range metadata.
+4. Return structured bounded search matches while retaining per-target checks.
+5. Review and extend accumulated tool regressions after navigation contracts are connected.
+6. Add deterministic repository-navigation and evidence tests.
+7. Define the fifteen repository benchmark tasks with checkable key facts.
+8. Run repository-navigation tests and resolve any failures.
+9. Run the accumulated exercise suite and resolve any regressions.
+10. Inspect an actual search-to-bounded-read evidence trace.
+11. Inspect incomplete results and a rejected request without reading outside.
+12. Complete the manual understanding gate; repeat this instruction as needed.
+13. Stage the intended stage files and inspect the actual Git index.
+14. Commit, verify the saved stage, and close at the Step 7 boundary.
+
+Instruction 1/14 issued: open src/khosiness/tools/filesystem.py and replace
+only the constants/argument-model block with strict bounded models. This
+prepares validation contracts; tool execution is updated in later steps.
+Waiting for the human's saved result. Progress: 0/14 completed. No source
+files were edited by Codex and no understanding check has been passed.
+
+Instruction 1/14 implemented by Codex at the human's explicit request.
+The human asked Codex to apply the presented code changes and then explain
+exactly what changed. Preserve small stage-scoped batches and the human
+understanding gate; do not treat delegated coding as passed understanding.
+
+Changed only the argument-model block in src/khosiness/tools/filesystem.py:
+MAX_READ_LINES=200; added ListArguments.max_items (default/cap 100); added
+ReadArguments.max_lines (default/cap 200); added SearchArguments.max_matches
+(default/cap 100). Each new field is a strict integer with minimum 1,
+inheriting the nonempty-string path and forbidden-extra-field contract.
+Existing ordered read ranges and filesystem guards remain intact.
+
+All 44 accumulated exercise tests pass. A direct inspection checked 31
+valid/invalid boundary cases, including defaults, endpoint values, zero,
+negative/over-cap values, string/boolean/fractional inputs, extra fields,
+invalid path type, and reversed line ranges. Generated schemas expose the
+same minima/maxima/defaults. No new test files or later-stage mechanisms
+were created. General and focused security reviews are running separately.
+
+Important intermediate behavior: ListDirectoryTool still uses PathArguments,
+so ListArguments is not connected. Existing read/search methods validate
+with their extended models and expose their new fields in schemas, but do
+not consume max_lines/max_matches yet. These request contracts do not yet
+make output limits configurable; execution changes belong to instructions
+2–4. Instruction 1 is implemented/verified; Step 7 remains incomplete.
+Progress: 1/14. No next human instruction or understanding check issued.
+
+Instruction 1 review closeout: general and focused security reviews both
+completed without actionable findings. Reviewers independently checked
+strict dict/JSON validation and schema bounds. The final source diff is
+19 added lines in filesystem.py. Checksum and whitespace checks pass.
+Changes remain uncommitted; progress remains 1/14.
+
+Tutoring resumed at the human’s request. Progress remains 1/14. Before
+starting instruction 2, ask one short prediction about the current listing
+path: with ten files, does passing max_items=3 return three entries, use
+the old cap, or reject the request, and why? This checks the distinction
+between defining ListArguments and wiring schema/execute to it. The answer
+is pending; no independent understanding credit awarded and no source
+changes made in this turn.
+
+Human prediction check: correct. The human selected rejection and explained
+that ListDirectoryTool.execute used PathArguments, whose extra-field rule
+rejects max_items, while ListArguments was defined but not connected. This
+scoped understanding check is satisfied; the full Step 7 understanding gate
+remains pending.
+
+Instruction 2/14 implemented by Codex under the human's requested coding-and-
+explanation workflow. ListDirectoryTool now advertises ListArguments and
+validates with that same model. Its directory iterator consumes at most
+max_items+1 entries; selected names use max_items; metadata.truncated compares
+against that requested limit, while retaining the character-limit check.
+The description exposes the shallow listing and 1–100 range. Enumeration
+order is unspecified: only the bounded selected subset is sorted, not the
+full set of entries. Existing cwd/path containment, symlink-labeling,
+strict validation, output cap, and default 100 remain intact.
+
+All 44 accumulated exercise tests pass. Actual temporary-workspace inspection
+with ten files and max_items=3 returned ok=True, count=3, truncated=True;
+iterator instrumentation observed exactly four consumed entries. Checked
+empty/exact/overflow directories, the schema's range/default, invalid numeric
+and coercible types rejected before directory access, workspace escape, and
+non-following directory-symlink labels. General and focused security reviews
+are running. No tests, numbered-read behavior, structured-search behavior,
+or benchmark files were added in this batch.
+
+Progress: 2/14 implemented and validated. A short question will ask why the
+iterator uses max_items+1 while returning at most max_items. The human has
+not answered that question yet; do not record it as understood merely from
+the code or verification. No next implementation instruction has started.
+
+Additional boundary inspection: this installed Python's Path.iterdir calls
+list(scandir_it) before yielding Path objects. Thus islice bounds how many
+yielded entries the tool consumes/selects, not the underlying directory scan
+or its peak memory. Do not claim max_items is a total filesystem-work bound.
+The direct inspection's four-entry count measures yielded-item consumption,
+not four underlying OS directory entries. The teaching explanation must
+preserve this distinction. No source behavior was changed for this caveat.
+
+Instruction 2 closeout: general and focused security reviews completed
+without actionable findings. Their enumeration checks concern yielded-item
+consumption; retain the local Path.iterdir scan/memory caveat above. All 44
+exercise tests, checksum and whitespace checks pass. Changes remain
+uncommitted. Progress remains 2/14; the extra-entry prediction is pending.
+
+Human lookahead check: correct. The human explained that the fourth yielded
+entry detects omitted entries for max_items=3, while only three are returned;
+with exactly three yielded entries there is no item-count truncation. The
+human also correctly retained the installed Path.iterdir filesystem-work
+caveat. This scoped check is satisfied; the full stage gate remains pending.
+
+Instruction 3/14 implemented by Codex: ReadFileTool now consumes max_lines,
+returns 1-based inclusive numbered excerpts, and reports the resolved relative
+path, full-file characters/line count, actual returned start/end, truncation,
+and whether the final displayed source line is partial. Empty/out-of-file
+ranges return empty content and null returned bounds. The existing file-byte
+check and resolved containment run before rendering. Character accounting
+includes number prefixes and newline separators; no partial citation prefix
+or prefix-only representation of a nonempty source line is emitted. A long
+source line can be cut only with partial_line=True and truncated=True.
+Truncation compares against available requested content, not the entire file
+when the request is deliberately narrow. These are returned-evidence budgets,
+not partial-disk-read or OS-sandbox guarantees.
+
+Required existing read assertions were adapted in instruction 3 rather than
+leaving the suite knowingly failing until instruction 5. Added meaningful
+read-contract regressions for inclusive windows, line-budget omission,
+EOF/out-of-range/empty files, default 200-line limit, partial long lines,
+character-budget citation boundaries, blank lines and indentation, plus
+invalid max_lines cases in the existing pre-IO validation check. Instruction
+5 remains a later regression review/extension; total stays fourteen.
+
+Validation: 24 tool tests and all 54 accumulated exercise tests pass. A real
+fixture read requesting lines 2–20 with max_lines=3 returned numbered lines
+2–4; metadata was path=config.py, start_line=2, end_line=4, total_lines=30,
+partial_line=False, truncated=True. Instrumented invalid max_lines and an
+outside-workspace symlink were rejected before file reading. Updated the
+matching manual page with the precise numbered-read contract; its older
+checkpoint remains explicitly marked for reconciliation. General and
+focused security reviews are running separately.
+
+Progress: 3/14 implemented and validated. The next short understanding check
+asks which source lines are returned, and whether truncation is true, for
+a ten-line file with start_line=4, end_line=8, max_lines=2. That prediction
+is pending; no credit inferred from the supplied demonstration. No structured
+search, benchmark, or later-stage implementation was started.
+
+Instruction 3 closeout: general and focused security reviews completed
+without actionable findings. Independent in-memory checks covered Unicode,
+byte/citation/output boundaries, actual-range metadata, and containment.
+The matching standalone tutor-stage reference check passes (1 selected case).
+All 54 exercise tests, checksum manifest and whitespace checks pass. Changes
+remain uncommitted. Progress remains 3/14; the range prediction is pending.
+
+Human numbered-read prediction: correct. For ten short source lines with
+start_line=4, end_line=8, max_lines=2, the human identified numbered lines 4–5,
+truncated=True, and partial_line=False. This scoped understanding check is
+satisfied; the full stage understanding gate remains pending.
+
+Instruction 4/14 implemented by Codex. SearchFilesTool now consumes the
+validated max_matches value and returns metadata.matches entries containing
+workspace-relative path, 1-based line, and selected text with original source
+whitespace. Content is rendered from the same selected match text, so a long
+original line cannot bypass the returned-text budget through metadata. Prefix
+and separator characters count toward the 20,000-character content cap; the
+serialized ToolResult includes additional bounded metadata and is not claimed
+to fit a 20,000-character combined request budget. A cut final line is flagged
+partial_match=True; its visible prefix can end before the query. Citation
+prefixes are never partially emitted. Character-budget exhaustion before a
+new citation fits returns only the earlier complete matches.
+
+Search stops at the match/character budget without scanning the remainder
+to prove that more hits exist. Thus truncated=True conservatively means the
+result may be incomplete even at exactly max_matches hits; truncated=False
+means traversal completed for the scoped eligible UTF-8 files. Per-target
+resolved containment, non-UTF8 skipping, explicit oversized-file rejection,
+and existing stable-workspace assumptions remain. Result caps are not total
+traversal/read/time bounds. The local finish helper centralizes ToolResult
+construction across normal and early-return paths; it executes no tools.
+
+Added/updated search regressions for path/line/text agreement, source whitespace,
+requested/exact/default match limits, no later-file read after budget stop,
+character-budget citation boundaries, partial text whose query is beyond the
+visible prefix, invalid budgets before traversal, non-UTF8 handling, empty
+results, metadata text bounds, and oversized-file rejection. All 38 tool tests
+and all 68 accumulated exercise tests pass. A real fixture returned config.py
+lines 1 and 3. With max_matches=2 its flag was True; with max_matches=3 the
+same two hits were returned with False after completion. The matching manual
+now explains this precise contract. General and security reviews are running.
+
+Progress: 4/14 implemented and validated. The next short understanding question
+asks why clipping content alone is insufficient if metadata.matches retains
+an uncapped matching line. The answer remains pending; do not infer that it
+was understood from implementation or supplied explanations. No later stage
+or repository-benchmark work was started.
+
+Instruction 4 closeout: general and focused security reviews completed
+without actionable findings. The security reviewer could not run filesystem-
+writing tests in its read-only environment; the main session ran all 68
+exercise tests successfully. The matching standalone tutor reference check,
+checksum manifest, and whitespace checks pass. Changes remain uncommitted.
+Progress remains 4/14; the metadata-budget explanation is pending.
+
+Instruction 4 metadata-budget answer: the human correctly explained that
+content and metadata are separate ToolResult fields, that uncapped match
+text could bypass the content budget, and that partial_match marks incomplete
+returned source text. The human correctly retained status 4/14. One recording
+distinction needs correction: current run() stores result.model_dump() in
+RunState.observations, while tool_completed/tool_failed event payloads contain
+only name and ok. Result text/metadata therefore do not automatically enter
+the event log. State growth and selected-context growth are the relevant
+paths here. Ask a one-sentence retry distinguishing full-result storage from
+tool-outcome event recording. Do not mark this distinction independently
+understood yet. Progress stays 4/14; instruction 5 has not started. No source
+code or tests changed in this tutoring turn.
+
+Human storage retry: correct after prompting. The human stated that the loop
+stores the full tool result in run-state observations and records the outcome
+in the event log. This resolves the immediate wording error, but is prompted
+recovery after Codex supplied the distinction; do not infer independently
+retained mastery or pass the later full-stage understanding gate from it.
+The metadata-budget mechanism was correctly explained earlier.
+
+Instruction 5/14 implemented by Codex: reviewed accumulated tool tests and
+added sixteen regression cases (including parametrized cases). Persistent
+coverage now includes listing empty/exact/overflow requested limits, bounded
+yielded-item consumption and sorting of only the selected subset, shallow
+listing, character clipping, symlink names without following directory targets,
+all three tools' invalid-budget rejection before requested-path resolution,
+public registry schemas' budget contracts, and all three tools' symlink-root
+escape rejection before target content access/traversal. Guards raise on
+forbidden operations and tests assert the expected ValidationError or path
+escape result rather than accepting an arbitrary failed ToolResult.
+
+No production behavior was changed by instruction 5. Constructor workspace
+resolution occurs before untrusted requests; the pre-resolution test concerns
+execute() resolving the requested path. The yielded-consumption test does not
+claim to bound Path.iterdir's underlying scan. The listing character-cap test
+checks length and truncation, not a promise of complete names: count represents
+selected entries before content clipping. The manual now states these precise
+regression/metadata boundaries.
+
+Verification: all 54 tool tests and all 84 accumulated exercise tests pass.
+Read-only review of the newly added tests is running. Navigation fixtures,
+fifteen benchmark tasks, the manual trace gates, and formal understanding and
+closeout are still pending. No next implementation instruction has begun.
+Progress: 5/14 implemented and validated. The next short tutoring question
+asks why ok=False alone cannot prove that validation happened before filesystem
+access. The answer remains pending; supplied code/tests do not earn understanding.
+
+Instruction 5 closeout: scoped read-only review completed without actionable
+findings. All 84 exercise tests, the matching standalone tutor-reference check,
+checksum manifest, and whitespace checks pass. Production tool code was not
+changed by this batch. Progress remains 5/14; the validation-order explanation
+is pending. Changes are uncommitted; no next instruction has started.
+
+
+Instruction 5 validation-order answer: correct. The human distinguished a
+failed ToolResult from evidence about ordering and required both the expected
+validation error and a guard proving filesystem access never happened. This
+passes the scoped understanding question; formal stage understanding is pending.
+
+Instruction 6/14 implemented by Codex: added tests/test_repository_tasks.py
+with eight deterministic integration tests through the real ToolRegistry and
+filesystem tools. A nine-file temporary repository contains retry/timeout
+settings, a session factory using them, two callers, a comment resembling a
+call, CLI source, and documentation. The fixture application is never executed.
+
+Tests verify source path/line/text against fixture facts, numbered excerpts,
+bounded shallow orientation, scoped search followed by a definition read,
+fixture-specific setting/caller relationships, incomplete candidate subsets,
+missing files, and containment rejection before content access. Instrumented
+tool reads stay within src/db for the scoped navigation sequence. Requests
+and follow-up choices are scripted in the test; this does not establish an
+autonomous model navigator, a general caller analyzer, or runtime call coverage.
+
+All eight repository tests and all 92 accumulated exercise tests pass. The
+matching standalone tutor-reference check also passes. No production code
+changed in this batch. The manual labels its older three-test checkpoint and
+explains the stronger live tests and their limits. Scoped read-only review is
+running; its result will be recorded before handing back this instruction.
+
+Progress: 6/14 implemented and validated. Fifteen benchmark tasks, manual trace
+gates, formal understanding, and stage closeout remain pending. The next short
+understanding question asks why a search hit containing create_session() alone
+cannot establish an actual caller. The answer is pending; supplied explanations
+do not pass it. No next implementation instruction or stage has begun.
+
+
+Instruction 6 closeout: scoped read-only review completed without actionable
+findings. The reviewer could not create fixtures in its read-only environment;
+the main session verified all eight navigation tests and all 92 accumulated
+exercise tests. The matching tutor-reference check, checksum manifest, and
+whitespace checks pass. Progress remains 6/14. The search-hit/caller question
+is pending; changes remain uncommitted and instruction 7 has not started.
+
+
+Instruction 6 search-hit answer: correct. The human identified definitions,
+comments, and real source calls as possible matches, required surrounding
+numbered source to identify callers, and distinguished a source call from
+proof of execution. This passes the scoped question. Formal understanding
+for the whole stage is still pending.
+
+Instruction 7/14 implemented by Codex: added benchmarks/repo_tasks.json with
+fifteen unique, fixture-specific repository navigation rubrics. Objectives
+cover retry/timeout definitions, factory returns, individual and complete
+caller sets, configuration flow, CLI source and declared entry, readiness,
+documentation verification, comment false positives, and a multi-file chain.
+Each record includes expected factual assertions and inclusive source ranges.
+
+The expected strings are semantic grading rubrics, not exact-match output
+requirements or keyword-based proof. Evidence ranges refer to SAMPLE_FILES
+and build_sample_repo() in tests/test_repository_tasks.py, not the live harness
+source. All fifteen IDs are unique, each rubric is nonempty, and all cited
+paths and ranges were checked against the fixture. No Task construction,
+benchmark execution, automatic grader, or completion verification was added.
+The manual explains this boundary and labels its older three-example snapshot.
+
+All 92 accumulated exercise tests pass. A scoped read-only review of the
+benchmark data against the fixture is running. Progress is 7/14 implemented
+and validated; the later explicit validation, trace, understanding, and
+closeout gates remain pending. No instruction 8 work has begun. Next short
+understanding question: why is finding expected keywords in a final answer
+insufficient to pass a repository benchmark? The answer remains pending.
+
+
+Instruction 7 closeout: scoped read-only review found no actionable issues.
+It independently checked all fifteen rubrics and 25 evidence ranges against
+the literal fixture source. Main-session verification passed all 92 exercise
+tests, the matching standalone tutor-reference check, checksum manifest, and
+whitespace checks. Progress remains 7/14; benchmark-keyword understanding is
+pending. Changes are uncommitted; instruction 8 has not begun.
+
+
+Instruction 7 benchmark-answer check: correct. The human explained that
+keywords can coexist with missing evidence, a comment misread as a caller,
+or unsupported completeness after a truncated search. Correct facts must be
+supported by the appropriate source paths and lines. Formal stage understanding
+remains pending.
+
+Tutoring ownership changed on 2026-10-19: the human performs stage edits and
+commands. Earlier broad delegation to Codex is superseded. At the human's
+explicit request, AGENTS.md now requires each instruction to teach the relevant
+mechanism, name exact edit locations and replacement/insertion boundaries,
+explain why, and specify command context, expected results, and proof limits.
+Codex maintains tutoring records but does not execute exercises on their behalf.
+
+Instruction 8/14: the human ran .venv/bin/python -m pytest
+tests/test_repository_tasks.py -q and reported 8 passed in 0.15s. This satisfies
+the stage-specific automated test gate. It verifies scripted tool behavior on
+the fixture; it is not a benchmark performance score or proof of autonomous
+navigation. Codex's earlier run is not substituted for this human exercise.
+Progress: 8/14 validated. Instruction 9/14 is issued to the human: run the
+accumulated exercise suite from the repository root. Await the reported result
+before advancing. No stage source code was edited in this tutoring turn.
+
+
+Instruction 9/14 completed by the human: .venv/bin/python -m pytest -q
+reported 92 passed in 0.40s. This satisfies the accumulated automated gate
+for tested compatibility; it does not prove general repository correctness
+or autonomous model benchmark performance. Progress: 9/14 validated.
+
+Instruction 10/14 issued, preparation only: the human creates
+/tmp/khosiness_repository_trace.py using the supplied complete script.
+It uses the real registry to search the live repository's context subtree
+for class ContextBuilder, then derives a bounded numbered read from the
+structured match. This is a scripted manual tool trace, not model navigation,
+RunState persistence, or an event-store trace. Codex has not created or run
+that script. Await the human's saved report before giving the run command.
+Instruction 10 remains incomplete until execution and evidence inspection.
+
+
+Instruction 10/14 preparation: the human reports the temporary trace script
+saved. This confirms the reported edit, not execution or correctness of its
+output. Issue the execution command from the repository root and await the
+printed search/read results. Progress remains 9/14 validated. Codex has not
+run the human's trace script.
+
+
+Instruction 10/14 completed by the human: the temporary script found one
+complete match for class ContextBuilder in src/khosiness/context/builder.py
+at line 13, then used that observed path/line for a numbered read of lines
+13–20. Both results were ok=True; search partial_match=False and truncated=False;
+read partial_line=False and truncated=False. Read metadata reports 81 total
+source lines and 2438 source characters, not the excerpt size. The read's
+truncated=False describes the complete requested range, not the whole file.
+This is actual scripted registry/tool execution on the live repository, not
+an autonomous model run or an event-store trace. Progress: 10/14 validated.
+
+Instruction 11/14 issued, edit preparation: append three probes to the same
+temporary script without replacing the successful trace: a one-match search,
+a two-line read of an eight-line requested range, and a ../ outside path.
+Await the human's saved result before issuing execution. Incomplete metadata
+and rejected results must be inspected before instruction 11 can pass.
+No source changes or exercise execution were performed by Codex.
+
+
+Instruction 11/14 preparation: the human reports the three trace probes
+saved. Execution and results have not yet been reported. Issue the existing
+temporary-script execution command from the repository root; await the full
+output before assessing truncation and containment behavior. Progress remains
+10/14 validated. Codex has not run the human's script.
+
+
+Instruction 11/14 completed by the human: reported capped search returned
+one match at builder.py:16 with ok=True, truncated=True, partial_match=False.
+The limited read requested lines 13–20 but returned 13–14 with ok=True,
+truncated=True, partial_line=False. The outside request returned ok=False
+with ValueError: path escapes workspace. The original complete search and
+read also passed. Progress: 11/14 validated.
+
+The human asks how capped search, bounded read, and limited read differ.
+Explain that these are trace labels: search_files limits returned matches;
+both reads use read_file and the same requested range, with max_lines 8 vs 2.
+Only the latter omits available requested lines. A budgeted successful result
+can be incomplete; budgets concern returned evidence, not an OS sandbox or
+a guarantee of total I/O limits. Do not count the supplied explanation as
+understanding. Instruction 12/14 formal understanding begins with one question
+about why ok=True cannot justify a claim that every caller was found when
+the search reports truncated=True. Await the human's reasoning before advancing.
+
+
+Instruction 12/14 understanding, completeness question: the human correctly
+distinguished a completed operation from complete evidence. Clarify that
+ok=True means success and truncated=True marks a reached result budget;
+there may be unreturned callers. This scoped distinction is understood.
+The full understanding gate remains open, progress stays 11/14.
+
+Next question revisits the earlier prompted storage/context recovery: after
+a tool result returns, where is the full result stored, what does the current
+tool-outcome event contain, and does the model automatically see all of it?
+Request a short account of that single result's path across state, events,
+and selected context. Do not supply the answer or infer independently retained
+understanding from the earlier prompted correction. No stage commands or code
+edits are requested or performed in this turn.
+
+
+Instruction 12/14 completed: without the earlier answer being supplied again,
+the human correctly identified full-result storage in RunState.observations,
+tool-outcome event payloads containing only name and ok, and ContextBuilder's
+separate selection of next-call context. This resolves the earlier prompted
+recovery gap. Together with the human's source-versus-execution, validation-
+ordering, benchmark-evidence, and truncation explanations and real tool trace
+inspection, the Step 7 understanding gate passes. Progress: 12/14 validated.
+
+Instruction 13/14 issued, staging only: from the repository root the human
+stages src/khosiness/tools/filesystem.py, tests/test_tools.py,
+tests/test_repository_tasks.py, benchmarks/repo_tasks.json, and STAGE_TRACKER.md.
+The index was empty on inspection. These five files contain the stage runtime,
+regression tests, navigation tests, benchmark rubrics, and canonical progress
+record. Numerous manual/animation/tutor changes remain separate and are not
+included with a blanket add. Staging selects a snapshot; it is not a commit.
+Await the human's staging result before issuing the index inspection command.
+Do not mark instruction 13 complete until the actual staged changes are checked.
+Codex has not staged or committed files.
+
+
+Instruction 13/14, human index summary: git diff --cached --stat reports
+exactly the five intended files: STAGE_TRACKER.md, benchmarks/repo_tasks.json,
+src/khosiness/tools/filesystem.py, tests/test_repository_tasks.py, and
+tests/test_tools.py; 1594 insertions and 37 deletions. Scope matches the
+requested staging list. A stat is a scope/size check, not a content review.
+The human is at the pager's (END) prompt; instruct q to return to the shell.
+Instruction 13 remains open pending staged-content inspection; progress 12/14.
+This new progress note is a working-tree update after the staged snapshot;
+refresh the tracker staging before commit so the committed record is current.
+Codex has not changed the index or performed an exercise command.
+
+
+Instruction 13/14 staged-content inspection: the human supplied the complete
+staged filesystem.py diff. It matches the reviewed and tested Step 7 behavior:
+strict bounded arguments, configurable shallow listings, numbered bounded
+reads with actual returned ranges, and bounded structured search metadata.
+Validation remains before path resolution; per-discovered-target containment
+and bounded file reads remain intact. Metadata and content share clipped
+match text. No unexpected runtime changes were identified in this diff.
+The previous tests and benchmark reviews cover the companion stage files.
+Next issue git diff --cached --check to the human for staged whitespace errors.
+Await the reported result; progress remains 12/14 until this index gate and
+refreshing the accumulated tracker record in the index are complete.
+
+
+Instruction 13/14 completed: the human reports git diff --cached --check
+produced no output. The staged five-file scope, runtime diff, and formatting
+gate are checked; companion tests and benchmark rubrics were reviewed earlier.
+Progress: 13/14 validated. This does not create a commit or make unrelated
+working-tree changes part of the staged snapshot.
+
+Instruction 14/14 preparation issued: the human refreshes only STAGE_TRACKER.md
+in the index with git add STAGE_TRACKER.md so the commit includes the latest
+validation and understanding record. Await confirmation before the commit
+command. Do not append routine tracker notes between this refresh and commit,
+which would otherwise require another refresh. Commit creation, commit content
+verification, and final stage closeout remain pending. No next stage has begun.

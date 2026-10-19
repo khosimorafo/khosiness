@@ -32,6 +32,29 @@ Implement **one manual stage at a time** unless the human explicitly asks otherw
 
 ### One-instruction cadence
 
+The human performs stage code edits, test commands, trace commands, staging,
+and commits. Do not perform these on their behalf unless they explicitly
+delegate the specific work again. Earlier delegation is superseded by the
+human's instruction on 2026-10-19 to perform the exercises themselves.
+Codex may inspect files and maintain tutoring instructions and progress records.
+
+Every instruction must teach the mechanism relevant to that action, not merely
+tell the human what to paste. Keep the explanation concise and concrete:
+
+- State the responsibility or concept being exercised and why this action is
+  needed, including the failure it prevents or detects.
+- For edits, name the exact file and editor command. Say whether to create,
+  replace, or insert; identify the existing block or a unique insertion anchor.
+  Give the complete code for that change and explain why it belongs there.
+  Do not leave the human to guess the destination or replacement boundaries.
+- For commands, state the working directory, what the command does, the expected
+  result, and what that result establishes or leaves unproven. Say explicitly
+  when no code edit is needed.
+- Connect relevant inputs, decisions, outputs, and failure paths to the current
+  architectural boundary. Do not introduce unrelated detail or preview later work.
+- Wait for the human's result; assess and explain it before the next action.
+  A Codex-run check does not substitute for the human performing the exercise.
+
 When guiding the human through a manual stage:
 
 - give exactly one actionable instruction at a time, with its exact command and
@@ -101,9 +124,10 @@ Label conceptual simulations clearly until the corresponding runtime exists.
 Keep the animation self-paced and usable without external services. Do not
 copy another educator's artwork, branding or narration.
 Embed each new stage animation on its matching multi-page manual page. Keep
-the standalone animation usable as a static teaching document. The local
-Python tutor service was removed for the fresh start; do not recreate it
-without a human request.
+the standalone animation usable as a static teaching document. The human
+explicitly requested restoration of the local Python tutor service on
+2026-10-14. Preserve its optional question panel on standalone lessons;
+embedded lessons use the manual page's question panel.
 Before every animation, place a short, stage-specific primer on the matching
 manual page that explains what the step does, what it builds on from earlier
 steps, its goal, and its concrete end state. Keep the same primer before the
@@ -112,6 +136,35 @@ Show the same primer when an animation is opened on its own; hide that copy
 inside the embedded iframe so the manual page presents it only once.
 State clearly when a mechanism is still conceptual or belongs to a later
 step; avoid generic boilerplate that could fit any stage. Keep the primer available on standalone animation pages as well.
+
+### Animation layout standard
+
+The human approved the corrected Step 6/7 layout on 2026-10-18. Preserve
+this layout ethos for every later animation:
+
+- Use those lessons as the layout reference and reuse
+  `docs/animations/assets/lesson-layout.css` and `lesson-layout.js` where
+  applicable. On desktop, place the active diagram beside its explanation,
+  with scene controls alongside, so the complete active scene is readable
+  on one screen. Avoid a tall diagram followed by narration and controls.
+- Fit by organizing content and reducing wasted space. Preserve readable
+  text and teaching substance; do not use zoom/scaling, tiny fonts, clipping,
+  or internal scrolling to make a standard desktop scene appear to fit.
+- Keep the stage primer above the animation, with its duplicate hidden in
+  embedded mode. The one-screen target applies to the active scene and
+  controls, not the entire manual page or primer plus animation.
+- Preserve **Expand lesson** for narrow embeds, `allowfullscreen` on the
+  manual iframe, an exit control, and Escape support. Fullscreen content
+  starts at the top; shorter windows and enlarged text must keep all content
+  reachable by scrolling rather than clipping either end.
+- Verify every scene in a browser at 1366x768, 1440x900, and 1920x1080.
+  Check vertical fit, visible controls, readable text, and unclipped code;
+  a horizontal-overflow check alone is insufficient. Check the embedded
+  fullscreen view at 1366x768 and inspect representative screenshots.
+- On mobile, use a readable stacked layout with vertical scrolling and no
+  horizontal overflow. Preserve keyboard controls, reduced-motion support,
+  static no-JavaScript reading, and the existing standalone/embedded tutor
+  distinction. Layout work does not advance a harness stage.
 
 When handing off a local HTML manual, animation, or other browser-viewable
 artifact, always include its complete absolute `file:///` URL so the human can

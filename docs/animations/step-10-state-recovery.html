@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Step 10 — State, Checkpoints and Recovery</title><style>
+:root{color-scheme:dark;font-family:Inter,ui-sans-serif,system-ui,sans-serif;--bg:#07111f;--panel:#10253a;--inset:#0b1b2d;--line:#46627a;--text:#edf5ff;--muted:#b4cadb;--cyan:#65d9f5;--green:#85e4b2;--rose:#ff758d;--amber:#ffca78}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at 90% 0%,#173c54,transparent 40%),var(--bg);color:var(--text)}
+.shell{max-width:1480px;margin:auto;padding:clamp(16px,2.5vw,34px)}h1{font-size:clamp(1.8rem,3vw,3rem);line-height:1.1;margin:8px 0 12px}
+h2{font-size:1.35rem;margin:0 0 12px}h3{font-size:1rem;margin:0 0 10px}p{line-height:1.55;margin:8px 0;color:var(--muted)}
+.eyebrow,.kicker{color:var(--cyan);font-size:.76rem;letter-spacing:.12em;text-transform:uppercase;font-weight:800}
+header{margin-bottom:22px;max-width:85ch}.primer,.board,.lesson{border:1px solid var(--line);border-radius:18px;background:var(--panel);padding:clamp(16px,2vw,24px);margin-bottom:18px}
+.primer-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.primer-grid>div{background:var(--inset);border-radius:10px;padding:14px}.primer p{font-size:.88rem}
+body.embedded .primer{display:none}.notice{border-left:4px solid var(--amber);padding:10px 14px;background:var(--inset);margin-bottom:18px}
+.board-head{display:flex;justify-content:space-between;gap:14px;flex-wrap:wrap;margin-bottom:16px}.simulation{color:var(--amber);font-weight:700;font-size:.85rem}
+.flow{display:grid;grid-template-columns:minmax(0,1fr) 28px minmax(0,.8fr) 28px minmax(0,1.1fr);gap:8px;align-items:stretch}
+.column{min-width:0;border:1px solid var(--line);border-radius:12px;padding:14px;background:var(--inset)}.arrow{align-self:center;text-align:center;color:var(--cyan);font-size:1.7rem}
+.small{font-size:.8rem}.record{padding:10px;border:1px solid var(--line);border-radius:8px;margin:8px 0;font-size:.82rem;line-height:1.45;overflow-wrap:anywhere;transition:border-color .3s,background .3s}
+.record b{display:block;color:var(--text)}.record.selected{border-color:var(--green);background:#14362f}.record.omitted{border-style:dashed;color:var(--muted)}
+.badge{display:block;font-size:.74rem;margin-top:5px;color:var(--amber)}.record.selected .badge{color:var(--green)}
+.policy{border-left:3px solid var(--cyan);padding-left:12px;margin:16px 0}.policy strong{color:var(--cyan)}
+pre{font:.78rem/1.5 ui-monospace,monospace;white-space:pre-wrap;overflow-wrap:anywhere;background:var(--bg);border:1px solid var(--line);border-radius:9px;padding:12px;margin:8px 0;color:#c9e5ee}
+#view{min-height:18em}.metrics{border:1px solid var(--line);padding:10px;border-radius:8px;font-size:.83rem;margin-top:12px;min-height:4em;overflow-wrap:anywhere}
+.status{font-weight:700;color:var(--green)}.status.error{color:var(--rose)}.intact{font-size:.85rem;color:var(--green);margin-top:16px}
+.lesson-head{display:flex;gap:15px;align-items:baseline;flex-wrap:wrap}.count{color:var(--cyan);font:800 .85rem ui-monospace,monospace}
+.scene{border-top:1px solid var(--line);padding-top:16px;margin-top:12px}.scene h3{font-size:1.4rem}.rule{border-left:4px solid var(--cyan);padding:10px 14px;background:var(--inset);color:var(--text)}
+.scene[data-scene="7"] .rule{border-color:var(--rose)}.enhanced .scene[hidden]{display:none}.enhanced #scenes{min-height:260px}
+.controls{display:none;gap:8px;flex-wrap:wrap;align-items:center;margin:16px 0}.enhanced .controls{display:flex}
+button{font-family:inherit;font-size:.88rem;font-weight:700;color:var(--text);background:#1a334c;border:1px solid var(--line);border-radius:8px;padding:10px 13px;cursor:pointer;min-height:42px}
+button:hover,button:focus-visible{outline:2px solid var(--cyan);outline-offset:2px}button:disabled{opacity:.4;cursor:default}#play{background:#1a7188}
+.dots{display:flex;flex-wrap:wrap;gap:5px}.dot{min-width:36px;padding:8px}.dot[aria-current="step"]{border-color:var(--cyan);color:var(--cyan)}
+.motion-track{height:5px;background:var(--line);border-radius:9px;overflow:hidden;margin-top:16px}.motion-track span{display:block;background:var(--cyan);height:100%;width:0}
+body.playing .arrow{animation:signal 1.3s ease-in-out infinite}@keyframes signal{50%{color:var(--green);transform:translateX(3px)}}
+@media(max-width:1050px){.flow{grid-template-columns:1fr}.arrow{transform:rotate(90deg);font-size:1.3rem}#view{min-height:0}body.playing .arrow{animation:none}}
+@media(max-width:600px){.primer-grid{grid-template-columns:1fr}.enhanced #scenes{min-height:0}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
+
+.board{display:none}.enhanced .board{display:block}.detail{margin:14px 0}.enhanced .scene .detail{display:none}.tree-line{font-family:ui-monospace,monospace;font-size:.8rem}#view{min-height:13em}#query{min-height:9em}.trace{border-left:3px solid var(--amber);margin-top:15px;padding:12px;background:var(--inset)}.trace pre{margin-bottom:0}.record.outside{border-color:var(--rose)}.scene[data-scene="6"] .rule{border-color:var(--rose)}.scene[data-scene="7"] .rule{border-color:var(--cyan)}.enhanced #scenes{min-height:230px}@media(max-width:1050px){#query,#view{min-height:0}}
+</style>
+<link rel="stylesheet" href="assets/lesson-layout.css"><link rel="stylesheet" href="assets/boundary-lessons.css"></head>
+<body><div class="shell"><header><div class="eyebrow">khosiness · visual lesson 10</div><h1>A restart needs a known place.</h1><p>Follow an interrupted retry-setting investigation through a checkpoint, a failed temporary write, restart, and the side-effect gap that atomic replacement cannot solve.</p><p><a class="start-lesson" href="#lesson-stage">Go to animation ↓</a></p></header>
+<section class="primer" aria-label="Before the animation"><div class="kicker">Before the animation</div><h2>Step 10 in context</h2><div class="primer-grid"><div><h3>What this step does</h3><p>Serialize current run state and reload a validated task and checkpoint after process interruption.</p></div><div><h3>What it builds on</h3><p>Step 4 owns working RunState and an optional save callback. Step 3 owns factual events; neither automatically reconstructs the other.</p></div><div><h3>Goal</h3><p>Continue from an explicit saved position, avoid rerunning a finished run, and detect uncertainty before repeating a side effect.</p></div><div><h3>End state</h3><p>Planned: expanded RunState, atomic checkpoint replacement, load/resume helpers, and recovery tests. Idempotency, event reconciliation, and power-loss durability need additional mechanisms.</p></div></div></section>
+<div class="notice"><strong>Conceptual simulation.</strong> No checkpoint files are written, no process is terminated, and no recovery runs on this page. The reference helpers illustrate snapshot replacement and loading; they do not implement event replay, exactly-once side effects, or a power-loss guarantee. Use STAGE_TRACKER.md for actual implementation progress.</div>
+<main id="lesson-stage" class="boundary-lesson"><section class="board" aria-label="State, Checkpoints and Recovery diagram"><div class="board-head"><h2>Task: resume a retry-setting investigation after interruption</h2><span class="simulation">Illustrative scenario · no live execution</span></div>
+<div class="boundary-map" aria-label="Responsibility boundaries"><div class="record" data-node="proposal"><b>Working RunState</b>Mutable current-run position<span class="badge">Boundary in view</span></div><div class="record" data-node="boundary"><b>Committed checkpoint</b>Serialized, validated snapshot<span class="badge">Boundary in view</span></div><div class="record" data-node="result"><b>Recovery decision</b>Resume / return / stop<span class="badge">Boundary in view</span></div></div><div class="io-grid"><section class="column"><h3>Input / proposed transition</h3><pre id="query"></pre></section><section class="column"><h3>Result / saved position</h3><pre id="view"></pre><p id="status" class="status" role="status"></p></section></div>
+<div class="trace"><h3>Boundary trace / state distinction</h3><pre id="trace"></pre></div><p class="intact">Event history records facts. A checkpoint stores a working snapshot. Context is selected later.</p><div class="motion-track" aria-hidden="true"><span id="progress"></span></div></section>
+<section class="lesson" aria-label="Self-paced State, Checkpoints and Recovery lesson"><div class="lesson-head"><span id="count" class="count">Eight scenes · static reading available below</span><span class="kicker">Working state → checkpoint → validated resume</span></div>
+<nav class="controls" aria-label="Lesson controls"><button id="previous" type="button">← Previous</button><button id="play" type="button">Play</button><button id="next" type="button">Next →</button><div id="dots" class="dots" aria-label="Choose a scene"></div></nav><div id="scenes"><article class="scene" data-scene="0" data-focus="proposal" data-error="false"><h3>1. Separate three kinds of record</h3><p>The process holds mutable RunState. The event store holds a factual history. The context builder selects messages for a model call. A checkpoint serializes working state; it does not turn all three into one transcript or automatically reconstruct state from events.</p><p class="rule">State ≠ history ≠ selected context.</p><div class="detail"><h4>Illustrative input / request</h4><pre class="request">run_id: recovery-demo
+Current step: 3
+Observation: RETRY_COUNT = 3
+Next decision: inspect caller</pre><h4>Illustrative result / state</h4><pre class="result">Working state: in process memory
+Checkpoint: saved state snapshot
+Event history: separate JSONL facts
+Context: next build chooses evidence</pre><h4>Boundary trace</h4><pre class="boundary">Loop updates RunState → optional save_state callback
+The current default callback is a no-op.</pre></div><span class="scene-status" hidden>Continuity needs explicit persistence</span></article><article class="scene" data-scene="1" data-focus="boundary" data-error="false"><h3>2. Capture a useful position</h3><p>The planned state adds status, plans, completed_work, pending_actions, and artifacts. These fields describe position but do not execute recovery logic. Persist the task separately so the restart has both its contract and its current state.</p><p class="rule">A field named completed_work does not prevent duplicate execution.</p><div class="detail"><h4>Illustrative input / request</h4><pre class="request">State at an illustrative safe boundary:
+step: 3
+observations: [retry setting read]
+finished: false
+pending_actions: []</pre><h4>Illustrative result / state</h4><pre class="result">runs/recovery-demo/
+  task.json  ← persisted task contract
+  state.json ← planned state snapshot
+  events.jsonl ← separate event history</pre><h4>Boundary trace</h4><pre class="boundary">Save task explicitly; connect save_state to checkpoints
+No automatic task saving exists in the snapshot helper.</pre></div><span class="scene-status" hidden>Persist the contract and position</span></article><article class="scene" data-scene="2" data-focus="boundary" data-error="false"><h3>3. Replace the snapshot atomically</h3><p>The helper writes a complete temporary JSON file, then replaces state.json with os.replace. Under a single writer on the same filesystem, readers see the previous or the replacement file, rather than a half-written committed JSON document. No fsync is included.</p><p class="rule">Atomic visibility is not a power-loss durability guarantee.</p><div class="detail"><h4>Illustrative input / request</h4><pre class="request">1. Serialize state at step 3
+2. Write state.json.tmp
+3. os.replace(tmp, state.json)</pre><h4>Illustrative result / state</h4><pre class="result">Before replace: committed step 2
+After replace: committed step 3
+The temporary file is not the checkpoint.
+Single writer assumed.</pre><h4>Boundary trace</h4><pre class="boundary">Working state → temp write → atomic replacement
+File/directory fsync and concurrent writers are outside this helper.</pre></div><span class="scene-status" hidden>Committed snapshot changes at replace</span></article><article class="scene" data-scene="3" data-focus="boundary" data-error="true"><h3>4. Ignore an interrupted temporary write</h3><p>Suppose the process stops while writing the next temporary snapshot. state.json still contains the last committed state; a truncated state.json.tmp is not used by load_checkpoint. This assumes interruption before replacement and says nothing about power loss.</p><p class="rule">Resume from the committed file, not whichever file looks newest.</p><div class="detail"><h4>Illustrative input / request</h4><pre class="request">Committed state.json: step 3
+Next state.json.tmp: &quot;{incomplete&quot;
+Interruption before os.replace</pre><h4>Illustrative result / state</h4><pre class="result">Load target: state.json
+Restored position: step 3
+Incomplete temporary file ignored
+Later completed save replaces the temp.</pre><h4>Boundary trace</h4><pre class="boundary">Interrupted temp write → previous committed snapshot retained
+Illustration only; no process is killed here.</pre></div><span class="scene-status" hidden>Failed write leaves the prior snapshot</span></article><article class="scene" data-scene="4" data-focus="result" data-error="false"><h3>5. Validate, then resume unfinished work</h3><p>load_run reads task.json through Task validation and state.json through RunState validation. resume_run passes an unfinished state to the injected runner. The runner and supplied dependencies must continue from that position; the helper does not replay the event log.</p><p class="rule">Loading JSON is only the beginning of a recovery contract.</p><div class="detail"><h4>Illustrative input / request</h4><pre class="request">resume_run(run_dir, runner,
+           **dependencies)
+Loaded state: step=3, finished=False</pre><h4>Illustrative result / state</h4><pre class="result">Validated Task + RunState
+Runner receives saved step 3
+Next bounded turn may become step 4
+Existing observations remain available.</pre><h4>Boundary trace</h4><pre class="boundary">load_run → validate → unfinished → injected runner
+Identity binding and event reconciliation need explicit checks.</pre></div><span class="scene-status" hidden>Continue from the saved state</span></article><article class="scene" data-scene="5" data-focus="result" data-error="false"><h3>6. Return a finished run without rerunning</h3><p>The helper checks state.finished after loading. If true, it returns the saved state without invoking the runner. This avoids rerunning this completed run, but it does not prove that the original final answer met the success criteria.</p><p class="rule">Finished means accepted final text in the current loop, not verified task success.</p><div class="detail"><h4>Illustrative input / request</h4><pre class="request">Saved state:
+finished: true
+final_answer: &quot;retry setting located&quot;</pre><h4>Illustrative result / state</h4><pre class="result">resume_run returns saved state
+Injected runner calls: 0
+Model calls from resume: 0
+No new tool execution</pre><h4>Boundary trace</h4><pre class="boundary">Validated checkpoint → finished guard → return
+Task success still requires a separate evidence check.</pre></div><span class="scene-status" hidden>Finished run is not dispatched again</span></article><article class="scene" data-scene="6" data-focus="boundary" data-error="true"><h3>7. Stop at an uncertain side effect</h3><p>A write can succeed just before a crash prevents checkpointing its result. The old checkpoint then cannot tell whether the action happened. Repeating it blindly risks a duplicate effect; atomic snapshot replacement does not close this gap.</p><p class="rule">Reconcile evidence or use an idempotency protocol before retrying.</p><div class="detail"><h4>Illustrative input / request</h4><pre class="request">Illustrative failure window:
+1. External write succeeds
+2. Process stops before saving result
+3. Old checkpoint still shows pending</pre><h4>Illustrative result / state</h4><pre class="result">Outcome on restart: uncertain
+Do not assume &quot;not executed&quot;.
+Needed: effect identity + verification
+or idempotent operation / transaction
+These mechanisms are not supplied.</pre><h4>Boundary trace</h4><pre class="boundary">Side effect → CRASH → missing completion record
+Checkpoint alone cannot guarantee exactly-once execution.</pre></div><span class="scene-status" hidden>Do not replay an uncertain action</span></article><article class="scene" data-scene="7" data-focus="boundary" data-error="true"><h3>8. Reject unusable committed state</h3><p>A malformed committed state.json fails Pydantic validation. Missing files and invalid task workspaces can also stop loading. The reference propagates these errors; it does not silently return to step zero or claim a successful recovery. Preserve evidence and diagnose before continuing.</p><p class="rule">Recovery must expose uncertainty, not invent continuity.</p><div class="detail"><h4>Illustrative input / request</h4><pre class="request">Committed state.json: &quot;not-json&quot;
+load_checkpoint(state_path)
+→ RunState.model_validate_json(...)</pre><h4>Illustrative result / state</h4><pre class="result">ValidationError propagates
+Runner is not called
+No fallback or event replay is supplied
+Checkpoint corruption needs diagnosis.</pre><h4>Boundary trace</h4><pre class="boundary">Load → validation failure → stop
+Reference tests alone do not cover every interruption window.</pre></div><span class="scene-status" hidden>Reject damaged recovery input</span></article></div></section></main>
+<p class="small">Starts paused. Use Previous/Next, scene numbers, or ←/→. Space toggles playback outside controls and inputs. Playback stops at the final scene. Without JavaScript, every scene and example remains readable.</p></div>
+<script src="assets/boundary-lessons.js"></script><script src="assets/lesson-layout.js"></script><script src="../manual/assets/manual.js"></script></body></html>

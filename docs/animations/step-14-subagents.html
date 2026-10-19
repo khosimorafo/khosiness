@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Step 14 — Subagents</title>
+<link rel="stylesheet" href="assets/lesson-theme.css"><link rel="stylesheet" href="assets/lesson-layout.css"><link rel="stylesheet" href="assets/boundary-lessons.css"></head><body><div class="shell">
+<header><div class="eyebrow">khosiness · Step 14 visual lesson</div><h1>Delegate a question. Keep the boundary.</h1><p>Follow a parent retry investigation into one bounded child task, then check the returned identity, evidence, and unresolved questions.</p><p><a class="start-lesson" href="#lesson-stage">Go to animation ↓</a> · <a class="start-lesson" href="index.html">All visual lessons</a></p></header>
+<section class="primer" aria-label="Before the animation"><div class="kicker">Before the animation</div><h2>Step 14 in context</h2><div class="primer-grid"><div><h3>What this step does</h3><p>Give a child an explicit objective and return a structured result instead of sharing an entire transcript.</p></div><div><h3>What it builds on</h3><p>The core loop and tool boundaries can support a separately configured child; skills supply procedures, not new authority.</p></div><div><h3>Goal</h3><p>Gain context isolation while keeping child tools, steps, and evidence under harness control.</p></div><div><h3>End state</h3><p>Planned: AgentRequest, AgentResult, and spawner. The reference forwards requests and checks IDs; child runtime enforcement must be supplied.</p></div></div></section>
+<div class="notice"><strong>Conceptual simulation.</strong> Every example, output, and trace is illustrative. This page performs no harness tool execution, storage, delegation, grading, or personal profiling. Planned mechanisms are separate from the current implementation; use STAGE_TRACKER.md for actual progress.</div>
+<main id="lesson-stage" class="boundary-lesson"><section class="board" aria-label="Subagents diagram"><div class="board-head"><h2>Task: delegate inspection of retry-setting callers</h2><span class="simulation">Illustrative scenario · no live execution</span></div>
+<div class="boundary-map" aria-label="Responsibility boundaries"><div class="record" data-node="proposal"><b>Parent request</b>Objective + allowed tools + steps<span class="badge">Separate responsibility</span></div><div class="record" data-node="boundary"><b>Child boundary</b>Own run identity and intended scope<span class="badge">Separate responsibility</span></div><div class="record" data-node="result"><b>Parent handoff</b>Summary + evidence + questions<span class="badge">Separate responsibility</span></div></div><div class="io-grid"><section class="column"><h3>Input / proposed transition</h3><pre id="query"></pre></section><section class="column"><h3>Result / state distinction</h3><pre id="view"></pre><p id="status" class="status" role="status"></p></section></div>
+<div class="trace"><h3>Boundary trace / state distinction</h3><pre id="trace"></pre></div><p class="intact">Step 14 is a teaching simulation, not completed implementation or understanding credit.</p><div class="motion-track" aria-hidden="true"><span id="progress"></span></div></section>
+<section class="lesson" aria-label="Self-paced Subagents lesson"><div class="lesson-head"><span id="count" class="count">Eight scenes · static reading available below</span><span class="kicker">Step 14 · one boundary at a time</span></div>
+<nav class="controls" aria-label="Lesson controls"><button id="previous" type="button">← Previous</button><button id="play" type="button">Play</button><button id="next" type="button">Next →</button><div id="dots" class="dots" aria-label="Choose a scene"></div></nav><div id="scenes"><article class="scene" data-scene="0" data-focus="proposal" data-error="false"><h3>1. Delegate a bounded question</h3><p>The parent needs to know which caller uses a retry setting. A child request can narrow that question while the parent retains the wider task. Delegation should isolate a useful subproblem, not merely assign a persona.</p><p class="rule">Delegate an objective with a verifiable result.</p><div class="detail"><h4>Illustrative input / request</h4><pre class="request">Parent: explain retry behavior
+Child: find verified callers
+Workspace: fixture repository</pre><h4>Illustrative result / state</h4><pre class="result">Parent keeps overall task
+Child gets a narrower objective
+No shared transcript is required
+No child is actually spawned here.</pre><h4>Boundary trace</h4><pre class="boundary">Parent task → AgentRequest → child boundary
+This is an illustrative handoff.</pre></div><span class="scene-status" hidden>Scope the delegated work</span></article><article class="scene" data-scene="1" data-focus="boundary" data-error="false"><h3>2. Carry tools and a step budget</h3><p>The request names allowed_tools and max_steps. Those are requirements for the child runner to enforce. Merely storing read_file and five steps in a Pydantic object cannot stop an unrestricted injected function.</p><p class="rule">A declared limit needs an enforcement point.</p><div class="detail"><h4>Illustrative input / request</h4><pre class="request">AgentRequest(
+ objective=&quot;Find retry callers&quot;,
+ allowed_tools=[&quot;search_files&quot;, &quot;read_file&quot;],
+ max_steps=5, workspace=fixture)</pre><h4>Illustrative result / state</h4><pre class="result">Request carries the envelope
+Restricted registry: runner must build
+Step limit: runner must enforce
+No write or shell tool intended</pre><h4>Boundary trace</h4><pre class="boundary">Request fields → runner configuration → enforced limits
+The wrapper supplies only the first handoff.</pre></div><span class="scene-status" hidden>Limits are data until enforced</span></article><article class="scene" data-scene="2" data-focus="boundary" data-error="false"><h3>3. Create and pass a child identity</h3><p>The reference generates child- plus a UUID and passes it with the request to child_runner. This makes a result attributable to a specific invocation. The wrapper alone does not create an independent event log.</p><p class="rule">Identity supports traceability; storage still needs wiring.</p><div class="detail"><h4>Illustrative input / request</h4><pre class="request">child_run_id = &quot;child-&lt;uuid&gt;&quot;
+child_runner(request, child_run_id)</pre><h4>Illustrative result / state</h4><pre class="result">Distinct invocation ID
+Same supplied request
+Runner decides state/context storage
+Wrapper call is synchronous.</pre><h4>Boundary trace</h4><pre class="boundary">Spawner generates ID → injected runner
+Parallel scheduling is not implemented here.</pre></div><span class="scene-status" hidden>One child invocation, explicit identity</span></article><article class="scene" data-scene="3" data-focus="boundary" data-error="true"><h3>4. Enforce isolation inside the runner</h3><p>A real child runner should instantiate its own RunState, selected context, event store, and restricted registry while reusing the core loop. This is the intended architecture, not behavior provided by SubagentSpawner.</p><p class="rule">Independent context does not require a different model persona.</p><div class="detail"><h4>Illustrative input / request</h4><pre class="request">Planned child runner:
+own state + own events
+restricted tools + max_steps
+reuse core run()</pre><h4>Illustrative result / state</h4><pre class="result">Expected enforcement test:
+Child asks for disallowed shell
+Dispatch count must be 0
+Reference wrapper does not prove it.</pre><h4>Boundary trace</h4><pre class="boundary">Planned child policy rejects out-of-scope tool
+No live child restriction runs in this animation.</pre></div><span class="scene-status" hidden>Reject out-of-scope child capability</span></article><article class="scene" data-scene="4" data-focus="result" data-error="false"><h3>5. Return a structured handoff</h3><p>AgentResult carries summary, evidence, open_questions, and child_run_id. A source location lets the parent inspect what supports the summary. Child transcript text is not required as the return contract.</p><p class="rule">A concise handoff still needs inspectable evidence.</p><div class="detail"><h4>Illustrative input / request</h4><pre class="request">AgentResult(
+ summary=&quot;worker calls retry helper&quot;,
+ evidence=[{path:&quot;worker.py&quot;, lines:&quot;4&quot;}],
+ open_questions=[], child_run_id=id)</pre><h4>Illustrative result / state</h4><pre class="result">Summary: candidate conclusion
+Evidence: source pointer
+Questions: explicit gaps
+Identity: linked invocation</pre><h4>Boundary trace</h4><pre class="boundary">Child work → structured AgentResult → parent
+Evidence fields remain claims until checked.</pre></div><span class="scene-status" hidden>Bring back evidence and gaps</span></article><article class="scene" data-scene="5" data-focus="boundary" data-error="true"><h3>6. Reject a mismatched result ID</h3><p>The spawner checks the returned child_run_id against the one it generated. A wrong ID raises ValueError. This prevents accepting a handoff labeled as a different invocation; it does not verify the factual correctness of its evidence.</p><p class="rule">Identity validation and evidence verification are distinct.</p><div class="detail"><h4>Illustrative input / request</h4><pre class="request">Expected ID: child-A
+Returned result ID: child-B</pre><h4>Illustrative result / state</h4><pre class="result">ValueError:
+child runner returned the wrong run id
+Result not accepted by spawner
+Parent gets an explicit failure.</pre><h4>Boundary trace</h4><pre class="boundary">Runner returns → ID comparison fails → exception
+No silent parent-state merge.</pre></div><span class="scene-status" hidden>Wrong child identity rejected</span></article><article class="scene" data-scene="6" data-focus="result" data-error="false"><h3>7. Preserve unfinished child work</h3><p>If the intended child loop reaches its step limit, the result must communicate unresolved questions instead of claiming complete coverage. The reference request allows a budget, but the wrapper does not translate loop outcomes into results.</p><p class="rule">Budget exhaustion is not evidence of success.</p><div class="detail"><h4>Illustrative input / request</h4><pre class="request">Planned child outcome:
+step limit reached
+One caller verified; more remain</pre><h4>Illustrative result / state</h4><pre class="result">Structured partial handoff:
+Known evidence retained
+Open question: remaining callers?
+Completion must not be fabricated.</pre><h4>Boundary trace</h4><pre class="boundary">Child limit → explicit partial result → parent decision
+The runner must implement this translation.</pre></div><span class="scene-status" hidden>Incomplete child work stays visible</span></article><article class="scene" data-scene="7" data-focus="result" data-error="false"><h3>8. Let the parent verify and decide</h3><p>The parent can inspect cited lines and integrate a bounded result into its own context. It still owns the original task, policy, and completion decision. A child’s confident summary does not transfer responsibility.</p><p class="rule">Delegation returns evidence; the parent retains accountability.</p><div class="detail"><h4>Illustrative input / request</h4><pre class="request">Parent receives worker.py:4
+Next: permitted source verification</pre><h4>Illustrative result / state</h4><pre class="result">Parent state remains its own
+Child trace stays separately inspectable
+Relevant handoff can enter context
+Task success still needs grading.</pre><h4>Boundary trace</h4><pre class="boundary">Structured result → parent verification → selected context
+No automatic success or autonomy increase.</pre></div><span class="scene-status" hidden>Parent owns the final conclusion</span></article></div></section></main>
+<p class="small">Starts paused. Use Previous/Next, scene numbers, or ←/→. Space toggles playback outside controls and inputs. Playback stops at the final scene. Without JavaScript, every scene and example remains readable.</p></div>
+<script src="assets/boundary-lessons.js"></script><script src="assets/lesson-layout.js"></script><script src="../manual/assets/manual.js"></script></body></html>

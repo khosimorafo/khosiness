@@ -24,8 +24,8 @@ Step 0 question is withdrawn. The human has now begun fresh Project Setup.
 | Step 4 — Implement the Agent Loop | Complete — 12/12; eighteen tests, traces, debugger inspection and understanding verified; commit 40237f9 |
 | Step 5 — Build the Tool System | Complete — 13/13; thirty-two tests, search/integration/rejection inspections and understanding verified; commit 0b51887 |
 | Step 6 — Engineer the Context | Complete — 11/11; forty-four tests, message/integration/failure inspections and understanding verified; commit 2e3f832 |
-| Step 7 — Repository Navigation | In progress — 13/14 validated; staged scope/content/format checked, commit pending |
-| Step 8 — Shell Execution and Sandbox | Pending |
+| Step 7 — Repository Navigation | Complete — 14/14 validated; saved and verified in commit 90c9773 |
+| Step 8 — Shell Execution and Sandbox | Active — 1/12 validated; runtime package directory created by human |
 | Step 9 — Policy and Human Approval | Pending |
 | Step 10 — State, Checkpoints and Recovery | Pending |
 | Step 11 — Memory | Pending |
@@ -2561,3 +2561,94 @@ validation and understanding record. Await confirmation before the commit
 command. Do not append routine tracker notes between this refresh and commit,
 which would otherwise require another refresh. Commit creation, commit content
 verification, and final stage closeout remain pending. No next stage has begun.
+
+
+Instruction 14/14 completed: the human refreshed STAGE_TRACKER.md in the index,
+created commit 90c9773 (step 7: add evidence-based repository navigation), and
+verified HEAD with git --no-pager show --stat --oneline HEAD. The saved commit
+contains exactly the five intended files, 1633 insertions and 37 deletions.
+No push was performed. Final closeout documentation follows the commit and
+remains a working-tree update; no history rewriting or additional commit is
+needed to complete this tutoring stage.
+
+Step 7 is complete: 14/14 validated; eight repository-navigation tests and
+92 accumulated exercise tests passed in human runs; live scoped search to
+numbered bounded read, capped search, limited read, and rejected outside path
+were inspected; fifteen fixture rubrics and 25 source ranges were verified;
+scoped reviews found no actionable issues; understanding and index gates
+passed. Tools retrieve evidence; no autonomous navigator, benchmark runner,
+automatic success grader, approval system, or OS sandbox was added. Separate
+manual/animation/tutor work remains outside the five-file stage commit.
+Stop at the Step 7 boundary. Step 8 requires a new human instruction.
+
+
+## Active stage: Step 8 — Shell Execution and Sandbox
+
+The human requested the next stage after Step 7 closeout. Read project history,
+current state, seed brief, and the complete Step 8 manual; inspected Tool,
+ToolResult, registry context, configuration, and current source/test paths.
+No sandbox package, shell tool, or shell tests exist. Baseline: 92 passing
+exercise tests from the human's Step 7 run.
+
+Responsibility: execute structured argv requests through a replaceable runtime
+boundary with explicit cwd, timeout, environment, exit status, stdout/stderr,
+and output limits. Failure modes include accidental shell interpretation,
+uncontrolled process lifetime, leaked environment, ambiguous failure results,
+and treating local execution controls as OS isolation. A cwd constraint sets
+where a process starts; it does not confine all its filesystem/network access.
+An allowed interpreter is powerful, and shell=False is not an authorization
+policy. Do not introduce Step 9 approvals or claim a local runner is a container.
+Reconcile the older reference's loose validation, basename-only allowlist,
+after-capture clipping, and direct-child timeout limits explicitly as code is
+introduced. Preserve provider-neutral ToolResult and Sandbox boundaries.
+
+Planned total: twelve instructions, with preparation/run subturns kept under
+the same number until verified:
+1. Create the sandbox package directory.
+2. Define execution request/result models and the Sandbox protocol.
+3. Implement the constrained local runner and explain its actual limits.
+4. Adapt validated shell-tool arguments to the Sandbox protocol.
+5. Add deterministic shell/runtime tests and inspect the changes.
+6. Run stage-specific tests, reviewing/fixing failures as necessary.
+7. Run the accumulated exercise suite.
+8. Audit source for shell=True and inspect the execution boundary.
+9. Run and inspect real success, nonzero, timeout, rejection, and loop traces.
+10. Complete the manual understanding gate.
+11. Stage intended files and inspect index scope/content/format.
+12. Commit, verify saved content, and stop at the Step 8 boundary.
+
+Instruction 1/12 issued: from the repository root, mkdir -p
+src/khosiness/sandbox. This creates only the execution-package directory;
+no sandboxing or process capability exists merely because the directory is
+named sandbox. Await the human's result. Progress: 0/12 validated. Codex has
+not created stage code, run exercise checks, or advanced another stage.
+
+
+Instruction 1/12: the human reports mkdir completed. The runtime package
+directory is prepared; this is not an execution or isolation mechanism.
+Progress: 1/12 validated.
+
+Instruction 2/12 issued: create src/khosiness/sandbox/base.py with complete
+execution request/result models and a Sandbox protocol. Preserve reference
+fields while strengthening request validation: strict types, forbidden extra
+fields, nonempty argv/executable, no embedded NUL, and a 1–120-second timeout.
+The internal cwd is an actual Path, not silently coerced text. Shape validation
+does not authorize an executable or enforce cwd containment; those belong to
+the runtime. ExecResult carries nonzero exits and timeout as data. Sandbox is
+a replaceable interface, not an execution implementation. Await the human's
+saved report; do not create or test the file on their behalf.
+
+
+Publication interlude, 2026-10-19: the human explicitly delegated commit and
+push operations. This narrow Git delegation does not transfer implementation
+or exercise ownership back to Codex. Step 8 remains at 1/12; base.py exists
+but has not completed instruction 2 validation. Keep that unfinished runtime
+file outside the documentation commit.
+
+Codex inspected pending changes and found no remote configured. Requested
+the intended repository URL while preparing the existing documentation,
+animations, optional tutor service, standing instructions, and stage records
+for a local commit. All 74 documentation tests pass with localhost socket
+access; the restricted run could not create sockets. Existing manifest hashes
+and whitespace checks passed. Stage 7 runtime is already in commit 90c9773.
+No next stage instruction or implementation work was performed in this interlude.

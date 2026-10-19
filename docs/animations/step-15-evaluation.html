@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Step 15 — Evaluation</title>
+<link rel="stylesheet" href="assets/lesson-theme.css"><link rel="stylesheet" href="assets/lesson-layout.css"><link rel="stylesheet" href="assets/boundary-lessons.css"></head><body><div class="shell">
+<header><div class="eyebrow">khosiness · Step 15 visual lesson</div><h1>Measure the outcome, not the final sentence.</h1><p>Grade a retry-setting answer against evidence, attach run metrics, and compare a passing and failing benchmark without hiding missing measurements.</p><p><a class="start-lesson" href="#lesson-stage">Go to animation ↓</a> · <a class="start-lesson" href="index.html">All visual lessons</a></p></header>
+<section class="primer" aria-label="Before the animation"><div class="kicker">Before the animation</div><h2>Step 15 in context</h2><div class="primer-grid"><div><h3>What this step does</h3><p>Execute stable benchmark tasks, grade outcomes, and retain metrics tied to run IDs.</p></div><div><h3>What it builds on</h3><p>Earlier task contracts, traces, and tools supply inspectable runs; a task_completed event alone does not establish success.</p></div><div><h3>Goal</h3><p>Compare behavior under repeatable conditions and classify failures before changing the harness.</p></div><div><h3>End state</h3><p>Planned: EvalResult, summary, runner callbacks, benchmark records, and tests. Graders, metric extraction, and error capture still need implementation.</p></div></div></section>
+<div class="notice"><strong>Conceptual simulation.</strong> Every example, output, and trace is illustrative. This page performs no harness tool execution, storage, delegation, grading, or personal profiling. Planned mechanisms are separate from the current implementation; use STAGE_TRACKER.md for actual progress.</div>
+<main id="lesson-stage" class="boundary-lesson"><section class="board" aria-label="Evaluation diagram"><div class="board-head"><h2>Task: grade a retry-setting answer with source evidence</h2><span class="simulation">Illustrative scenario · no live execution</span></div>
+<div class="boundary-map" aria-label="Responsibility boundaries"><div class="record" data-node="proposal"><b>Benchmark contract</b>Stable task + explicit grader<span class="badge">Separate responsibility</span></div><div class="record" data-node="boundary"><b>Evaluation boundary</b>Execute → grade → extract metrics<span class="badge">Separate responsibility</span></div><div class="record" data-node="result"><b>Measured record</b>Success + costs + trace identity<span class="badge">Separate responsibility</span></div></div><div class="io-grid"><section class="column"><h3>Input / proposed transition</h3><pre id="query"></pre></section><section class="column"><h3>Result / state distinction</h3><pre id="view"></pre><p id="status" class="status" role="status"></p></section></div>
+<div class="trace"><h3>Boundary trace / state distinction</h3><pre id="trace"></pre></div><p class="intact">Step 15 is a teaching simulation, not completed implementation or understanding credit.</p><div class="motion-track" aria-hidden="true"><span id="progress"></span></div></section>
+<section class="lesson" aria-label="Self-paced Evaluation lesson"><div class="lesson-head"><span id="count" class="count">Eight scenes · static reading available below</span><span class="kicker">Step 15 · one boundary at a time</span></div>
+<nav class="controls" aria-label="Lesson controls"><button id="previous" type="button">← Previous</button><button id="play" type="button">Play</button><button id="next" type="button">Next →</button><div id="dots" class="dots" aria-label="Choose a scene"></div></nav><div id="scenes"><article class="scene" data-scene="0" data-focus="proposal" data-error="false"><h3>1. Define the benchmark before the run</h3><p>The fixture asks for a retry setting, its defining path, and value. Freeze the task and grader before comparing variants. A stable ID identifies the benchmark; a run ID identifies one attempt.</p><p class="rule">Task identity and run identity serve different comparisons.</p><div class="detail"><h4>Illustrative input / request</h4><pre class="request">task_id: retry-config
+Required: path + setting + value
+Fixture truth: src/db/config.py:1</pre><h4>Illustrative result / state</h4><pre class="result">Expected: DB_RETRY_COUNT = 3
+Grader: explicit callback
+Attempt identity: eval-run-A
+No benchmark runs in the browser.</pre><h4>Boundary trace</h4><pre class="boundary">Fixed benchmark → execute callback → run artifact
+A future suite must load tasks explicitly.</pre></div><span class="scene-status" hidden>Stable task, traceable attempt</span></article><article class="scene" data-scene="1" data-focus="boundary" data-error="true"><h3>2. Separate finishing from success</h3><p>The loop may accept final text and emit task_completed even when it cites the wrong setting. The grader must inspect the outcome against the task criteria. Confidence and final-answer formatting cannot replace evidence.</p><p class="rule">A finished run can fail its benchmark.</p><div class="detail"><h4>Illustrative input / request</h4><pre class="request">Run final text: &quot;retry is 5&quot;
+state.finished: true
+Fixture expected value: 3</pre><h4>Illustrative result / state</h4><pre class="result">Grader result: False
+Run completion: True
+These are consistent outcomes
+Trace retained for diagnosis.</pre><h4>Boundary trace</h4><pre class="boundary">execute returns → grade(run) → success=False
+Loop completion does not override the grader.</pre></div><span class="scene-status" hidden>Completed run, failed task</span></article><article class="scene" data-scene="2" data-focus="boundary" data-error="false"><h3>3. Choose a grader that tests the claim</h3><p>The reference provides a grade callback and example required fragments. Text fragments alone can accept an unsupported answer. An evidence-aware grader should verify the defining file, setting, and observed value in a controlled fixture.</p><p class="rule">Test evidence when the success criteria require evidence.</p><div class="detail"><h4>Illustrative input / request</h4><pre class="request">Proposed answer includes:
+&quot;src/db/config.py DB_RETRY_COUNT 3&quot;</pre><h4>Illustrative result / state</h4><pre class="result">Fragment match: possible
+Supported by allowed read: separate check
+Reference does not supply that check
+Do not confuse the two graders.</pre><h4>Boundary trace</h4><pre class="boundary">Answer wording → fragment test
+Source evidence → separate deterministic assertion.</pre></div><span class="scene-status" hidden>Grader strength bounds the claim</span></article><article class="scene" data-scene="3" data-focus="result" data-error="false"><h3>4. Attach the measurements you actually have</h3><p>metrics_from_run supplies steps, tool calls, failed tool calls, run_id, and optional token/intervention/failure fields. The runner measures elapsed time around execution, grading, and metric extraction. Missing token measurements remain None.</p><p class="rule">Unknown cost is not zero cost.</p><div class="detail"><h4>Illustrative input / request</h4><pre class="request">metrics: steps=2, tool_calls=1
+failed_tool_calls=0
+run_id=&quot;eval-run-A&quot;
+input_tokens: not supplied</pre><h4>Illustrative result / state</h4><pre class="result">EvalResult: success=True
+input_tokens: None
+output_tokens: None
+wall_ms: includes grading/extraction</pre><h4>Boundary trace</h4><pre class="boundary">Execute → grade → metrics → EvalResult
+Callback must obtain factual metrics.</pre></div><span class="scene-status" hidden>Retain missing measurements honestly</span></article><article class="scene" data-scene="4" data-focus="result" data-error="false"><h3>5. Aggregate failures as well as successes</h3><p>The reference summary includes all records, with successes divided by task count. One passing and one failing attempt produce 50 percent success. Total steps and calls include the failed run’s cost.</p><p class="rule">A failed attempt still consumes a budget.</p><div class="detail"><h4>Illustrative input / request</h4><pre class="request">A: success=True, steps=2, calls=3
+B: success=False, steps=4, calls=5</pre><h4>Illustrative result / state</h4><pre class="result">tasks: 2; successes: 1
+success_rate: 0.5
+total_steps: 6
+total_tool_calls: 8</pre><h4>Boundary trace</h4><pre class="boundary">All EvalResults → summarize(results)
+Tokens and latency are not aggregated by this helper.</pre></div><span class="scene-status" hidden>Do not drop failed runs from the denominator</span></article><article class="scene" data-scene="5" data-focus="boundary" data-error="false"><h3>6. Classify from the trace</h3><p>Suppose the answer failed because the defining read never entered context. Inspect the run trace and context selection before classifying it as missing_context. The field accepts a supplied label; the runner does not diagnose it.</p><p class="rule">A failure label is a supported diagnosis, not an automatic fact.</p><div class="detail"><h4>Illustrative input / request</h4><pre class="request">Observed trace:
+Defining read stored
+Next context omitted that observation
+Answer names wrong setting</pre><h4>Illustrative result / state</h4><pre class="result">Candidate class: missing_context
+Evidence: selection + response trace
+Classification: supplied by evaluator
+Other causes still need exclusion.</pre><h4>Boundary trace</h4><pre class="boundary">Failed grader → inspect run_id trace → classify
+Do not change code before locating the boundary.</pre></div><span class="scene-status" hidden>Trace first, diagnosis second</span></article><article class="scene" data-scene="6" data-focus="boundary" data-error="true"><h3>7. Treat evaluator crashes explicitly</h3><p>If execute, grade, or metrics_from_run raises, the reference propagates the exception and returns no EvalResult. A future suite must record such attempts explicitly rather than silently excluding them and inflating success rate.</p><p class="rule">A broken evaluator is not a passing or omitted task.</p><div class="detail"><h4>Illustrative input / request</h4><pre class="request">grade(run) raises ValueError
+run_eval(...)</pre><h4>Illustrative result / state</h4><pre class="result">Exception propagates
+No EvalResult returned
+Suite-level error record needed
+Attempt must not disappear.</pre><h4>Boundary trace</h4><pre class="boundary">Callback failure → evaluator boundary error
+Exception capture is not supplied by run_eval.</pre></div><span class="scene-status" hidden>Keep crashed attempts visible</span></article><article class="scene" data-scene="7" data-focus="result" data-error="false"><h3>8. Compare like with like</h3><p>Use the same tasks, fixture revisions, grader, model configuration, and budgets when comparing a harness change. Repeated trials help when model variance matters. The measured result only supports the tested conditions.</p><p class="rule">Evaluation makes improvement claims challengeable.</p><div class="detail"><h4>Illustrative input / request</h4><pre class="request">Baseline and variant:
+same tasks + fixture + grader
+same model + budgets
+one harness variable changed</pre><h4>Illustrative result / state</h4><pre class="result">Compare success and secondary costs
+Retain every run ID
+Inspect representative failures
+No improvement claimed by this page.</pre><h4>Boundary trace</h4><pre class="boundary">Comparable records → bounded conclusion
+Next stage turns this evidence into an experiment.</pre></div><span class="scene-status" hidden>Use repeatable evidence, not a demo</span></article></div></section></main>
+<p class="small">Starts paused. Use Previous/Next, scene numbers, or ←/→. Space toggles playback outside controls and inputs. Playback stops at the final scene. Without JavaScript, every scene and example remains readable.</p></div>
+<script src="assets/boundary-lessons.js"></script><script src="assets/lesson-layout.js"></script><script src="../manual/assets/manual.js"></script></body></html>

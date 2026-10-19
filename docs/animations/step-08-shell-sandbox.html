@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Step 8 — Shell Execution and Sandbox</title><style>
+:root{color-scheme:dark;font-family:Inter,ui-sans-serif,system-ui,sans-serif;--bg:#07111f;--panel:#10253a;--inset:#0b1b2d;--line:#46627a;--text:#edf5ff;--muted:#b4cadb;--cyan:#65d9f5;--green:#85e4b2;--rose:#ff758d;--amber:#ffca78}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at 90% 0%,#173c54,transparent 40%),var(--bg);color:var(--text)}
+.shell{max-width:1480px;margin:auto;padding:clamp(16px,2.5vw,34px)}h1{font-size:clamp(1.8rem,3vw,3rem);line-height:1.1;margin:8px 0 12px}
+h2{font-size:1.35rem;margin:0 0 12px}h3{font-size:1rem;margin:0 0 10px}p{line-height:1.55;margin:8px 0;color:var(--muted)}
+.eyebrow,.kicker{color:var(--cyan);font-size:.76rem;letter-spacing:.12em;text-transform:uppercase;font-weight:800}
+header{margin-bottom:22px;max-width:85ch}.primer,.board,.lesson{border:1px solid var(--line);border-radius:18px;background:var(--panel);padding:clamp(16px,2vw,24px);margin-bottom:18px}
+.primer-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.primer-grid>div{background:var(--inset);border-radius:10px;padding:14px}.primer p{font-size:.88rem}
+body.embedded .primer{display:none}.notice{border-left:4px solid var(--amber);padding:10px 14px;background:var(--inset);margin-bottom:18px}
+.board-head{display:flex;justify-content:space-between;gap:14px;flex-wrap:wrap;margin-bottom:16px}.simulation{color:var(--amber);font-weight:700;font-size:.85rem}
+.flow{display:grid;grid-template-columns:minmax(0,1fr) 28px minmax(0,.8fr) 28px minmax(0,1.1fr);gap:8px;align-items:stretch}
+.column{min-width:0;border:1px solid var(--line);border-radius:12px;padding:14px;background:var(--inset)}.arrow{align-self:center;text-align:center;color:var(--cyan);font-size:1.7rem}
+.small{font-size:.8rem}.record{padding:10px;border:1px solid var(--line);border-radius:8px;margin:8px 0;font-size:.82rem;line-height:1.45;overflow-wrap:anywhere;transition:border-color .3s,background .3s}
+.record b{display:block;color:var(--text)}.record.selected{border-color:var(--green);background:#14362f}.record.omitted{border-style:dashed;color:var(--muted)}
+.badge{display:block;font-size:.74rem;margin-top:5px;color:var(--amber)}.record.selected .badge{color:var(--green)}
+.policy{border-left:3px solid var(--cyan);padding-left:12px;margin:16px 0}.policy strong{color:var(--cyan)}
+pre{font:.78rem/1.5 ui-monospace,monospace;white-space:pre-wrap;overflow-wrap:anywhere;background:var(--bg);border:1px solid var(--line);border-radius:9px;padding:12px;margin:8px 0;color:#c9e5ee}
+#view{min-height:18em}.metrics{border:1px solid var(--line);padding:10px;border-radius:8px;font-size:.83rem;margin-top:12px;min-height:4em;overflow-wrap:anywhere}
+.status{font-weight:700;color:var(--green)}.status.error{color:var(--rose)}.intact{font-size:.85rem;color:var(--green);margin-top:16px}
+.lesson-head{display:flex;gap:15px;align-items:baseline;flex-wrap:wrap}.count{color:var(--cyan);font:800 .85rem ui-monospace,monospace}
+.scene{border-top:1px solid var(--line);padding-top:16px;margin-top:12px}.scene h3{font-size:1.4rem}.rule{border-left:4px solid var(--cyan);padding:10px 14px;background:var(--inset);color:var(--text)}
+.scene[data-scene="7"] .rule{border-color:var(--rose)}.enhanced .scene[hidden]{display:none}.enhanced #scenes{min-height:260px}
+.controls{display:none;gap:8px;flex-wrap:wrap;align-items:center;margin:16px 0}.enhanced .controls{display:flex}
+button{font-family:inherit;font-size:.88rem;font-weight:700;color:var(--text);background:#1a334c;border:1px solid var(--line);border-radius:8px;padding:10px 13px;cursor:pointer;min-height:42px}
+button:hover,button:focus-visible{outline:2px solid var(--cyan);outline-offset:2px}button:disabled{opacity:.4;cursor:default}#play{background:#1a7188}
+.dots{display:flex;flex-wrap:wrap;gap:5px}.dot{min-width:36px;padding:8px}.dot[aria-current="step"]{border-color:var(--cyan);color:var(--cyan)}
+.motion-track{height:5px;background:var(--line);border-radius:9px;overflow:hidden;margin-top:16px}.motion-track span{display:block;background:var(--cyan);height:100%;width:0}
+body.playing .arrow{animation:signal 1.3s ease-in-out infinite}@keyframes signal{50%{color:var(--green);transform:translateX(3px)}}
+@media(max-width:1050px){.flow{grid-template-columns:1fr}.arrow{transform:rotate(90deg);font-size:1.3rem}#view{min-height:0}body.playing .arrow{animation:none}}
+@media(max-width:600px){.primer-grid{grid-template-columns:1fr}.enhanced #scenes{min-height:0}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
+
+.board{display:none}.enhanced .board{display:block}.detail{margin:14px 0}.enhanced .scene .detail{display:none}.tree-line{font-family:ui-monospace,monospace;font-size:.8rem}#view{min-height:13em}#query{min-height:9em}.trace{border-left:3px solid var(--amber);margin-top:15px;padding:12px;background:var(--inset)}.trace pre{margin-bottom:0}.record.outside{border-color:var(--rose)}.scene[data-scene="6"] .rule{border-color:var(--rose)}.scene[data-scene="7"] .rule{border-color:var(--cyan)}.enhanced #scenes{min-height:230px}@media(max-width:1050px){#query,#view{min-height:0}}
+</style>
+<link rel="stylesheet" href="assets/lesson-layout.css"><link rel="stylesheet" href="assets/boundary-lessons.css"></head>
+<body><div class="shell"><header><div class="eyebrow">khosiness · visual lesson 08</div><h1>A command needs a boundary.</h1><p>Follow one fixture test request through execution controls, a rejected path, nonzero exit, and timeout. Separate process results from claims of containment.</p><p><a class="start-lesson" href="#lesson-stage">Go to animation ↓</a></p></header>
+<section class="primer" aria-label="Before the animation"><div class="kicker">Before the animation</div><h2>Step 8 in context</h2><div class="primer-grid"><div><h3>What this step does</h3><p>Introduce structured process execution: argv, cwd, timeout, environment, exit status, stdout, and stderr.</p></div><div><h3>What it builds on</h3><p>Steps 4–6 supply the loop, registry, results, and selected context. Step 7 plans repository navigation; executing programs adds a much wider action surface.</p></div><div><h3>Goal</h3><p>Make each execution inspectable and each failure explicit, while knowing which protections a local runner cannot provide.</p></div><div><h3>End state</h3><p>Planned: Sandbox protocol, local runner, shell tool, and execution tests. The local reference is a constrained runner, not OS isolation; authorization follows in Step 9.</p></div></div></section>
+<div class="notice"><strong>Conceptual simulation.</strong> All commands and outputs are synthetic. This page launches no processes. The reference LocalSandbox constrains launches but does not isolate filesystem or network access. A disposable container is a later implementation exercise, not a component supplied by this lesson. Use STAGE_TRACKER.md for actual implementation progress.</div>
+<main id="lesson-stage" class="boundary-lesson"><section class="board" aria-label="Shell Execution and Sandbox diagram"><div class="board-head"><h2>Task: run a retry test in a fixture workspace</h2><span class="simulation">Illustrative scenario · no live execution</span></div>
+<div class="boundary-map" aria-label="Responsibility boundaries"><div class="record" data-node="proposal"><b>Model proposal</b>argv + cwd + timeout<span class="badge">Boundary in view</span></div><div class="record" data-node="boundary"><b>Local runner</b>Check launch conditions<span class="badge">Boundary in view</span></div><div class="record" data-node="result"><b>Structured result</b>Exit / output / timeout<span class="badge">Boundary in view</span></div></div><div class="io-grid"><section class="column"><h3>Input / proposed transition</h3><pre id="query"></pre></section><section class="column"><h3>Result / saved position</h3><pre id="view"></pre><p id="status" class="status" role="status"></p></section></div>
+<div class="trace"><h3>Boundary trace / state distinction</h3><pre id="trace"></pre></div><p class="intact">The fixture workspace is illustrative. No command executes in this browser.</p><div class="motion-track" aria-hidden="true"><span id="progress"></span></div></section>
+<section class="lesson" aria-label="Self-paced Shell Execution and Sandbox lesson"><div class="lesson-head"><span id="count" class="count">Eight scenes · static reading available below</span><span class="kicker">Proposal → launch checks → process result</span></div>
+<nav class="controls" aria-label="Lesson controls"><button id="previous" type="button">← Previous</button><button id="play" type="button">Play</button><button id="next" type="button">Next →</button><div id="dots" class="dots" aria-label="Choose a scene"></div></nav><div id="scenes"><article class="scene" data-scene="0" data-focus="proposal" data-error="false"><h3>1. Propose a specific execution</h3><p>The model asks to run one fixture test. The shell tool will translate arguments into an ExecRequest; the sandbox boundary returns an ExecResult. Naming a tool does not grant permission to execute it.</p><p class="rule">Keep provider output outside process creation code.</p><div class="detail"><h4>Illustrative input / request</h4><pre class="request">shell({
+  argv: [&quot;python&quot;, &quot;-m&quot;, &quot;pytest&quot;,
+         &quot;tests/test_retry.py&quot;, &quot;-q&quot;],
+  cwd: &quot;.&quot;, timeout_seconds: 20
+})</pre><h4>Illustrative result / state</h4><pre class="result">ExecRequest
+argv: explicit argument list
+cwd: /fixture/workspace
+timeout_seconds: 20
+No process started in this lesson.</pre><h4>Boundary trace</h4><pre class="boundary">Model proposal → shell tool → Sandbox.execute(request)
+Step 9 will add an authorization gate before dispatch.</pre></div><span class="scene-status" hidden>Request shape is not authority</span></article><article class="scene" data-scene="1" data-focus="boundary" data-error="false"><h3>2. Pass argv without shell parsing</h3><p>With shell=False, subprocess receives a program and separate arguments. A semicolon inside a Python string remains part of that argument; no command shell interprets it. The chosen program still interprets its own flags and code.</p><p class="rule">Avoid shell parsing; still validate program identity and arguments.</p><div class="detail"><h4>Illustrative input / request</h4><pre class="request">argv = [&quot;python&quot;, &quot;-c&quot;,
+        &quot;print(&#x27;a; b&#x27;)&quot;]
+shell = False</pre><h4>Illustrative result / state</h4><pre class="result">Illustrative stdout: a; b
+No shell splitting at the semicolon.
+Python still executes the supplied code.
+This is not a safe-code guarantee.</pre><h4>Boundary trace</h4><pre class="boundary">argv array → direct program launch
+shell=False removes one parser, not program capabilities.</pre></div><span class="scene-status" hidden>Literal arguments still have program semantics</span></article><article class="scene" data-scene="2" data-focus="boundary" data-error="true"><h3>3. Reject cwd before launch</h3><p>The reference checks the command basename against its allowlist and resolves cwd against the workspace. This example fails the cwd check. No subprocess is started on this path; the registry can convert the exception into a failed tool result.</p><p class="rule">A valid executable name does not make an outside cwd acceptable.</p><div class="detail"><h4>Illustrative input / request</h4><pre class="request">argv: [&quot;python&quot;, &quot;-m&quot;, &quot;pytest&quot;]
+cwd: /fixture/outside
+workspace: /fixture/workspace</pre><h4>Illustrative result / state</h4><pre class="result">PermissionError: cwd escapes workspace
+Registry: ToolResult(ok=False, ...)
+Process launch count on this path: 0</pre><h4>Boundary trace</h4><pre class="boundary">Allowlist passes → cwd check rejects → failed result
+Planned loop integration: observation + tool_failed.</pre></div><span class="scene-status" hidden>Rejected before process creation</span></article><article class="scene" data-scene="3" data-focus="boundary" data-error="false"><h3>4. Choose the environment deliberately</h3><p>The local snapshot passes only PATH and PYTHONUNBUFFERED. It reduces inherited variables but inherits PATH itself; it neither pins a trusted binary nor guarantees access to the project virtual environment. An inside cwd does not confine what the program can access.</p><p class="rule">Environment control and OS isolation are separate responsibilities.</p><div class="detail"><h4>Illustrative input / request</h4><pre class="request">cwd: /fixture/workspace
+env = {
+  &quot;PATH&quot;: inherited_path,
+  &quot;PYTHONUNBUFFERED&quot;: &quot;1&quot;
+}</pre><h4>Illustrative result / state</h4><pre class="result">Reference environment: two keys
+Not a virtualenv activation mechanism.
+No filesystem or network isolation.
+Trusted executable selection still matters.</pre><h4>Boundary trace</h4><pre class="boundary">Local launch controls ≠ disposable container
+Test a disposable workspace separately before relying on isolation.</pre></div><span class="scene-status" hidden>Reduced environment, limited containment</span></article><article class="scene" data-scene="4" data-focus="result" data-error="false"><h3>5. Turn a zero exit into evidence</h3><p>Assume the fixture test process returns successfully. The runner captures its exit code, streams, and elapsed duration. ShellTool marks the result ok only when the exit is zero and no timeout occurred. A passing test supports only what that test checks.</p><p class="rule">A process result is evidence; the harness still owns task completion.</p><div class="detail"><h4>Illustrative input / request</h4><pre class="request">argv: [&quot;python&quot;, &quot;-m&quot;, &quot;pytest&quot;,
+       &quot;tests/test_retry.py&quot;, &quot;-q&quot;]
+timeout_seconds: 20</pre><h4>Illustrative result / state</h4><pre class="result">Illustrative ExecResult:
+exit_code: 0
+stdout: &quot;1 passed&quot;
+stderr: &quot;&quot;
+timed_out: false
+ShellTool: ok=True</pre><h4>Boundary trace</h4><pre class="boundary">ExecResult → ToolResult → loop observation
+Illustrative events: tool_requested → tool_completed</pre></div><span class="scene-status" hidden>Successful exit, bounded claim</span></article><article class="scene" data-scene="5" data-focus="result" data-error="true"><h3>6. Treat nonzero exit as data</h3><p>A program may run normally and report failure through its exit code. The local runner returns that code rather than raising for it. ShellTool converts a nonzero result to ok=False so the loop can record and reason about the failure.</p><p class="rule">Do not confuse a failed check with a broken control loop.</p><div class="detail"><h4>Illustrative input / request</h4><pre class="request">argv: [&quot;python&quot;, &quot;-c&quot;,
+       &quot;raise SystemExit(7)&quot;]</pre><h4>Illustrative result / state</h4><pre class="result">Illustrative ExecResult:
+exit_code: 7
+timed_out: false
+stdout: &quot;&quot;
+ShellTool: ok=False</pre><h4>Boundary trace</h4><pre class="boundary">Process returns 7 → failed ToolResult
+Loop: tool_failed; failure observation retained.</pre></div><span class="scene-status" hidden>Execution completed; check failed</span></article><article class="scene" data-scene="6" data-focus="result" data-error="true"><h3>7. Report a timeout explicitly</h3><p>A long-running direct child exceeds the deadline. The reference catches TimeoutExpired and returns exit_code=None with timed_out=True. Python subprocess.run kills and waits for the direct child; this is not a promise that every descendant is gone.</p><p class="rule">Timeout is its own result, not an invented successful exit.</p><div class="detail"><h4>Illustrative input / request</h4><pre class="request">argv: [&quot;python&quot;, &quot;-c&quot;,
+       &quot;import time; time.sleep(2)&quot;]
+timeout_seconds: 1</pre><h4>Illustrative result / state</h4><pre class="result">Illustrative ExecResult:
+exit_code: null
+timed_out: true
+ShellTool: ok=False
+Partial output may be absent in this snapshot.</pre><h4>Boundary trace</h4><pre class="boundary">TimeoutExpired → ExecResult(timed_out=True)
+Registry/loop can preserve the failed outcome.</pre></div><span class="scene-status" hidden>Deadline exceeded</span></article><article class="scene" data-scene="7" data-focus="boundary" data-error="false"><h3>8. Know what the limits really bound</h3><p>The reference keeps only the last 20,000 characters of each captured stream. Capture happens first, so this limits returned text, not peak memory. The local runner also lacks OS isolation and guaranteed descendant cleanup. Stronger execution infrastructure needs separate implementation and tests.</p><p class="rule">Do not promote a local runner into a security guarantee.</p><div class="detail"><h4>Illustrative input / request</h4><pre class="request">Reference output handling:
+stdout = captured_stdout[-20_000:]
+stderr = captured_stderr[-20_000:]
+Container backend: not supplied here</pre><h4>Illustrative result / state</h4><pre class="result">Returned text: capped per stream
+Capture memory: not bounded by the slice
+Filesystem/network: not isolated
+Policy gate: planned Step 9
+Live stage progress: tracker only</pre><h4>Boundary trace</h4><pre class="boundary">Execution result ≠ permission ≠ task success
+This lesson adds no runtime capability or exercise credit.</pre></div><span class="scene-status" hidden>Inspectable execution has explicit limits</span></article></div></section></main>
+<p class="small">Starts paused. Use Previous/Next, scene numbers, or ←/→. Space toggles playback outside controls and inputs. Playback stops at the final scene. Without JavaScript, every scene and example remains readable.</p></div>
+<script src="assets/boundary-lessons.js"></script><script src="assets/lesson-layout.js"></script><script src="../manual/assets/manual.js"></script></body></html>

@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Step 16 — The Harness Learning Loop</title>
+<link rel="stylesheet" href="assets/lesson-theme.css"><link rel="stylesheet" href="assets/lesson-layout.css"><link rel="stylesheet" href="assets/boundary-lessons.css"></head><body><div class="shell">
+<header><div class="eyebrow">khosiness · Step 16 visual lesson</div><h1>Change one thing. Measure again.</h1><p>Follow an illustrative ADR-discovery failure through a falsifiable hypothesis, a controlled variant, a confounded comparison, and an evidence-based decision.</p><p><a class="start-lesson" href="#lesson-stage">Go to animation ↓</a> · <a class="start-lesson" href="index.html">All visual lessons</a></p></header>
+<section class="primer" aria-label="Before the animation"><div class="kicker">Before the animation</div><h2>Step 16 in context</h2><div class="primer-grid"><div><h3>What this step does</h3><p>Turn a repeated failure into one controlled harness experiment.</p></div><div><h3>What it builds on</h3><p>Step 15 plans stable evaluation and trace-linked results; improvement needs those measurements before broader changes.</p></div><div><h3>Goal</h3><p>Identify which change helped without confusing model, task, tool, and prompt changes.</p></div><div><h3>End state</h3><p>Planned: experiment record, JSON results, and decision note. Example 9/15 and 13/15 counts are reference illustrations, not measured results here.</p></div></div></section>
+<div class="notice"><strong>Conceptual simulation.</strong> Every example, output, and trace is illustrative. This page performs no harness tool execution, storage, delegation, grading, or personal profiling. Planned mechanisms are separate from the current implementation; use STAGE_TRACKER.md for actual progress.</div>
+<main id="lesson-stage" class="boundary-lesson"><section class="board" aria-label="The Harness Learning Loop diagram"><div class="board-head"><h2>Task: test whether ADR discovery improves architecture answers</h2><span class="simulation">Illustrative scenario · no live execution</span></div>
+<div class="boundary-map" aria-label="Responsibility boundaries"><div class="record" data-node="proposal"><b>Observed failure</b>Trace-backed repeated pattern<span class="badge">Separate responsibility</span></div><div class="record" data-node="boundary"><b>Controlled experiment</b>One variable; constants fixed<span class="badge">Separate responsibility</span></div><div class="record" data-node="result"><b>Decision record</b>Evidence + costs + keep/revert<span class="badge">Separate responsibility</span></div></div><div class="io-grid"><section class="column"><h3>Input / proposed transition</h3><pre id="query"></pre></section><section class="column"><h3>Result / state distinction</h3><pre id="view"></pre><p id="status" class="status" role="status"></p></section></div>
+<div class="trace"><h3>Boundary trace / state distinction</h3><pre id="trace"></pre></div><p class="intact">Step 16 is a teaching simulation, not completed implementation or understanding credit.</p><div class="motion-track" aria-hidden="true"><span id="progress"></span></div></section>
+<section class="lesson" aria-label="Self-paced The Harness Learning Loop lesson"><div class="lesson-head"><span id="count" class="count">Eight scenes · static reading available below</span><span class="kicker">Step 16 · one boundary at a time</span></div>
+<nav class="controls" aria-label="Lesson controls"><button id="previous" type="button">← Previous</button><button id="play" type="button">Play</button><button id="next" type="button">Next →</button><div id="dots" class="dots" aria-label="Choose a scene"></div></nav><div id="scenes"><article class="scene" data-scene="0" data-focus="proposal" data-error="false"><h3>1. Start with a repeated observed failure</h3><p>In the reference scenario, architecture answers fail when docs/adr is never discovered. Before changing anything, inspect multiple failed traces and distinguish missing retrieval from reasoning or runtime failure.</p><p class="rule">A repeated symptom needs a trace-backed cause.</p><div class="detail"><h4>Illustrative input / request</h4><pre class="request">Illustrative baseline: 15 tasks
+6 failures associated with missing ADRs
+Trace: docs/adr never retrieved</pre><h4>Illustrative result / state</h4><pre class="result">Candidate boundary: context discovery
+Not yet proof of a remedy
+Counts are illustrative
+No evaluation executes here.</pre><h4>Boundary trace</h4><pre class="boundary">Repeated failures → inspect traces → classify
+Avoid changing unrelated components.</pre></div><span class="scene-status" hidden>Identify one failure pattern</span></article><article class="scene" data-scene="1" data-focus="boundary" data-error="false"><h3>2. Write a falsifiable hypothesis</h3><p>Predict that adding an ADR index during repository initialization will improve architecture-task success. Name the measured outcome and specify what stays constant. A vague claim that context will be better cannot be tested cleanly.</p><p class="rule">State what evidence could show the idea did not help.</p><div class="detail"><h4>Illustrative input / request</h4><pre class="request">Hypothesis: ADR index improves success
+Variant: ADR discovery at initialization
+Outcome: fixed architecture-task score</pre><h4>Illustrative result / state</h4><pre class="result">Independent variable: ADR index
+Same benchmark, model, step limit, tools
+Baseline and variant need run records
+Failure classes inspected in both.</pre><h4>Boundary trace</h4><pre class="boundary">Failure diagnosis → hypothesis → defined comparison
+No improvement has been established yet.</pre></div><span class="scene-status" hidden>Make the claim testable</span></article><article class="scene" data-scene="2" data-focus="boundary" data-error="false"><h3>3. Freeze the baseline conditions</h3><p>Record model configuration, task and fixture versions, grader, budgets, and retrieval settings before the variant. Merely writing same model in a JSON array does not freeze its actual runtime configuration.</p><p class="rule">A controlled comparison needs identifiable inputs.</p><div class="detail"><h4>Illustrative input / request</h4><pre class="request">Record baseline identities:
+model/config, task set, fixture revision
+grader version, budgets
+run IDs and outcomes</pre><h4>Illustrative result / state</h4><pre class="result">Baseline records retained
+One independent variable planned
+Secondary costs captured
+No benchmark edits during comparison</pre><h4>Boundary trace</h4><pre class="boundary">Baseline artifacts → fixed constants → variant
+Missing identifiers weaken reproducibility.</pre></div><span class="scene-status" hidden>Preserve the comparison contract</span></article><article class="scene" data-scene="3" data-focus="boundary" data-error="false"><h3>4. Change only ADR discovery</h3><p>Add the ADR index as the single experimental change. Leave model choice, tools, prompts unrelated to the index, and task criteria fixed. If another needed correction appears, isolate it or repeat the comparison with an explicit new baseline.</p><p class="rule">Several simultaneous changes obscure the cause.</p><div class="detail"><h4>Illustrative input / request</h4><pre class="request">Variant change:
+include ADR index during orientation
+Everything else held fixed</pre><h4>Illustrative result / state</h4><pre class="result">Illustrative question:
+Does this one context-discovery change
+improve the fixed architecture tasks?
+Actual implementation is future work.</pre><h4>Boundary trace</h4><pre class="boundary">One change → same evaluation procedure
+This page changes no runtime discovery logic.</pre></div><span class="scene-status" hidden>One variable defines the experiment</span></article><article class="scene" data-scene="4" data-focus="boundary" data-error="true"><h3>5. Reject a confounded comparison</h3><p>Changing the model and increasing max_steps alongside ADR discovery prevents attributing a higher score to the index. A better result may be real, but it does not answer this experiment’s causal question.</p><p class="rule">Do not label a confounded comparison controlled.</p><div class="detail"><h4>Illustrative input / request</h4><pre class="request">Variant also changes:
+model A → model B
+max_steps 20 → 40
+ADR discovery added</pre><h4>Illustrative result / state</h4><pre class="result">Comparison is confounded
+Cannot attribute gain to ADR discovery
+Separate changes or rerun baseline
+Do not claim the hypothesis is proven.</pre><h4>Boundary trace</h4><pre class="boundary">Multiple changed variables → reject causal conclusion
+A new controlled trial is needed.</pre></div><span class="scene-status" hidden>Invalid experiment design</span></article><article class="scene" data-scene="5" data-focus="result" data-error="false"><h3>6. Compare outcomes and costs</h3><p>The reference scenario shows 9/15 versus 13/15 successes. That is an illustrative increase of four tasks, not a measured result of this lesson. Inspect token/tool costs, safety outcomes, and remaining failures; repeat trials when variance is material.</p><p class="rule">A higher score alone is not a complete engineering decision.</p><div class="detail"><h4>Illustrative input / request</h4><pre class="request">Illustrative reference:
+baseline successes: 9 of 15
+variant successes: 13 of 15</pre><h4>Illustrative result / state</h4><pre class="result">Success rate: 60% → about 86.7%
+Difference: 4 tasks
+Costs and variance: still need evidence
+No real improvement claimed here.</pre><h4>Boundary trace</h4><pre class="boundary">Fixed trials → compare success + secondary costs
+Retain failures and run IDs.</pre></div><span class="scene-status" hidden>Compare the whole measured outcome</span></article><article class="scene" data-scene="6" data-focus="result" data-error="false"><h3>7. Record keep, revert, or refine</h3><p>An experiment record should include observation, hypothesis, independent variable, constants, actual results, costs, and decision. The reference chooses keep in its example. A failing variant should be reverted or refined with its negative evidence preserved.</p><p class="rule">Negative results also improve the engineering record.</p><div class="detail"><h4>Illustrative input / request</h4><pre class="request">Decision record:
+observation → hypothesis → change
+results + costs → decision</pre><h4>Illustrative result / state</h4><pre class="result">Possible outcome: keep
+Alternative: revert or refine
+Retain measured evidence either way
+Do not rewrite the baseline.</pre><h4>Boundary trace</h4><pre class="boundary">Comparison → explicit decision note
+Policy still governs any actual change.</pre></div><span class="scene-status" hidden>Make the decision reviewable</span></article><article class="scene" data-scene="7" data-focus="result" data-error="false"><h3>8. Inspect the next failure before iterating</h3><p>The remaining failures may have a different cause. Open their traces and form the next hypothesis separately. This loop improves the harness through bounded experiments; it is not permission for unreviewed recursive self-modification.</p><p class="rule">Evaluate before improving again.</p><div class="detail"><h4>Illustrative input / request</h4><pre class="request">After the reference comparison:
+2 of 15 tasks still fail
+Next: inspect those traces</pre><h4>Illustrative result / state</h4><pre class="result">No second variable changed yet
+Remaining cause: not assumed
+Next experiment needs its own record
+Human judgment remains in the loop.</pre><h4>Boundary trace</h4><pre class="boundary">Measured decision → next failure analysis
+Autonomy does not increase automatically.</pre></div><span class="scene-status" hidden>Learning remains evidence-driven</span></article></div></section></main>
+<p class="small">Starts paused. Use Previous/Next, scene numbers, or ←/→. Space toggles playback outside controls and inputs. Playback stops at the final scene. Without JavaScript, every scene and example remains readable.</p></div>
+<script src="assets/boundary-lessons.js"></script><script src="assets/lesson-layout.js"></script><script src="../manual/assets/manual.js"></script></body></html>

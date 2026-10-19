@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Step 17 — Assemble the First-Generation Architecture</title>
+<link rel="stylesheet" href="assets/lesson-theme.css"><link rel="stylesheet" href="assets/lesson-layout.css"><link rel="stylesheet" href="assets/boundary-lessons.css"></head><body><div class="shell">
+<header><div class="eyebrow">khosiness · Step 17 visual lesson</div><h1>Draw the system you can prove.</h1><p>Trace a retry-setting question through component contracts, then replace an adapter and reject an unregistered capability without widening the loop’s responsibilities.</p><p><a class="start-lesson" href="#lesson-stage">Go to animation ↓</a> · <a class="start-lesson" href="index.html">All visual lessons</a></p></header>
+<section class="primer" aria-label="Before the animation"><div class="kicker">Before the animation</div><h2>Step 17 in context</h2><div class="primer-grid"><div><h3>What this step does</h3><p>Document actual dependency direction and component ownership after implementation.</p></div><div><h3>What it builds on</h3><p>The earlier curriculum defines task, loop, context, tools, policy, recovery, memory, skills, delegation, and evaluation boundaries.</p></div><div><h3>Goal</h3><p>Describe proven interfaces and gaps rather than treating a target diagram as a built system.</p></div><div><h3>End state</h3><p>Planned: architecture and component-contract documents reconciled with tested code. RunService, EvalHooks, and other diagram boxes are not automatically implemented.</p></div></div></section>
+<div class="notice"><strong>Conceptual simulation.</strong> Every example, output, and trace is illustrative. This page performs no harness tool execution, storage, delegation, grading, or personal profiling. Planned mechanisms are separate from the current implementation; use STAGE_TRACKER.md for actual progress.</div>
+<main id="lesson-stage" class="boundary-lesson"><section class="board" aria-label="Assemble the First-Generation Architecture diagram"><div class="board-head"><h2>Task: explain the retry setting with replaceable components</h2><span class="simulation">Illustrative scenario · no live execution</span></div>
+<div class="boundary-map" aria-label="Responsibility boundaries"><div class="record" data-node="proposal"><b>Orchestration</b>Task + loop + contracts<span class="badge">Separate responsibility</span></div><div class="record" data-node="boundary"><b>Replaceable boundaries</b>Adapters, tools, policy, storage<span class="badge">Separate responsibility</span></div><div class="record" data-node="result"><b>Evidence of architecture</b>Imports + tests + actual traces<span class="badge">Separate responsibility</span></div></div><div class="io-grid"><section class="column"><h3>Input / proposed transition</h3><pre id="query"></pre></section><section class="column"><h3>Result / state distinction</h3><pre id="view"></pre><p id="status" class="status" role="status"></p></section></div>
+<div class="trace"><h3>Boundary trace / state distinction</h3><pre id="trace"></pre></div><p class="intact">Step 17 is a teaching simulation, not completed implementation or understanding credit.</p><div class="motion-track" aria-hidden="true"><span id="progress"></span></div></section>
+<section class="lesson" aria-label="Self-paced Assemble the First-Generation Architecture lesson"><div class="lesson-head"><span id="count" class="count">Eight scenes · static reading available below</span><span class="kicker">Step 17 · one boundary at a time</span></div>
+<nav class="controls" aria-label="Lesson controls"><button id="previous" type="button">← Previous</button><button id="play" type="button">Play</button><button id="next" type="button">Next →</button><div id="dots" class="dots" aria-label="Choose a scene"></div></nav><div id="scenes"><article class="scene" data-scene="0" data-focus="proposal" data-error="false"><h3>1. Begin with a concrete request</h3><p>A validated task asks for the retry setting and its defining file. Trace the real contracts involved instead of starting from a large collection of speculative services. Architecture should explain where the next decision and its evidence travel.</p><p class="rule">Start with behavior, then draw ownership.</p><div class="detail"><h4>Illustrative input / request</h4><pre class="request">Task: find retry configuration
+Workspace: fixture
+Constraint: read-only
+Success: file + setting + value</pre><h4>Illustrative result / state</h4><pre class="result">Known current boundaries:
+Task → run()
+ContextBuilder → messages
+ModelAdapter → ModelResponse
+Registry → validated tools</pre><h4>Boundary trace</h4><pre class="boundary">Contract → selected evidence → proposal → permitted result
+Future integrations must be labeled planned.</pre></div><span class="scene-status" hidden>Trace an actual responsibility</span></article><article class="scene" data-scene="1" data-focus="boundary" data-error="false"><h3>2. Separate selection from provider translation</h3><p>ContextBuilder decides which data enters messages. ModelAdapter accepts neutral messages and schemas and returns a neutral response. A provider SDK object should not leak into unrelated loop or filesystem logic.</p><p class="rule">Selection and provider translation solve different failures.</p><div class="detail"><h4>Illustrative input / request</h4><pre class="request">ContextBuilder.build(task, state)
+→ messages
+model.generate(messages, schemas)
+→ ModelResponse</pre><h4>Illustrative result / state</h4><pre class="result">Context owns visibility
+Adapter owns provider translation
+Loop owns orchestration
+ToolCall remains a proposal.</pre><h4>Boundary trace</h4><pre class="boundary">Data contracts cross boundaries
+SDK details stop inside the provider adapter.</pre></div><span class="scene-status" hidden>Keep dependencies behind their interfaces</span></article><article class="scene" data-scene="2" data-focus="result" data-error="false"><h3>3. Replace the model through the same interface</h3><p>A deterministic FakeModel can stand in for a provider adapter without changing the loop call shape. This is a concrete replaceability check. It does not prove a real SDK transport exists or that both models behave identically.</p><p class="rule">Replaceability concerns the contract, not identical reasoning.</p><div class="detail"><h4>Illustrative input / request</h4><pre class="request">Same loop call:
+generate(messages, tools)
+Adapter A: FakeModel
+Adapter B: callable transport wrapper</pre><h4>Illustrative result / state</h4><pre class="result">Both return ModelResponse
+Fake produces queued responses
+Provider wrapper validates raw dictionary
+No live provider call in this lesson.</pre><h4>Boundary trace</h4><pre class="boundary">Same interface → alternate implementation
+Test the boundary without coupling the loop to an SDK.</pre></div><span class="scene-status" hidden>Contract survives an adapter swap</span></article><article class="scene" data-scene="3" data-focus="boundary" data-error="false"><h3>4. Locate authority before execution</h3><p>The registry owns capability discovery and dispatch; policy owns authorization decisions; the runtime owns execution constraints. A real call path must enforce the gate before the side effect. A diagram arrow alone cannot enforce it.</p><p class="rule">Document the gate that the code actually calls.</p><div class="detail"><h4>Illustrative input / request</h4><pre class="request">Planned flow:
+proposal → validate/classify
+→ policy/approval gate
+→ authorized tool/runtime execution</pre><h4>Illustrative result / state</h4><pre class="result">Registry: known capability
+Policy: permission
+Runtime: execution controls
+Each boundary needs tests.</pre><h4>Boundary trace</h4><pre class="boundary">No authorized execution without a called gate
+Current loop still lacks Step 9 wiring.</pre></div><span class="scene-status" hidden>Different owners, ordered checks</span></article><article class="scene" data-scene="4" data-focus="boundary" data-error="false"><h3>5. Keep storage roles separate</h3><p>RunState tracks the current run, the event store records facts, checkpoint helpers persist snapshots, and memory stores selected cross-run knowledge. Events do not automatically produce checkpoints or reusable memories.</p><p class="rule">One transcript abstraction cannot replace different lifetimes.</p><div class="detail"><h4>Illustrative input / request</h4><pre class="request">Current position → RunState
+Factual transition → EventStore
+Saved snapshot → checkpoint helper
+Cross-run fact → MemoryStore</pre><h4>Illustrative result / state</h4><pre class="result">Context selects from available sources
+Replay requires implementation
+Memory promotion is deliberate
+Checkpoint wiring is explicit.</pre><h4>Boundary trace</h4><pre class="boundary">Storage contracts → separate consumers
+Diagram arrows are not automatic integrations.</pre></div><span class="scene-status" hidden>Assign each record to its owner</span></article><article class="scene" data-scene="5" data-focus="boundary" data-error="true"><h3>6. Reject an unregistered capability</h3><p>A read-only configuration can omit the shell tool. A proposed shell call then encounters an unknown tool in the registry and produces a failed result rather than acquiring process authority. This does not make existing filesystem tools an OS sandbox.</p><p class="rule">Unavailable capability must fail explicitly.</p><div class="detail"><h4>Illustrative input / request</h4><pre class="request">Registered: read_file, search_files
+Proposed: shell({argv:[&quot;python&quot;]})</pre><h4>Illustrative result / state</h4><pre class="result">Unknown tool → failed result
+No shell tool dispatched
+Loop can retain failure observation
+No OS isolation implied.</pre><h4>Boundary trace</h4><pre class="boundary">Registry lookup fails before execution
+Read-only mode is a configuration plus enforced tool contracts.</pre></div><span class="scene-status" hidden>Missing capability is not executable</span></article><article class="scene" data-scene="6" data-focus="boundary" data-error="false"><h3>7. Test a replaceable backend</h3><p>Memory persistence should remain behind a memory contract, so a storage swap does not require edits to filesystem tools. The target architecture needs such a boundary tested; naming a class MemoryStore does not establish interchangeability.</p><p class="rule">Prove a boundary with a focused replacement test.</p><div class="detail"><h4>Illustrative input / request</h4><pre class="request">Planned architecture check:
+swap memory storage implementation
+keep tool inputs/results unchanged</pre><h4>Illustrative result / state</h4><pre class="result">Tools do not import storage internals
+Context uses a retrieval boundary
+Backend-specific code stays local
+Test required during the stage.</pre><h4>Boundary trace</h4><pre class="boundary">Proven coupling pain → smallest refactor → same tests
+Do not add interfaces solely for a diagram.</pre></div><span class="scene-status" hidden>Refactor a demonstrated boundary</span></article><article class="scene" data-scene="7" data-focus="result" data-error="false"><h3>8. Document the real system and its gaps</h3><p>Reconcile architecture.md and component-contracts.md with imports, call sites, traces, and tests. Explicitly mark retries, redaction, completion checking, policy, and other responsibilities if their intended owner is not implemented yet.</p><p class="rule">A missing component is clearer than a fictional completed box.</p><div class="detail"><h4>Illustrative input / request</h4><pre class="request">Review documents against code:
+who calls whom?
+what is enforced?
+what remains planned?</pre><h4>Illustrative result / state</h4><pre class="result">Documented interface + actual owner
+Evidence: tests and trace locations
+Known limits retained
+No stage completion from a diagram.</pre><h4>Boundary trace</h4><pre class="boundary">Implemented behavior → accurate architecture
+A target is not a deployment claim.</pre></div><span class="scene-status" hidden>Architecture follows evidence</span></article></div></section></main>
+<p class="small">Starts paused. Use Previous/Next, scene numbers, or ←/→. Space toggles playback outside controls and inputs. Playback stops at the final scene. Without JavaScript, every scene and example remains readable.</p></div>
+<script src="assets/boundary-lessons.js"></script><script src="assets/lesson-layout.js"></script><script src="../manual/assets/manual.js"></script></body></html>

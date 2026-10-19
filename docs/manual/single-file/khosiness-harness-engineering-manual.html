@@ -3104,17 +3104,18 @@ def test_search_rejects_symlink_escape_before_read(tmp_path, monkeypatch):
 <div class="tree-row" style="--depth:0"><span class="tree-icon">▾</span><span class="tree-label">benchmarks/</span></div><div class="tree-row" style="--depth:1"><span class="tree-icon">•</span><span class="tree-label">.gitkeep</span></div><div class="tree-row" style="--depth:1"><span class="tree-icon">•</span><span class="tree-label">tasks.json</span></div><div class="tree-row" style="--depth:0"><span class="tree-icon">▾</span><span class="tree-label">docs/</span></div><div class="tree-row" style="--depth:1"><span class="tree-icon">•</span><span class="tree-label">architecture.md</span></div><div class="tree-row affected" style="--depth:0"><span class="tree-icon">▾</span><span class="tree-label">src/</span></div><div class="tree-row affected" style="--depth:1"><span class="tree-icon">▾</span><span class="tree-label">khosiness/</span></div><div class="tree-row" style="--depth:2"><span class="tree-icon">▾</span><span class="tree-label">models/</span></div><div class="tree-row" style="--depth:3"><span class="tree-icon">•</span><span class="tree-label">base.py</span></div><div class="tree-row" style="--depth:3"><span class="tree-icon">•</span><span class="tree-label">fake.py</span></div><div class="tree-row" style="--depth:3"><span class="tree-icon">•</span><span class="tree-label">provider.py</span></div><div class="tree-row affected" style="--depth:2"><span class="tree-icon">▾</span><span class="tree-label">tools/</span></div><div class="tree-row affected" style="--depth:3"><span class="tree-icon">•</span><span class="tree-label">base.py</span></div><div class="tree-row affected" style="--depth:3"><span class="tree-icon">•</span><span class="tree-label">filesystem.py</span></div><div class="tree-row affected" style="--depth:3"><span class="tree-icon">•</span><span class="tree-label">registry.py</span></div><div class="tree-row" style="--depth:2"><span class="tree-icon">•</span><span class="tree-label">__init__.py</span></div><div class="tree-row" style="--depth:2"><span class="tree-icon">•</span><span class="tree-label">cli.py</span></div><div class="tree-row" style="--depth:2"><span class="tree-icon">•</span><span class="tree-label">event_store.py</span></div><div class="tree-row" style="--depth:2"><span class="tree-icon">•</span><span class="tree-label">events.py</span></div><div class="tree-row" style="--depth:2"><span class="tree-icon">•</span><span class="tree-label">loop.py</span></div><div class="tree-row" style="--depth:2"><span class="tree-icon">•</span><span class="tree-label">state.py</span></div><div class="tree-row" style="--depth:2"><span class="tree-icon">•</span><span class="tree-label">task.py</span></div><div class="tree-row affected" style="--depth:0"><span class="tree-icon">▾</span><span class="tree-label">tests/</span></div><div class="tree-row" style="--depth:1"><span class="tree-icon">•</span><span class="tree-label">__init__.py</span></div><div class="tree-row" style="--depth:1"><span class="tree-icon">•</span><span class="tree-label">test_event_store.py</span></div><div class="tree-row" style="--depth:1"><span class="tree-icon">•</span><span class="tree-label">test_loop.py</span></div><div class="tree-row" style="--depth:1"><span class="tree-icon">•</span><span class="tree-label">test_model_adapter.py</span></div><div class="tree-row" style="--depth:1"><span class="tree-icon">•</span><span class="tree-label">test_task.py</span></div><div class="tree-row affected" style="--depth:1"><span class="tree-icon">•</span><span class="tree-label">test_tools.py</span></div><div class="tree-row" style="--depth:0"><span class="tree-icon">•</span><span class="tree-label">.gitignore</span></div><div class="tree-row" style="--depth:0"><span class="tree-icon">•</span><span class="tree-label">pyproject.toml</span></div><div class="tree-row" style="--depth:0"><span class="tree-icon">•</span><span class="tree-label">README.md</span></div>
 </div>
 </div>
-</aside></div></section><section class="view" data-route="step-06-context-engineering" id="view-step-06-context-engineering"><div class="detail-layout"><div class="detail-main"><header class="hero"><div class="eyebrow">Step 6</div><h1>6. Engineer the Context</h1><p>Treat context as a selected working set, not a transcript dump.</p></header><div class="wrap"><div class="pager"><a href="#step-05-tool-system">← 5. Build the Tool System</a><a href="#step-07-repository-navigation">7. Repository Navigation →</a></div><section class="card"><h2>Conceptual objective</h2><p class="lead">Treat context as a selected working set, not a transcript dump.</p><div class="callout">This stage strengthens control over information and side effects. The central question is no longer only “can the model do it?” but “under exactly what conditions may it do it, and can the run survive failure?”</div><h3>Files to create or modify</h3><div class="files"><code>src/khosiness/context/builder.py</code><code>tests/test_context_builder.py</code></div></section><section class="card"><h2>Implementation sequence</h2><div class="step"><div class="badge">1</div><div><h3>Separate system contract, task, constraints, working state and recent observations.</h3><p>Implement this as the smallest version that makes the responsibility concrete. Keep provider/framework details outside the core boundary, add an event where the action changes run state, and make failure observable rather than silent.</p></div></div><div class="step"><div class="badge">2</div><div><h3>Make ContextBuilder deterministic and inspectable.</h3><p>Implement this as the smallest version that makes the responsibility concrete. Keep provider/framework details outside the core boundary, add an event where the action changes run state, and make failure observable rather than silent.</p></div></div><div class="step"><div class="badge">3</div><div><h3>Bound large observations.</h3><p>Implement this as the smallest version that makes the responsibility concrete. Keep provider/framework details outside the core boundary, add an event where the action changes run state, and make failure observable rather than silent.</p></div></div><div class="step"><div class="badge">4</div><div><h3>Log context size every turn.</h3><p>Implement this as the smallest version that makes the responsibility concrete. Keep provider/framework details outside the core boundary, add an event where the action changes run state, and make failure observable rather than silent.</p></div></div></section><section class="card"><h2>Starter implementation</h2><div class="callout warn"><strong>Do not paste blindly.</strong> Type this in VS Code, make it run, then explain every line before you add another layer.</div><pre><code>class ContextBuilder:
+</aside></div></section><section class="view" data-route="step-06-context-engineering" id="view-step-06-context-engineering"><div class="detail-layout"><div class="detail-main"><header class="hero"><div class="eyebrow">Step 6</div><h1>6. Engineer the Context</h1><p>Treat context as a selected working set, not a transcript dump.</p></header><div class="wrap"><div class="pager"><a href="#step-05-tool-system">← 5. Build the Tool System</a><a href="#step-07-repository-navigation">7. Repository Navigation →</a></div><section class="card"><h2>Conceptual objective</h2><p class="lead">Treat context as a selected working set, not a transcript dump.</p><div class="callout">This stage strengthens control over information and side effects. The central question is no longer only “can the model do it?” but “under exactly what conditions may it do it, and can the run survive failure?”</div><h3>Files to create or modify</h3><div class="files"><code>src/khosiness/context/builder.py</code><code>tests/test_context_builder.py</code></div></section><section class="card"><h2>Implementation sequence</h2><div class="step"><div class="badge">1</div><div><h3>Separate system contract, task, constraints, working state and recent observations.</h3><p>Implement this as the smallest version that makes the responsibility concrete. Keep provider/framework details outside the core boundary, add an event where the action changes run state, and make failure observable rather than silent.</p></div></div><div class="step"><div class="badge">2</div><div><h3>Make ContextBuilder deterministic and inspectable.</h3><p>Implement this as the smallest version that makes the responsibility concrete. Keep provider/framework details outside the core boundary, add an event where the action changes run state, and make failure observable rather than silent.</p></div></div><div class="step"><div class="badge">3</div><div><h3>Bound large observations.</h3><p>Implement this as the smallest version that makes the responsibility concrete. Keep provider/framework details outside the core boundary, add an event where the action changes run state, and make failure observable rather than silent.</p></div></div><div class="step"><div class="badge">4</div><div><h3>Measure each built context locally.</h3><p>Implement this as the smallest version that makes the responsibility concrete. Keep provider/framework details outside the core boundary, add an event where the action changes run state, and make failure observable rather than silent.</p></div></div></section><section class="card"><h2>Starter implementation</h2><p>The complete checkpoint validates non-negative integer budgets. Zero recent observations selects none; zero observation characters retains only the truncation marker. Clipping adds the marker after the prefix limit. Task text remains uncapped; character counts are not tokens or persistent metrics.</p><div class="callout warn"><strong>Do not paste blindly.</strong> Type this in VS Code, make it run, then explain every line before you add another layer.</div><pre><code>class ContextBuilder:
     def __init__(self, max_recent_observations: int = 8):
         self.max_recent_observations = max_recent_observations
 
     def build(self, task, state) -&gt; list[dict]:
-        recent = state.observations[-self.max_recent_observations:]
+        recent = (state.observations[-self.max_recent_observations:]
+                  if self.max_recent_observations else [])
         return [
             {"role": "system", "content": "Use tools for evidence. Never invent tool results."},
             {"role": "user", "content": f"Objective: {task.objective}\nConstraints: {task.constraints}"},
             {"role": "user", "content": f"Recent observations: {recent}"},
-        ]</code></pre></section><section class="card"><h2>Tests to perform</h2><ol><li>Task and constraints are always present.</li><li>Old observations fall out of active context.</li><li>Huge tool output is not blindly re-injected.</li><li>Context metrics are emitted.</li></ol><div class="callout green"><strong>Deliberate-failure rule:</strong> after the happy path works, deliberately trigger at least one failure and inspect the returned result, state change and event trace.</div></section><section class="card"><h2>What to inspect before moving on</h2><ul class="checks"><li>The component has one clear responsibility.</li><li>Failure is explicit and testable.</li><li>The event log shows the important transition.</li><li>No provider/framework object has leaked across an architectural boundary without a reason.</li><li>You can explain what problem this step solves without reading the code.</li></ul></section><section class="card"><h2>Suggested commit</h2><pre><code>git add .
+        ]</code></pre></section><section class="card"><h2>Tests to perform</h2><ol><li>Task and constraints are always present.</li><li>Old observations fall out of active context.</li><li>Huge tool output is not blindly re-injected.</li><li>last_stats records exact message and content-character counts; it does not emit events.</li></ol><div class="callout green"><strong>Deliberate-failure rule:</strong> after the happy path works, reject an invalid budget and inspect the validation error. Selection must leave source observations unchanged; the builder emits no event trace.</div></section><section class="card"><h2>What to inspect before moving on</h2><ul class="checks"><li>The component has one clear responsibility.</li><li>Failure is explicit and testable.</li><li>Inspect selected messages and last_stats; the builder itself emits no events.</li><li>No provider/framework object has leaked across an architectural boundary without a reason.</li><li>You can explain what problem this step solves without reading the code.</li></ul></section><section class="card"><h2>Suggested commit</h2><pre><code>git add .
 git commit -m "step 6: engineer the context"</code></pre><p>Tagging each stage separately makes later architectural comparison much easier.</p></section>
 <section class="card stage-checkpoint">
 <div class="checkpoint-kicker">Stage release checkpoint</div>
@@ -3154,6 +3155,13 @@ class ContextBuilder:
         max_recent_observations: int = 8,
         max_observation_chars: int = 8_000,
     ):
+        for name, value in (
+            ("max_recent_observations", max_recent_observations),
+            ("max_observation_chars", max_observation_chars),
+        ):
+            if type(value) is not int or value &lt; 0:
+                raise ValueError(f"{name} must be a non-negative integer")
+
         self.max_recent_observations = max_recent_observations
         self.max_observation_chars = max_observation_chars
         self.last_stats = ContextStats(messages=0, characters=0)
@@ -3163,18 +3171,17 @@ class ContextBuilder:
         task: Task,
         state: RunState,
     ) -&gt; list[dict]:
-        recent = state.observations[
-            -self.max_recent_observations:
-        ]
+        recent = (
+            state.observations[-self.max_recent_observations :]
+            if self.max_recent_observations
+            else []
+        )
 
         rendered_observations = []
         for observation in recent:
             text = repr(observation)
             if len(text) &gt; self.max_observation_chars:
-                text = (
-                    text[: self.max_observation_chars]
-                    + "... [truncated]"
-                )
+                text = text[: self.max_observation_chars] + "... [truncated]"
             rendered_observations.append(text)
 
         messages = [
@@ -3198,18 +3205,14 @@ class ContextBuilder:
             {
                 "role": "user",
                 "content": (
-                    "Recent observations:\n"
-                    + "\n".join(rendered_observations)
+                    "Recent observations:\n" + "\n".join(rendered_observations)
                 ),
             },
         ]
 
         self.last_stats = ContextStats(
             messages=len(messages),
-            characters=sum(
-                len(message["content"])
-                for message in messages
-            ),
+            characters=sum(len(message["content"]) for message in messages),
         )
 
         return messages</code></pre>
@@ -3222,7 +3225,9 @@ class ContextBuilder:
 </summary>
 <div class="snapshot-body">
 <button class="copy-code" type="button">Copy file</button>
-<pre><code>from khosiness.context.builder import ContextBuilder
+<pre><code>import pytest
+
+from khosiness.context.builder import ContextBuilder
 from khosiness.state import RunState
 from khosiness.task import Task
 
@@ -3239,17 +3244,17 @@ def make_task(tmp_path):
 
 def test_context_always_contains_task_and_constraints(tmp_path):
     builder = ContextBuilder()
-    messages = builder.build(
-        make_task(tmp_path),
-        RunState(run_id="r1"),
-    )
+    task = make_task(tmp_path)
+    state = RunState(run_id="r1", step=3)
 
-    joined = "\n".join(
-        message["content"] for message in messages
-    )
+    messages = builder.build(task, state)
+    joined = "\n".join(message["content"] for message in messages)
 
     assert "Find retry configuration" in joined
     assert "Do not modify files" in joined
+    assert "Name the defining file" in joined
+    assert "Current step: 3" in joined
+    assert builder.build(task, state) == messages
 
 
 def test_context_keeps_only_recent_observations(tmp_path):
@@ -3261,28 +3266,29 @@ def test_context_keeps_only_recent_observations(tmp_path):
             {"value": "recent"},
         ],
     )
+    before = state.model_copy(deep=True)
     builder = ContextBuilder(max_recent_observations=2)
 
     messages = builder.build(make_task(tmp_path), state)
-    joined = "\n".join(
-        message["content"] for message in messages
-    )
+    content = messages[-1]["content"]
 
-    assert "old" not in joined
-    assert "middle" in joined
-    assert "recent" in joined
+    assert "old" not in content
+    assert "middle" in content
+    assert "recent" in content
+    assert state == before
 
 
 def test_large_observation_is_truncated(tmp_path):
-    state = RunState(
-        run_id="r1",
-        observations=[{"value": "x" * 1000}],
-    )
+    observation = {"value": "x" * 1000}
+    state = RunState(run_id="r1", observations=[observation])
+    before = state.model_copy(deep=True)
     builder = ContextBuilder(max_observation_chars=100)
 
     messages = builder.build(make_task(tmp_path), state)
 
-    assert "[truncated]" in messages[-1]["content"]
+    expected = repr(observation)[:100] + "... [truncated]"
+    assert messages[-1]["content"] == "Recent observations:\n" + expected
+    assert state == before
 
 
 def test_context_stats_are_recorded(tmp_path):
@@ -3292,8 +3298,53 @@ def test_context_stats_are_recorded(tmp_path):
         RunState(run_id="r1"),
     )
 
-    assert builder.last_stats.messages == len(messages)
-    assert builder.last_stats.characters &gt; 0</code></pre>
+    assert builder.last_stats.messages == len(messages) == 3
+    assert builder.last_stats.characters == sum(
+        len(message["content"]) for message in messages
+    )
+
+
+def test_zero_window_selects_no_observations(tmp_path):
+    state = RunState(
+        run_id="r1",
+        observations=[{"value": "retained source"}],
+    )
+    before = state.model_copy(deep=True)
+    builder = ContextBuilder(max_recent_observations=0)
+
+    messages = builder.build(make_task(tmp_path), state)
+
+    assert messages[-1]["content"] == "Recent observations:\n"
+    assert state == before
+
+
+def test_zero_character_budget_keeps_only_marker(tmp_path):
+    builder = ContextBuilder(max_observation_chars=0)
+    state = RunState(
+        run_id="r1",
+        observations=[{"value": "source text"}],
+    )
+
+    messages = builder.build(make_task(tmp_path), state)
+
+    assert messages[-1]["content"] == ("Recent observations:\n... [truncated]")
+    assert state.observations == [{"value": "source text"}]
+
+
+@pytest.mark.parametrize(
+    "name,value",
+    [
+        ("max_recent_observations", -1),
+        ("max_observation_chars", -1),
+        ("max_recent_observations", 1.5),
+        ("max_observation_chars", 1.5),
+        ("max_recent_observations", True),
+        ("max_observation_chars", False),
+    ],
+)
+def test_invalid_budgets_are_rejected(name, value):
+    with pytest.raises(ValueError, match=name):
+        ContextBuilder(**{name: value})</code></pre>
 </div>
 </details>
 </div>
@@ -3318,8 +3369,8 @@ def test_context_stats_are_recorded(tmp_path):
 <tbody>
 <tr>
 <td>Run context tests</td>
-<td><pre class="command-pre"><code>pytest tests/test_context_builder.py -q</code></pre></td>
-<td>4 tests pass.</td>
+<td><pre class="command-pre"><code>.venv/bin/python -m pytest tests/test_context_builder.py -q</code></pre></td>
+<td>12 test cases pass, including zero windows, invalid budgets, and source preservation.</td>
 </tr>
 <tr>
 <td>Run all tests</td>
@@ -3328,13 +3379,7 @@ def test_context_stats_are_recorded(tmp_path):
 </tr>
 <tr>
 <td>Inspect context size</td>
-<td><pre class="command-pre"><code>python - &lt;&lt;'PY'
-from pathlib import Path
-from khosiness.context.builder import ContextBuilder
-from khosiness.state import RunState
-from khosiness.task import Task
-b=ContextBuilder(); b.build(Task(id="x", objective="Inspect project", workspace=Path(".")), RunState(run_id="r")); print(b.last_stats)
-PY</code></pre></td>
+<td><pre class="command-pre"><code>.venv/bin/python -c 'from pathlib import Path; from khosiness.context.builder import ContextBuilder; from khosiness.state import RunState; from khosiness.task import Task; builder = ContextBuilder(); builder.build(Task(id="x", objective="Inspect project", workspace=Path(".")), RunState(run_id="r")); print(builder.last_stats)'</code></pre></td>
 <td>Prints a small ContextStats object.</td>
 </tr>
 </tbody>

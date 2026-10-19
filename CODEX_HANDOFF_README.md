@@ -10,5 +10,5 @@ recorded one-instruction cadence. Do not infer progress from reference code.
 The static manual entry point is docs/manual/index.html. Its dedicated pages
 cover Setup, Steps 0–18, and the future personal harness. Animations are in
 docs/animations/. Browser assets support reading, copying reference code,
-and stepping through conceptual lessons. The local Python Q&A service has
-been removed as part of the complete coding reset.
+and stepping through conceptual lessons. The optional local Python Q&A service was restored on explicit human
+request. See docs/manual/README.md for its localhost startup command.

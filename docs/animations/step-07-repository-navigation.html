@@ -1,0 +1,211 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Step 7 — Repository Navigation</title><style>
+:root{color-scheme:dark;font-family:Inter,ui-sans-serif,system-ui,sans-serif;--bg:#07111f;--panel:#10253a;--inset:#0b1b2d;--line:#46627a;--text:#edf5ff;--muted:#b4cadb;--cyan:#65d9f5;--green:#85e4b2;--rose:#ff758d;--amber:#ffca78}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at 90% 0%,#173c54,transparent 40%),var(--bg);color:var(--text)}
+.shell{max-width:1480px;margin:auto;padding:clamp(16px,2.5vw,34px)}h1{font-size:clamp(1.8rem,3vw,3rem);line-height:1.1;margin:8px 0 12px}
+h2{font-size:1.35rem;margin:0 0 12px}h3{font-size:1rem;margin:0 0 10px}p{line-height:1.55;margin:8px 0;color:var(--muted)}
+.eyebrow,.kicker{color:var(--cyan);font-size:.76rem;letter-spacing:.12em;text-transform:uppercase;font-weight:800}
+header{margin-bottom:22px;max-width:85ch}.primer,.board,.lesson{border:1px solid var(--line);border-radius:18px;background:var(--panel);padding:clamp(16px,2vw,24px);margin-bottom:18px}
+.primer-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.primer-grid>div{background:var(--inset);border-radius:10px;padding:14px}.primer p{font-size:.88rem}
+body.embedded .primer{display:none}.notice{border-left:4px solid var(--amber);padding:10px 14px;background:var(--inset);margin-bottom:18px}
+.board-head{display:flex;justify-content:space-between;gap:14px;flex-wrap:wrap;margin-bottom:16px}.simulation{color:var(--amber);font-weight:700;font-size:.85rem}
+.flow{display:grid;grid-template-columns:minmax(0,1fr) 28px minmax(0,.8fr) 28px minmax(0,1.1fr);gap:8px;align-items:stretch}
+.column{min-width:0;border:1px solid var(--line);border-radius:12px;padding:14px;background:var(--inset)}.arrow{align-self:center;text-align:center;color:var(--cyan);font-size:1.7rem}
+.small{font-size:.8rem}.record{padding:10px;border:1px solid var(--line);border-radius:8px;margin:8px 0;font-size:.82rem;line-height:1.45;overflow-wrap:anywhere;transition:border-color .3s,background .3s}
+.record b{display:block;color:var(--text)}.record.selected{border-color:var(--green);background:#14362f}.record.omitted{border-style:dashed;color:var(--muted)}
+.badge{display:block;font-size:.74rem;margin-top:5px;color:var(--amber)}.record.selected .badge{color:var(--green)}
+.policy{border-left:3px solid var(--cyan);padding-left:12px;margin:16px 0}.policy strong{color:var(--cyan)}
+pre{font:.78rem/1.5 ui-monospace,monospace;white-space:pre-wrap;overflow-wrap:anywhere;background:var(--bg);border:1px solid var(--line);border-radius:9px;padding:12px;margin:8px 0;color:#c9e5ee}
+#view{min-height:18em}.metrics{border:1px solid var(--line);padding:10px;border-radius:8px;font-size:.83rem;margin-top:12px;min-height:4em;overflow-wrap:anywhere}
+.status{font-weight:700;color:var(--green)}.status.error{color:var(--rose)}.intact{font-size:.85rem;color:var(--green);margin-top:16px}
+.lesson-head{display:flex;gap:15px;align-items:baseline;flex-wrap:wrap}.count{color:var(--cyan);font:800 .85rem ui-monospace,monospace}
+.scene{border-top:1px solid var(--line);padding-top:16px;margin-top:12px}.scene h3{font-size:1.4rem}.rule{border-left:4px solid var(--cyan);padding:10px 14px;background:var(--inset);color:var(--text)}
+.scene[data-scene="7"] .rule{border-color:var(--rose)}.enhanced .scene[hidden]{display:none}.enhanced #scenes{min-height:260px}
+.controls{display:none;gap:8px;flex-wrap:wrap;align-items:center;margin:16px 0}.enhanced .controls{display:flex}
+button{font-family:inherit;font-size:.88rem;font-weight:700;color:var(--text);background:#1a334c;border:1px solid var(--line);border-radius:8px;padding:10px 13px;cursor:pointer;min-height:42px}
+button:hover,button:focus-visible{outline:2px solid var(--cyan);outline-offset:2px}button:disabled{opacity:.4;cursor:default}#play{background:#1a7188}
+.dots{display:flex;flex-wrap:wrap;gap:5px}.dot{min-width:36px;padding:8px}.dot[aria-current="step"]{border-color:var(--cyan);color:var(--cyan)}
+.motion-track{height:5px;background:var(--line);border-radius:9px;overflow:hidden;margin-top:16px}.motion-track span{display:block;background:var(--cyan);height:100%;width:0}
+body.playing .arrow{animation:signal 1.3s ease-in-out infinite}@keyframes signal{50%{color:var(--green);transform:translateX(3px)}}
+@media(max-width:1050px){.flow{grid-template-columns:1fr}.arrow{transform:rotate(90deg);font-size:1.3rem}#view{min-height:0}body.playing .arrow{animation:none}}
+@media(max-width:600px){.primer-grid{grid-template-columns:1fr}.enhanced #scenes{min-height:0}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
+
+.board{display:none}.enhanced .board{display:block}.detail{margin:14px 0}.enhanced .scene .detail{display:none}.tree-line{font-family:ui-monospace,monospace;font-size:.8rem}#view{min-height:13em}#query{min-height:9em}.trace{border-left:3px solid var(--amber);margin-top:15px;padding:12px;background:var(--inset)}.trace pre{margin-bottom:0}.record.outside{border-color:var(--rose)}.scene[data-scene="6"] .rule{border-color:var(--rose)}.scene[data-scene="7"] .rule{border-color:var(--cyan)}.enhanced #scenes{min-height:230px}@media(max-width:1050px){#query,#view{min-height:0}}
+</style>
+<link rel="stylesheet" href="assets/lesson-layout.css"></head><body><div class="shell"><header><div class="eyebrow">khosiness · visual lesson 07</div><h1>Find the path. Read the evidence.</h1><p>Trace a worker’s retry configuration through a small illustrative repository. Search for locations, read bounded ranges, and separate supported facts from guesses.</p><p><a class="start-lesson" href="#lesson-stage">Go to animation ↓</a></p></header><section class="primer" aria-label="Before the animation"><div class="kicker">Before the animation</div><h2>Step 7 in context</h2><div class="primer-grid"><div><h3>What this step does</h3><p>Navigate a repository through shallow listings, scoped searches, and numbered line-range reads that support an evidence-based answer.</p></div><div><h3>What it builds on</h3><p>Step 5 supplies validated, contained read-only tools. Step 6 selects observations for the model; retrieval still needs useful paths and citations.</p></div><div><h3>Goal</h3><p>Follow a question to defining code and verified call sites, and state exactly what a bounded result can establish.</p></div><div><h3>End state</h3><p>Planned: numbered reads, structured path/line/text matches, configurable result limits, navigation tests, and 15 benchmark tasks. Preserve Step 5 safeguards; this lesson implements none of them.</p></div></div></section>
+<div class="notice"><strong>Conceptual simulation.</strong> This page runs no tools and reads no repository files. Numbered reads, structured search metadata, and configurable result limits illustrate planned Step 7 additions. Preserve Step 5’s validation, containment, byte limits, and output caps. Use the tracker for actual progress.</div>
+<main id="lesson-stage" class="repository-lesson"><section class="board" aria-label="Repository navigation diagram"><div class="board-head"><h2>Question: how does the worker reach DB_RETRY_COUNT?</h2><span class="simulation">Illustrative repository · no live retrieval</span></div><div class="flow"><section class="column"><h3>Workspace map</h3><p class="small">Map of the fixture, not an automatic repository dump.</p>
+<div class="record" data-node="root"><b>workspace/</b><span class="tree-line">README.md · pyproject.toml · src/</span><span class="badge">Illustrative source</span></div>
+<div class="record" data-node="config"><b>src/db/config.py</b>Setting definition<span class="badge">Not selected</span></div>
+<div class="record" data-node="session"><b>src/db/session.py</b>create_session and setting use<span class="badge">Not selected</span></div>
+<div class="record" data-node="worker"><b>src/service/worker.py</b>Worker entry and caller<span class="badge">Not selected</span></div>
+<div class="record outside" data-node="outside"><b>../private.env</b>Outside the workspace<span class="badge">No content available</span></div>
+</section><div class="arrow" aria-hidden="true">→</div><section class="column"><h3>Proposed retrieval</h3><pre id="query"></pre><p id="status" class="status" role="status"></p><p class="small">Schema ≠ enforcement. Tool risk labels do not implement approvals.</p></section><div class="arrow" aria-hidden="true">→</div><section class="column"><h3>Evidence / result</h3><pre id="view"></pre><p class="small">Synthetic examples. A result cap is not a bound on total traversal.</p></section></div><div class="trace"><h3>Boundary trace / state distinction</h3><pre id="trace"></pre></div><div class="motion-track" aria-hidden="true"><span id="progress"></span></div></section>
+<section class="lesson" aria-label="Self-paced repository lesson"><div class="lesson-head"><span id="count" class="count">Eight scenes · read below or enable JavaScript for controls</span><span class="kicker">Search → bounded read → supported fact</span></div><nav class="controls" aria-label="Lesson controls"><button id="previous" type="button">← Previous</button><button id="play" type="button">Play</button><button id="next" type="button">Next →</button><div id="dots" class="dots" aria-label="Choose a scene"></div></nav><div id="scenes"><article class="scene" data-scene="0" data-nodes=""><h3>1. Define the evidence you need</h3><p>We need more than a file guess. Establish where the setting is defined, its value, and how the worker reaches the configuration. A later report should cite the defining line and the relevant call sites.</p><p class="rule">Completion text is a claim. File evidence is what makes the claim assessable.</p><div class="detail"><h4>Illustrative request</h4><pre class="request">Task objective:
+Find DB_RETRY_COUNT and trace how the worker reaches it.
+
+Constraints: read-only, workspace-contained
+Success: defining file + value + verified call chain</pre><h4>Evidence / result</h4><pre class="result">No evidence collected yet.
+
+A plausible file name is only a hypothesis.</pre><h4>Boundary trace</h4><pre class="boundary">Task contract → proposed retrieval plan
+No tool call or event executes in this simulation.</pre></div><span class="scene-status" hidden>Task boundary: evidence before conclusions</span></article><article class="scene" data-scene="1" data-nodes="root"><h3>2. Orient with a shallow listing</h3><p>The fixture has three root entries. A shallow listing gives us a starting point without reading their contents. Next, search src rather than dumping every file. The current Step 5 tool has a fixed cap; max_items is a planned extension.</p><p class="rule">A directory map orients retrieval. It is not evidence of what a function does.</p><div class="detail"><h4>Illustrative request</h4><pre class="request">list_directory({
+  &quot;path&quot;: &quot;.&quot;,
+  &quot;max_items&quot;: 3
+})
+
+max_items is a planned Step 7 argument.</pre><h4>Evidence / result</h4><pre class="result">README.md
+pyproject.toml
+src/
+
+metadata: {count: 3, truncated: false}
+Illustrative fixture listing; not a live result.</pre><h4>Boundary trace</h4><pre class="boundary">Known name → validate arguments → contained directory
+→ bounded listing → ToolResult</pre></div><span class="scene-status" hidden>Proposed addition: configurable listing count</span></article><article class="scene" data-scene="2" data-nodes="config,session"><h3>3. Search a narrow subtree</h3><p>A literal substring search returns a definition, an import, and a use. Structured matches make locations inspectable, but they are not semantic proof. Search can still read every eligible file in the requested subtree; scope it deliberately.</p><p class="rule">Bound returned evidence, and distinguish that from bounding total traversal or I/O.</p><div class="detail"><h4>Illustrative request</h4><pre class="request">search_files({
+  &quot;path&quot;: &quot;src/db&quot;,
+  &quot;query&quot;: &quot;DB_RETRY_COUNT&quot;
+})</pre><h4>Evidence / result</h4><pre class="result">Illustrative metadata.matches:
+{path: &quot;src/db/config.py&quot;, line: 1,
+ text: &quot;DB_RETRY_COUNT = 3&quot;}
+{path: &quot;src/db/session.py&quot;, line: 1,
+ text: &quot;from .config import DB_RETRY_COUNT&quot;}
+{path: &quot;src/db/session.py&quot;, line: 4,
+ text: &quot;    return {\&quot;retries\&quot;: DB_RETRY_COUNT}&quot;}
+truncated: false</pre><h4>Boundary trace</h4><pre class="boundary">Proposed structured matches: path + line + text
+Search scans files under src/db; a result cap does not cap total reads.</pre></div><span class="scene-status" hidden>Candidate locations: search results need interpretation</span></article><article class="scene" data-scene="3" data-nodes="config"><h3>4. Read the defining line</h3><p>Read the small range that can support the claim. The planned numbered format anchors the value to a source location. A line-range result limits the returned excerpt; it does not mean only those bytes were read from disk.</p><p class="rule">Cite src/db/config.py:1 for the setting and value. Do not infer the rest of the architecture from one constant.</p><div class="detail"><h4>Illustrative request</h4><pre class="request">read_file({
+  &quot;path&quot;: &quot;src/db/config.py&quot;,
+  &quot;start_line&quot;: 1,
+  &quot;end_line&quot;: 1
+})</pre><h4>Evidence / result</h4><pre class="result">    1 | DB_RETRY_COUNT = 3
+
+Illustrative read metadata:
+path: src/db/config.py
+start_line: 1
+end_line: 1
+total_lines: 1</pre><h4>Boundary trace</h4><pre class="boundary">Numbered reads are a planned Step 7 presentation.
+Keep Step 5 strict arguments, byte caps, and resolved-path checks.</pre></div><span class="scene-status" hidden>Bounded evidence: definition and value</span></article><article class="scene" data-scene="4" data-nodes="config,session,worker"><h3>5. Verify candidate callers with reads</h3><p>A search hit can be a definition, import, comment, or actual call. Reading worker.py shows a call at line 4; session.py shows the value being used. These excerpts establish the source relationship in this fixture, not runtime behavior across every possible execution path.</p><p class="rule">Use search to locate candidates, then read to verify the relationship.</p><div class="detail"><h4>Illustrative request</h4><pre class="request">Search src for &quot;create_session&quot;.
+Then read:
+  src/service/worker.py:1–4
+  src/db/session.py:1–4</pre><h4>Evidence / result</h4><pre class="result">src/service/worker.py
+    1 | from src.db.session import create_session
+    2 |
+    3 | def run():
+    4 |     return create_session()
+
+src/db/session.py
+    1 | from .config import DB_RETRY_COUNT
+    2 |
+    3 | def create_session():
+    4 |     return {&quot;retries&quot;: DB_RETRY_COUNT}</pre><h4>Boundary trace</h4><pre class="boundary">worker.py:4 → session.py:3–4 → config.py:1
+Source-level relationship only; no application was executed.</pre></div><span class="scene-status" hidden>Text matches → verified source-level call chain</span></article><article class="scene" data-scene="5" data-nodes="session,worker"><h3>6. Stop short of a completeness claim</h3><p>Two hits do not establish that every caller has been found. This possible subset even omits the actual call line. A result limit controls output size, not discovery order, total search time, or semantic completeness.</p><p class="rule">Report incomplete evidence honestly; narrow the search rather than claiming exhaustive coverage.</p><div class="detail"><h4>Illustrative request</h4><pre class="request">Illustrative narrower result budget:
+search_files({
+  &quot;path&quot;: &quot;src&quot;,
+  &quot;query&quot;: &quot;create_session&quot;,
+  &quot;max_matches&quot;: 2
+})
+
+max_matches is a planned Step 7 argument.</pre><h4>Evidence / result</h4><pre class="result">Illustrative possible search subset:
+src/db/session.py:3:def create_session():
+src/service/worker.py:1:from src.db.session import create_session
+
+metadata: {truncated: true}
+
+The worker call at line 4 is not in this subset.
+Search order is not guaranteed.</pre><h4>Boundary trace</h4><pre class="boundary">ok=True + truncated=True
+≠ every reference found
+Refine the path/query or perform a bounded follow-up read.</pre></div><span class="scene-status" hidden>Result cap reached: evidence is incomplete</span></article><article class="scene" data-scene="6" data-nodes="outside"><h3>7. Reject an outside-workspace read</h3><p>Resolving the proposed path places it outside the workspace. The existing containment check raises before a content read; the registry converts the error. The loop stores the failure as an observation and records its outcome. These are distinct responsibilities. Path checks still assume a stable workspace; they are not an OS sandbox.</p><p class="rule">Reject the operation, preserve the failure, and do not invent a missing result.</p><div class="detail"><h4>Illustrative request</h4><pre class="request">read_file({
+  &quot;path&quot;: &quot;../private.env&quot;
+})
+
+The proposal grants no permission.</pre><h4>Evidence / result</h4><pre class="result">ToolResult(
+  ok=False,
+  content=&quot;ValueError: path escapes workspace&quot;,
+  metadata={}
+)
+
+Outside-file contents are never read in this illustrated path.</pre><h4>Boundary trace</h4><pre class="boundary">safe_path → ValueError → registry failed result
+Loop: observation added; tool_requested → tool_failed
+ContextBuilder later chooses whether the model sees it.</pre></div><span class="scene-status" hidden>Rejected: path escapes workspace</span></article><article class="scene" data-scene="7" data-nodes="config,session,worker"><h3>8. Grade the evidence, not the wording</h3><p>Repository benchmarks should check expected facts and source evidence rather than an exact answer string. The Step 7 roadmap calls for 15 tasks; its older snapshot contains only three examples. Build and validate the full set during tutoring. Merely returning final text is not grading success.</p><p class="rule">This is a conceptual lesson, not a completed repository-navigation stage or evaluation run.</p><div class="detail"><h4>Illustrative request</h4><pre class="request">Assess the report against required facts:
+1. Defining path and value
+2. Verified worker call
+3. Setting use inside create_session</pre><h4>Evidence / result</h4><pre class="result">Fixture evidence ledger:
+DB_RETRY_COUNT = 3 → src/db/config.py:1
+Worker calls create_session → src/service/worker.py:4
+Function uses the setting → src/db/session.py:1,3–4
+
+Different prose can express the same supported facts.</pre><h4>Boundary trace</h4><pre class="boundary">Observations → selected context → proposed answer
+Event history remains separate.
+No benchmark runner or success checker executes on this page.</pre></div><span class="scene-status" hidden>Evidence ledger: claims have specific source support</span></article></div></section></main><p class="small">Starts paused. Use Previous/Next, scene numbers, or ←/→. Space toggles playback outside inputs and buttons. Playback stops at the final scene. Without JavaScript, all scenes and examples remain readable.</p></div>
+<script>
+(() => {
+  const $ = id => document.getElementById(id);
+  const embedded = new URLSearchParams(location.search).get('embedded') === '1';
+  if (embedded) document.body.classList.add('embedded');
+  document.documentElement.classList.add('enhanced');
+  const scenes = [...document.querySelectorAll('.scene')];
+  const records = [...document.querySelectorAll('.record')];
+  let index = 0, playing = false, timer = null;
+  const buttons = scenes.map((scene,i) => {
+    const button = document.createElement('button');
+    button.type = 'button'; button.className = 'dot'; button.textContent = i+1;
+    button.setAttribute('aria-label', 'Scene ' + scene.querySelector('h3').textContent);
+    button.addEventListener('click', () => { stop(); show(i); });
+    $('dots').append(button); return button;
+  });
+  function stop() {
+    playing=false; clearTimeout(timer); timer=null;
+    document.body.classList.remove('playing');
+    $('play').textContent=index===scenes.length-1?'Replay':'Play';
+    $('play').setAttribute('aria-pressed','false');
+  }
+  function schedule() {
+    clearTimeout(timer);
+    if (playing) timer=setTimeout(() => { show(index+1); schedule(); },11000);
+  }
+  function show(next) {
+    index=Math.max(0,Math.min(scenes.length-1,next));
+    const scene=scenes[index];
+    scenes.forEach((item,i) => { item.hidden=i!==index; });
+    buttons.forEach((button,i) => { if(i===index) button.setAttribute('aria-current','step'); else button.removeAttribute('aria-current'); });
+    $('count').textContent='Scene '+(index+1)+' / '+scenes.length;
+    $('previous').disabled=index===0; $('next').disabled=index===scenes.length-1;
+    $('progress').style.width=((index+1)/scenes.length*100)+'%';
+    const selected=scene.dataset.nodes.split(',');
+    records.forEach(record => {
+      const active=selected.includes(record.dataset.node);
+      record.classList.toggle('selected',active && record.dataset.node!=='outside');
+      record.querySelector('.badge').textContent=record.dataset.node==='outside'?(index===6?'Rejected before content read':'Outside boundary; no content available'):(active?'In focus for this scene':'Not selected in this scene');
+    });
+    $('query').textContent=scene.querySelector('.request').textContent.replace(/\n{2,}/g,'\n');
+    $('view').textContent=scene.querySelector('.result').textContent.replace(/\n{2,}/g,'\n');
+    $('trace').textContent=scene.querySelector('.boundary').textContent;
+    $('status').textContent=scene.querySelector('.scene-status').textContent;
+    $('status').classList.toggle('error',index===6);
+    if(index===scenes.length-1) stop();
+    if(!playing) $('play').textContent=index===scenes.length-1?'Replay':'Play';
+  }
+  $('previous').addEventListener('click',()=>{stop();show(index-1);});
+  $('next').addEventListener('click',()=>{stop();show(index+1);});
+  $('play').addEventListener('click',()=>{
+    if(playing){stop();return;}
+    if(index===scenes.length-1) show(0);
+    playing=true;document.body.classList.add('playing');
+    $('play').textContent='Pause';$('play').setAttribute('aria-pressed','true');schedule();
+  });
+  document.addEventListener('keydown',event=>{
+    if(event.target.closest?.('textarea,input,select,button,a,[contenteditable],.manual-qa-panel'))return;
+    if(event.key==='ArrowRight'||event.key==='ArrowLeft'){
+      event.preventDefault();stop();show(index+(event.key==='ArrowRight'?1:-1));
+    }else if(event.code==='Space'){event.preventDefault();$('play').click();}
+  });
+  document.addEventListener('visibilitychange',()=>{if(document.hidden)stop();});
+  window.manualTutorContext='Step 7 — Repository Navigation. Conceptual simulation only. Planned additions include numbered reads, structured search metadata and configurable limits; preserve existing Step 5 strict validation, containment, byte/output caps and per-target checks. No runtime tools, provider calls, benchmark runner or stage credit are created by this lesson.\n\n'+document.querySelector('.primer').textContent+'\n\n'+scenes.map(scene=>scene.textContent).join('\n\n');
+  show(0);stop();
+  if(embedded){
+    const shell=document.querySelector('.shell');
+    const report=()=>parent.postMessage({type:'khosiness-animation-height',height:Math.ceil(shell.getBoundingClientRect().bottom)+2},'*');
+    new ResizeObserver(report).observe(shell);
+    window.addEventListener('message',event=>{if(event.source===parent&&event.data?.type==='khosiness-measure-animation')report();});
+    window.addEventListener('load',report);
+  }
+})();
+</script><script src="assets/lesson-layout.js"></script>
+<script src="../manual/assets/manual.js"></script></body></html>

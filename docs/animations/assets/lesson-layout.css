@@ -1,0 +1,178 @@
+/* Shared compact lesson layout for Step 6 onward.
+   Keep diagrams and narration together; never scale or clip lesson text. */
+.enhanced main {
+  scroll-margin-top: 12px;
+}
+.enhanced .lesson .controls {
+  gap: 6px;
+}
+.enhanced .lesson .controls button {
+  font-size: .82rem;
+  padding: 8px 10px;
+  min-height: 38px;
+}
+.enhanced .lesson .dots {
+  gap: 4px;
+}
+.enhanced .lesson .dots button {
+  min-width: 30px;
+  padding: 6px;
+}
+.lesson-expand {
+  flex-basis: 100%;
+}
+.layout-feedback {
+  font-size: .8rem;
+  color: var(--amber);
+}
+main:fullscreen {
+  width: 100%;
+  padding: 10px;
+  background: var(--bg);
+  overflow: auto;
+}
+@media (min-width: 900px) {
+  .enhanced main {
+    display: grid;
+    grid-template-columns: minmax(0, 1.7fr) minmax(280px, 1fr);
+    gap: 14px;
+    align-items: stretch;
+  }
+  .enhanced main > .board,
+  .enhanced main > .lesson {
+    min-width: 0;
+    margin: 0;
+    padding: 14px;
+    border-radius: 14px;
+  }
+  .enhanced .board-head {
+    gap: 6px;
+    margin-bottom: 10px;
+  }
+  .enhanced .board-head h2 {
+    font-size: 1.1rem;
+    line-height: 1.25;
+  }
+  .enhanced .simulation {
+    font-size: .75rem;
+  }
+  .enhanced .flow {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.4fr);
+    grid-template-areas: "source result" "policy policy";
+    gap: 10px;
+  }
+  .enhanced .flow > .column:nth-of-type(1) { grid-area: source; }
+  .enhanced .flow > .column:nth-of-type(2) { grid-area: policy; }
+  .enhanced .flow > .column:nth-of-type(3) { grid-area: result; }
+  .enhanced .flow > .arrow { display: none; }
+  .enhanced .column {
+    padding: 10px;
+    border-radius: 10px;
+  }
+  .enhanced .column h3 {
+    font-size: .87rem;
+    line-height: 1.3;
+    margin-bottom: 6px;
+  }
+  .enhanced .column p.small {
+    font-size: .75rem;
+    line-height: 1.4;
+    margin: 5px 0;
+  }
+  .enhanced .record {
+    padding: 7px;
+    margin: 6px 0;
+    font-size: .75rem;
+    line-height: 1.35;
+  }
+  .enhanced .badge { font-size: .7rem; margin-top: 3px; }
+  .enhanced pre {
+    font-size: .78rem;
+    line-height: 1.4;
+    padding: 9px;
+    margin: 6px 0 0;
+  }
+  .enhanced #view,
+  .enhanced #query {
+    min-height: 0;
+  }
+  .enhanced .metrics {
+    font-size: .75rem;
+    line-height: 1.4;
+    padding: 7px;
+    margin-top: 7px;
+    min-height: 0;
+  }
+  .enhanced .intact {
+    font-size: .75rem;
+    line-height: 1.4;
+    margin: 10px 0 0;
+  }
+  .enhanced .motion-track { margin-top: 10px; }
+  .enhanced .lesson {
+    display: flex;
+    flex-direction: column;
+  }
+  .enhanced .lesson-head { order: 0; gap: 6px; }
+  .enhanced .lesson-head .kicker {
+    font-size: .67rem;
+    letter-spacing: .06em;
+  }
+  .enhanced #scenes {
+    order: 1;
+    min-height: 0;
+    flex: 1;
+  }
+  .enhanced .scene { padding-top: 12px; margin-top: 10px; }
+  .enhanced .scene h3 { font-size: 1.25rem; line-height: 1.25; }
+  .enhanced .scene p { font-size: .88rem; line-height: 1.5; }
+  .enhanced .scene .rule { padding: 10px; }
+  .enhanced .lesson .controls { order: 2; margin-top: 12px; }
+  .enhanced .layout-feedback { order: 3; }
+  .enhanced .trace {
+    margin-top: 10px;
+    padding: 6px 10px;
+  }
+  .enhanced .trace h3 { font-size: .82rem; margin-bottom: 5px; }
+  .enhanced main:fullscreen { align-content: start; }
+
+  /* Context: source observations alongside selected messages.
+     Policy stays explicit in a short strip below, not a full extra column. */
+  .context-lesson .flow > .column:nth-of-type(2) {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 6px 14px;
+    align-items: baseline;
+  }
+  .context-lesson .flow > .column:nth-of-type(2) > h3 { margin: 0; }
+  .context-lesson .policy { display: none; }
+  .context-lesson .budget-summary { font-size: .75rem; margin: 0; }
+  .context-lesson #status {
+    grid-column: 1 / -1;
+    font-size: .8rem;
+    margin: 0;
+  }
+
+  /* Navigation: put the map above the request/result pair. */
+  .repository-lesson .flow {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.4fr);
+    grid-template-areas: "source source" "policy result";
+    align-items: start;
+  }
+  .repository-lesson .flow > .column:first-child {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 6px;
+  }
+  .repository-lesson .flow > .column:first-child > h3 {
+    grid-column: 1 / -1;
+    margin: 0;
+  }
+  .repository-lesson .flow > .column:first-child > p { grid-column: 1 / -1; }
+  .repository-lesson .record { margin: 0; padding: 6px; }
+  .repository-lesson .record .tree-line { font-size: .72rem; }
+  .repository-lesson .status { font-size: .8rem; line-height: 1.4; }
+}
+
+.start-lesson { color: var(--cyan); font-size: .85rem; text-underline-offset: 3px; }

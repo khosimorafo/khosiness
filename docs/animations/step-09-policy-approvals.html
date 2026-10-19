@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Step 9 — Policy and Human Approval</title><style>
+:root{color-scheme:dark;font-family:Inter,ui-sans-serif,system-ui,sans-serif;--bg:#07111f;--panel:#10253a;--inset:#0b1b2d;--line:#46627a;--text:#edf5ff;--muted:#b4cadb;--cyan:#65d9f5;--green:#85e4b2;--rose:#ff758d;--amber:#ffca78}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at 90% 0%,#173c54,transparent 40%),var(--bg);color:var(--text)}
+.shell{max-width:1480px;margin:auto;padding:clamp(16px,2.5vw,34px)}h1{font-size:clamp(1.8rem,3vw,3rem);line-height:1.1;margin:8px 0 12px}
+h2{font-size:1.35rem;margin:0 0 12px}h3{font-size:1rem;margin:0 0 10px}p{line-height:1.55;margin:8px 0;color:var(--muted)}
+.eyebrow,.kicker{color:var(--cyan);font-size:.76rem;letter-spacing:.12em;text-transform:uppercase;font-weight:800}
+header{margin-bottom:22px;max-width:85ch}.primer,.board,.lesson{border:1px solid var(--line);border-radius:18px;background:var(--panel);padding:clamp(16px,2vw,24px);margin-bottom:18px}
+.primer-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.primer-grid>div{background:var(--inset);border-radius:10px;padding:14px}.primer p{font-size:.88rem}
+body.embedded .primer{display:none}.notice{border-left:4px solid var(--amber);padding:10px 14px;background:var(--inset);margin-bottom:18px}
+.board-head{display:flex;justify-content:space-between;gap:14px;flex-wrap:wrap;margin-bottom:16px}.simulation{color:var(--amber);font-weight:700;font-size:.85rem}
+.flow{display:grid;grid-template-columns:minmax(0,1fr) 28px minmax(0,.8fr) 28px minmax(0,1.1fr);gap:8px;align-items:stretch}
+.column{min-width:0;border:1px solid var(--line);border-radius:12px;padding:14px;background:var(--inset)}.arrow{align-self:center;text-align:center;color:var(--cyan);font-size:1.7rem}
+.small{font-size:.8rem}.record{padding:10px;border:1px solid var(--line);border-radius:8px;margin:8px 0;font-size:.82rem;line-height:1.45;overflow-wrap:anywhere;transition:border-color .3s,background .3s}
+.record b{display:block;color:var(--text)}.record.selected{border-color:var(--green);background:#14362f}.record.omitted{border-style:dashed;color:var(--muted)}
+.badge{display:block;font-size:.74rem;margin-top:5px;color:var(--amber)}.record.selected .badge{color:var(--green)}
+.policy{border-left:3px solid var(--cyan);padding-left:12px;margin:16px 0}.policy strong{color:var(--cyan)}
+pre{font:.78rem/1.5 ui-monospace,monospace;white-space:pre-wrap;overflow-wrap:anywhere;background:var(--bg);border:1px solid var(--line);border-radius:9px;padding:12px;margin:8px 0;color:#c9e5ee}
+#view{min-height:18em}.metrics{border:1px solid var(--line);padding:10px;border-radius:8px;font-size:.83rem;margin-top:12px;min-height:4em;overflow-wrap:anywhere}
+.status{font-weight:700;color:var(--green)}.status.error{color:var(--rose)}.intact{font-size:.85rem;color:var(--green);margin-top:16px}
+.lesson-head{display:flex;gap:15px;align-items:baseline;flex-wrap:wrap}.count{color:var(--cyan);font:800 .85rem ui-monospace,monospace}
+.scene{border-top:1px solid var(--line);padding-top:16px;margin-top:12px}.scene h3{font-size:1.4rem}.rule{border-left:4px solid var(--cyan);padding:10px 14px;background:var(--inset);color:var(--text)}
+.scene[data-scene="7"] .rule{border-color:var(--rose)}.enhanced .scene[hidden]{display:none}.enhanced #scenes{min-height:260px}
+.controls{display:none;gap:8px;flex-wrap:wrap;align-items:center;margin:16px 0}.enhanced .controls{display:flex}
+button{font-family:inherit;font-size:.88rem;font-weight:700;color:var(--text);background:#1a334c;border:1px solid var(--line);border-radius:8px;padding:10px 13px;cursor:pointer;min-height:42px}
+button:hover,button:focus-visible{outline:2px solid var(--cyan);outline-offset:2px}button:disabled{opacity:.4;cursor:default}#play{background:#1a7188}
+.dots{display:flex;flex-wrap:wrap;gap:5px}.dot{min-width:36px;padding:8px}.dot[aria-current="step"]{border-color:var(--cyan);color:var(--cyan)}
+.motion-track{height:5px;background:var(--line);border-radius:9px;overflow:hidden;margin-top:16px}.motion-track span{display:block;background:var(--cyan);height:100%;width:0}
+body.playing .arrow{animation:signal 1.3s ease-in-out infinite}@keyframes signal{50%{color:var(--green);transform:translateX(3px)}}
+@media(max-width:1050px){.flow{grid-template-columns:1fr}.arrow{transform:rotate(90deg);font-size:1.3rem}#view{min-height:0}body.playing .arrow{animation:none}}
+@media(max-width:600px){.primer-grid{grid-template-columns:1fr}.enhanced #scenes{min-height:0}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
+
+.board{display:none}.enhanced .board{display:block}.detail{margin:14px 0}.enhanced .scene .detail{display:none}.tree-line{font-family:ui-monospace,monospace;font-size:.8rem}#view{min-height:13em}#query{min-height:9em}.trace{border-left:3px solid var(--amber);margin-top:15px;padding:12px;background:var(--inset)}.trace pre{margin-bottom:0}.record.outside{border-color:var(--rose)}.scene[data-scene="6"] .rule{border-color:var(--rose)}.scene[data-scene="7"] .rule{border-color:var(--cyan)}.enhanced #scenes{min-height:230px}@media(max-width:1050px){#query,#view{min-height:0}}
+</style>
+<link rel="stylesheet" href="assets/lesson-layout.css"><link rel="stylesheet" href="assets/boundary-lessons.css"></head>
+<body><div class="shell"><header><div class="eyebrow">khosiness · visual lesson 09</div><h1>Capability needs permission.</h1><p>Follow a proposed fixture update through allow, ask, and deny decisions. See why an unanswered approval and an unconnected policy engine must never become execution.</p><p><a class="start-lesson" href="#lesson-stage">Go to animation ↓</a></p></header>
+<section class="primer" aria-label="Before the animation"><div class="kicker">Before the animation</div><h2>Step 9 in context</h2><div class="primer-grid"><div><h3>What this step does</h3><p>Map a harness-classified action to allow, ask, or deny, and request explicit human approval where policy requires it.</p></div><div><h3>What it builds on</h3><p>The registry dispatches tools and Step 8 plans execution infrastructure. Neither the existence of a tool nor a risk label authorizes a call.</p></div><div><h3>Goal</h3><p>Place a deterministic authority gate before execution, with exact action details and a factual decision record.</p></div><div><h3>End state</h3><p>Planned: risk types, PolicyEngine, ApprovalUI, and tests. The reference provides decision helpers; loop integration and decision events must still be implemented and verified.</p></div></div></section>
+<div class="notice"><strong>Conceptual simulation.</strong> All approval answers and decision traces are illustrative. Buttons move through scenes; they do not authorize real actions. The current loop has no policy gate. Step 9 reference helpers do not wire themselves into tool dispatch. Use STAGE_TRACKER.md for actual implementation progress.</div>
+<main id="lesson-stage" class="boundary-lesson"><section class="board" aria-label="Policy and Human Approval diagram"><div class="board-head"><h2>Task: inspect, then update a fixture retry setting</h2><span class="simulation">Illustrative scenario · no live execution</span></div>
+<div class="boundary-map" aria-label="Responsibility boundaries"><div class="record" data-node="proposal"><b>Proposed action</b>Exact name + arguments<span class="badge">Boundary in view</span></div><div class="record" data-node="boundary"><b>Harness authority</b>Risk → allow / ask / deny<span class="badge">Boundary in view</span></div><div class="record" data-node="result"><b>Dispatch outcome</b>Execute only if authorized<span class="badge">Boundary in view</span></div></div><div class="io-grid"><section class="column"><h3>Input / proposed transition</h3><pre id="query"></pre></section><section class="column"><h3>Result / saved position</h3><pre id="view"></pre><p id="status" class="status" role="status"></p></section></div>
+<div class="trace"><h3>Boundary trace / state distinction</h3><pre id="trace"></pre></div><p class="intact">Risk must come from trusted harness classification, never a model self-label.</p><div class="motion-track" aria-hidden="true"><span id="progress"></span></div></section>
+<section class="lesson" aria-label="Self-paced Policy and Human Approval lesson"><div class="lesson-head"><span id="count" class="count">Eight scenes · static reading available below</span><span class="kicker">Classify → decide → approve or block</span></div>
+<nav class="controls" aria-label="Lesson controls"><button id="previous" type="button">← Previous</button><button id="play" type="button">Play</button><button id="next" type="button">Next →</button><div id="dots" class="dots" aria-label="Choose a scene"></div></nav><div id="scenes"><article class="scene" data-scene="0" data-focus="proposal" data-error="false"><h3>1. Classify the proposed action</h3><p>The fixture task asks to inspect a retry value and propose a change. The harness derives risk from trusted tool and action details, including arguments. Letting the model choose a harmless risk label would let the proposal authorize itself.</p><p class="rule">The model proposes an action; the harness classifies its authority needs.</p><div class="detail"><h4>Illustrative input / request</h4><pre class="request">Proposed action:
+name: update_retry
+arguments: {path: &quot;config.py&quot;,
+            old: 3, new: 4}
+Trusted risk: workspace_write</pre><h4>Illustrative result / state</h4><pre class="result">Planned Action:
+name + risk + arguments
+No write occurs while classifying.
+A risk string alone enforces nothing.</pre><h4>Boundary trace</h4><pre class="boundary">Proposal → trusted classification → PolicyEngine
+This gate is a planned loop integration.</pre></div><span class="scene-status" hidden>Classification belongs to the harness</span></article><article class="scene" data-scene="1" data-focus="boundary" data-error="false"><h3>2. Allow a contained read</h3><p>The reference table maps READ_ONLY to ALLOW. That permits dispatch under this example policy, but the filesystem tool still validates arguments, containment, and read limits. Authorization does not erase execution checks.</p><p class="rule">ALLOW opens one gate; the tool must still enforce its contract.</p><div class="detail"><h4>Illustrative input / request</h4><pre class="request">Action: read_file
+risk: READ_ONLY
+arguments: {path: &quot;config.py&quot;}</pre><h4>Illustrative result / state</h4><pre class="result">PolicyEngine.evaluate(action) → ALLOW
+Then: registry + validated contained read
+Illustrative content: RETRY_COUNT = 3</pre><h4>Boundary trace</h4><pre class="boundary">Trusted classification → allow → tool checks → result
+The model does not grant this permission.</pre></div><span class="scene-status" hidden>Policy allows; tool validates</span></article><article class="scene" data-scene="2" data-focus="boundary" data-error="false"><h3>3. Ask before the workspace write</h3><p>The reference maps WORKSPACE_WRITE to ASK. ApprovalUI presents the action name, risk, and arguments. The proposal remains blocked while the human has not answered; ASK is not a temporary ALLOW.</p><p class="rule">Show exactly what would happen before requesting approval.</p><div class="detail"><h4>Illustrative input / request</h4><pre class="request">Action: update_retry
+risk: workspace_write
+arguments: {path: &quot;config.py&quot;,
+            old: 3, new: 4}</pre><h4>Illustrative result / state</h4><pre class="result">Policy decision: ASK
+Prompt: Approve? [y/N]
+Human answer: pending
+Dispatch count: 0</pre><h4>Boundary trace</h4><pre class="boundary">Planned trace: policy → approval requested → wait
+No tool execution while the answer is pending.</pre></div><span class="scene-status" hidden>Awaiting a human decision</span></article><article class="scene" data-scene="3" data-focus="result" data-error="true"><h3>4. Default an empty answer to no</h3><p>The reference UI accepts only y or yes, ignoring case and surrounding spaces. An empty response returns False. A negative response blocks the operation; the planned integration should preserve the reason for the model and the factual decision for the event store.</p><p class="rule">Silence is not authorization.</p><div class="detail"><h4>Illustrative input / request</h4><pre class="request">Prompt: Approve? [y/N]
+Illustrative human answer: &quot;&quot;
+ApprovalUI.request(action) → False</pre><h4>Illustrative result / state</h4><pre class="result">Write not dispatched
+Fixture remains unchanged in this scenario
+Planned observation: approval declined
+Planned event: decision recorded</pre><h4>Boundary trace</h4><pre class="boundary">ASK → empty answer → approval False → no dispatch
+Event names here are illustrative, not live events.</pre></div><span class="scene-status" hidden>Rejected: approval was not granted</span></article><article class="scene" data-scene="4" data-focus="result" data-error="false"><h3>5. Bind yes to the reviewed action</h3><p>In this alternative branch, the human explicitly answers yes. The planned gate may dispatch the same reviewed action through the normal tool checks. If its path or arguments change, the earlier approval must not be reused for that different action.</p><p class="rule">Approval applies to the reviewed request, not every future write.</p><div class="detail"><h4>Illustrative input / request</h4><pre class="request">Same reviewed request:
+config.py: RETRY_COUNT 3 → 4
+Illustrative answer: &quot;yes&quot;
+ApprovalUI returns True</pre><h4>Illustrative result / state</h4><pre class="result">Planned gate: permit this request
+Then run tool validation + execution
+Result may still fail
+Approval is not a success result.</pre><h4>Boundary trace</h4><pre class="boundary">ASK → explicit yes → same action → tool runtime
+A failure after approval remains a failed tool result.</pre></div><span class="scene-status" hidden>Approved action can now be attempted</span></article><article class="scene" data-scene="5" data-focus="boundary" data-error="true"><h3>6. Deny a destructive request</h3><p>The example default maps DESTRUCTIVE to DENY. That path does not ask the model to reconsider permission or offer an approval prompt that bypasses policy. The gate must stop dispatch and return an explicit denied outcome.</p><p class="rule">A denied action must never reach the runtime.</p><div class="detail"><h4>Illustrative input / request</h4><pre class="request">Proposed action: delete workspace
+Trusted risk: DESTRUCTIVE
+Policy decision: DENY</pre><h4>Illustrative result / state</h4><pre class="result">No approval prompt
+No tool dispatch
+Planned observation: denied by policy
+Planned event: denial recorded</pre><h4>Boundary trace</h4><pre class="boundary">Policy DENY → denied result + factual record
+Registry/runtime not invoked on this path.</pre></div><span class="scene-status" hidden>Denied before execution</span></article><article class="scene" data-scene="6" data-focus="boundary" data-error="true"><h3>7. Deny a missing policy entry</h3><p>With a nonempty custom policy containing only READ_ONLY, NETWORK has no entry and evaluates to DENY. The snapshot uses policy or DEFAULT_POLICY, so passing an empty dictionary instead selects the defaults; do not mistake that for deny-all.</p><p class="rule">Test fallback behavior, including empty configuration.</p><div class="detail"><h4>Illustrative input / request</h4><pre class="request">Custom policy:
+  READ_ONLY: ALLOW
+Action risk: NETWORK
+Lookup default: DENY</pre><h4>Illustrative result / state</h4><pre class="result">NETWORK → DENY in this custom table
+Important snapshot edge case:
+PolicyEngine({}) uses DEFAULT_POLICY
+It does not create a deny-all policy.</pre><h4>Boundary trace</h4><pre class="boundary">Missing entry → DENY
+Empty mapping handling needs deliberate implementation review.</pre></div><span class="scene-status" hidden>Fallback rules must be explicit</span></article><article class="scene" data-scene="7" data-focus="boundary" data-error="false"><h3>8. Connect the gate before claiming safety</h3><p>Helpers that return decisions do not stop a loop that never calls them. Stage implementation must connect classification, evaluation, approval, recording, and dispatch. Test that denied or pending requests have zero runtime calls, not merely that a helper returns DENY.</p><p class="rule">Capability ≠ authority. A policy helper ≠ an enforced policy gate.</p><div class="detail"><h4>Illustrative input / request</h4><pre class="request">Planned dispatch order:
+classify → evaluate → ask if needed
+→ record decision → authorized dispatch
+→ record actual tool outcome</pre><h4>Illustrative result / state</h4><pre class="result">Keep these separate:
+Decision: allowed / asked / denied
+Execution: succeeded / failed
+Run: finished / unfinished
+Task success: requires evidence</pre><h4>Boundary trace</h4><pre class="boundary">Current loop: policy wiring absent
+Reference unit tests prove helpers, not end-to-end enforcement.</pre></div><span class="scene-status" hidden>Implement and test the boundary</span></article></div></section></main>
+<p class="small">Starts paused. Use Previous/Next, scene numbers, or ←/→. Space toggles playback outside controls and inputs. Playback stops at the final scene. Without JavaScript, every scene and example remains readable.</p></div>
+<script src="assets/boundary-lessons.js"></script><script src="assets/lesson-layout.js"></script><script src="../manual/assets/manual.js"></script></body></html>

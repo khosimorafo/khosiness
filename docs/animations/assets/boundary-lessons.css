@@ -1,0 +1,28 @@
+/* Step 8 onward shares the approved diagram / narration desktop layout. */
+.boundary-map {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+  margin-bottom: 10px;
+}
+.boundary-map .record { margin: 0; }
+.io-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr);
+  gap: 10px;
+}
+.boundary-lesson #query, .boundary-lesson #view { min-height: 0; }
+.boundary-lesson .status { font-size: .8rem; line-height: 1.4; }
+.boundary-map .record.rejected { border-color: var(--rose); }
+.boundary-map .record.rejected .badge { color: var(--rose); }
+.boundary-lesson .scene[data-error="true"] .rule { border-color: var(--rose); }
+.boundary-lesson .scene[data-error="false"] .rule { border-color: var(--cyan); }
+.boundary-map .record.selected { box-shadow: inset 0 3px var(--green); }
+body.playing .boundary-map .selected { animation: boundary-signal 1.8s ease-in-out infinite; }
+@keyframes boundary-signal { 50% { border-color: var(--cyan); } }
+@media (max-width: 600px) {
+  .boundary-map, .io-grid { grid-template-columns: 1fr; }
+}
+@media (prefers-reduced-motion: reduce) {
+  body.playing .boundary-map .selected { animation: none; }
+}

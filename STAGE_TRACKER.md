@@ -25,7 +25,7 @@ Step 0 question is withdrawn. The human has now begun fresh Project Setup.
 | Step 5 — Build the Tool System | Complete — 13/13; thirty-two tests, search/integration/rejection inspections and understanding verified; commit 0b51887 |
 | Step 6 — Engineer the Context | Complete — 11/11; forty-four tests, message/integration/failure inspections and understanding verified; commit 2e3f832 |
 | Step 7 — Repository Navigation | Complete — 14/14 validated; saved and verified in commit 90c9773 |
-| Step 8 — Shell Execution and Sandbox | Active — 1/12 validated; runtime package directory created by human |
+| Step 8 — Shell Execution and Sandbox | Active — 11/12 validated; staged scope/content/format checked, commit pending |
 | Step 9 — Policy and Human Approval | Pending |
 | Step 10 — State, Checkpoints and Recovery | Pending |
 | Step 11 — Memory | Pending |
@@ -2665,3 +2665,342 @@ main-only development instruction to AGENTS.md. No force push or history
 rewrite is used. Publish main and verify ancestry before deleting master.
 Unfinished src/khosiness/sandbox/base.py remains outside the commit; Step 8
 stays 1/12, with instruction 2 awaiting the human's saved/validation report.
+
+
+Git interlude verified: main and origin/main point to b1ddbcb, which preserves
+both prior histories and the MIT license; local and remote master were removed.
+The unfinished base.py hash was unchanged. Narrow Git delegation is finished;
+the human resumes implementation and exercise execution.
+
+Instruction 2/12 resumed: the human reports base.py saved. Inspection confirms
+the supplied strict execution contract, argv validator, result model, and
+Sandbox protocol are present. No subprocess implementation exists. Issue one
+human-run construction check: print a valid request, then construct one with
+timeout_seconds=0 and inspect its expected Pydantic ValidationError. The argv
+strings are data here; this check must not start a process. Progress remains
+1/12 until the human reports the validation output. Codex did not run the check.
+
+
+Tutoring preference reinforced: always explain why together with what and
+how. Encoded explicitly in AGENTS.md for both instructions and explanations.
+For instruction 2 the purpose is early rejection of an invalid execution
+request before a process can start; constructing ExecRequest exercises the
+contract without executing argv. The human has not reported the construction
+check yet. Step 8 remains 1/12; do not issue the next exercise or credit a pass.
+
+
+Instruction 2/12 completed: the human reported a valid ExecRequest with
+argv python -V, Path workspace, and timeout_seconds=20, followed by the
+expected Pydantic greater_than_equal ValidationError for timeout_seconds=0.
+This verifies request construction and that timeout rejection occurs without
+process execution; it does not authorize argv or enforce cwd containment.
+Progress: 2/12 validated.
+
+Instruction 3/12 begins with a focused edit: create sandbox/local.py with
+LocalSandbox configuration only. Resolve and validate the workspace and
+configured absolute executable paths; default to the current Python interpreter
+and preserve an explicitly empty allowlist. This improves the older reference's
+basename matching and inherited executable lookup. These are configured path
+identities, not OS isolation or protection against later replacement of files.
+No execute() implementation exists in this first edit; keep instruction 3 open.
+The human writes and saves the file; Codex does not execute the exercise.
+
+
+Instruction 3/12 constructor saved and inspected: the human's local.py
+matches the requested configuration semantics. It has no execution method yet.
+Issue one file edit with exact import replacement and class-method append.
+The execution method checks an absolute resolved executable against configured
+paths and a resolved cwd against the workspace before subprocess.run. It uses
+shell=False, closed stdin, a minimal environment, timeout, and temporary binary
+files for stdout/stderr. Read only the final 20,000 bytes per stream into Python
+memory, expose total bytes and truncation metadata, and decode with replacement.
+This improves the older reference's collect-then-slice memory issue without
+claiming a total disk-output bound. Timeout kills/waits for the direct child,
+not a guaranteed process tree. Permitted programs retain host access; no OS
+isolation or Step 9 authorization policy is implemented. Progress remains 2/12
+until the runtime edit and its instruction-level inspection/check are complete.
+Codex does not edit or execute stage code on the human's behalf.
+
+
+Instruction 3/12 execution method saved and inspected. Found a correctness
+issue in Codex's supplied code before the human-run process check: resolving
+.venv/bin/python and launching the resolved target can lose virtual-environment
+identity. The local venv uses a symlink; executable location matters for Python
+finding pyvenv.cfg. Correct the configuration to retain a mapping of configured
+absolute launch path to resolved target, check both on each request, and launch
+the configured path rather than substituting the target. This preserves the
+selected environment and still rejects unconfigured paths or changed symlink
+targets. It is not immutable executable identity or an OS sandbox. Ask the human
+to make precise replacements in local.py; do not edit the exercise file.
+Progress stays 2/12 while instruction 3 is corrected and checked.
+
+
+Instruction 3/12 launch-path correction: the human reports saved. Inspected
+local.py for configured-path to resolved-target mapping and preservation of
+the requested launch path in subprocess.run. Next issue a human-run temporary
+workspace process probe that prints a known message and sys.prefix, then
+asserts exit status, output, timeout status, and the parent's selected venv.
+This checks actual execution and environment identity without a project write.
+No runtime probe has been run by Codex. Progress remains 2/12 pending output.
+
+
+Instruction 3/12 completed: the human ran the supplied temporary-workspace
+probe. ExecResult reported duration_ms=15, exit_code=0, timed_out=False,
+stdout containing runner works and /home/l/working/github.com/khosiness/.venv,
+empty stderr, stdout_bytes=56, stderr_bytes=0, and both truncation flags False.
+All assertions completed. This proves the tested command executes through the
+runner and preserves the selected interpreter environment. It does not prove
+OS containment, all failure paths, or general command safety. Progress: 3/12.
+
+Instruction 4/12 issued: create src/khosiness/tools/shell.py with a strict
+ShellArguments model and a ShellTool adapter depending on the Sandbox protocol,
+not LocalSandbox. Generate the schema from that model, validate before runtime
+execution, construct ExecRequest with a workspace-relative cwd default, and
+map ExecResult to ToolResult. ok requires zero exit and no timeout; carry full
+structured execution metadata. Runtime enforces its own cwd/command boundary;
+process_execution risk is classification only, not Step 9 authorization.
+Output limits are per stream, not one combined 20,000-character tool budget.
+Await the human's saved report; no stage source code is edited by Codex.
+
+
+Instruction 4/12 saved and inspected: ShellArguments and ShellTool match the
+supplied strict adapter. It depends on Sandbox rather than LocalSandbox,
+validates before runtime.execute, preserves the structured result, and maps
+zero/no-timeout to success. No execution or approval policy is hidden in the
+adapter. Formal automated adapter checks remain part of the upcoming test gate.
+Progress: 4/12 implemented/inspected, not a claim that all validation passed.
+
+Instruction 5/12 begins with one focused edit: create tests/test_shell.py
+with invalid-timeout construction cases and real child-process tests for
+stdout/stderr, nonzero exit as data, and virtual-environment identity. Tests
+use tmp_path and sys.executable; never execute application fixture code or
+request project writes. Explicitly test the venv identity regression fixed
+in instruction 3. Further enforcement, output, and adapter cases remain in
+instruction 5 before stage-specific execution at instruction 6. The human
+writes the tests; Codex does not run them on the human's behalf.
+
+
+Instruction 5/12 initial test file saved and inspected: five parametrized
+invalid-timeout cases plus real-process stdout/stderr, nonzero-exit, and
+venv-identity tests are present. No tests have been run by Codex or reported
+by the human yet. Keep instruction 5 open; progress stays 4/12.
+
+Next append a focused timeout/rejection test batch to tests/test_shell.py:
+a timed-out child retains flushed output; relative/unconfigured executables,
+an explicit empty allowlist, and cwd escapes (including symlink resolution)
+raise the intended PermissionError before process creation. Monkeypatch
+subprocess.run with a forbidden-operation guard, not merely an ok=False
+assertion. This proves rejection ordering for those inputs. Further output,
+environment, and adapter cases remain within instruction 5. The human performs
+the edit and later test execution.
+
+
+Instruction 5/12 correction: although the human reported saved, inspection
+shows tests/test_shell.py still contains only the first batch, ending with
+the sys.prefix assertion. The timeout/rejection append is not present on disk.
+Do not advance or credit those cases. Repeat the exact append location and
+code for the pending timeout/rejection batch, asking the human to save that
+specific file. Progress remains 4/12; no stage tests have been executed.
+
+
+Instruction 5/12 timeout/rejection correction resolved: inspection now confirms
+all supplied timeout and rejection tests are on disk. Fourteen parametrized
+cases are defined so far; no test run is claimed. Progress remains 4/12.
+
+Next append six cases: output at 19,999/20,000/20,001 bytes per stream with
+retained tail markers and truncation flags; a real child checking absent test
+secret, closed stdin, literal shell-like argument, and requested cwd; rejection
+of an unconfigured alias to a permitted executable; and rejection of a changed
+configured symlink target. Rejection cases use the existing no_process guard.
+This tests bounded returned bytes and launch configuration, not total disk
+output, network/file isolation, or immutable executable identity. Adapter
+coverage remains pending within instruction 5. Await the human's saved report.
+
+
+Instruction 5/12 output/launch batch saved and inspected: all six supplied
+cases are now present, for twenty parametrized runtime/request cases so far.
+No automated run is credited. Progress remains 4/12.
+
+Issue the final adapter-test edit: extend imports and append a recording fake
+Sandbox, result-mapping cases, invalid argument rejection before runtime,
+schema contract checks, and actual registry success/rejection integration.
+The fake demonstrates replacement through the protocol; real child tests
+remain necessary for process behavior. Malformed input must yield the intended
+ValidationError with zero fake-runtime requests. Actual rejection must yield
+PermissionError through ToolRegistry while no_process proves no launch.
+Keep instruction 5 open until the saved test set is inspected/reviewed; the
+human runs stage-specific tests at instruction 6.
+
+
+Instruction 5/12 final adapter test batch saved and inspected. The file now
+defines 35 parametrized cases covering the request, runtime, adapter, and
+registry contracts. Static inspection confirms fake-runtime call recording,
+validation error checks, schema constraints, result mapping, and actual shell
+registry success/rejection cases. No tests have been run by Codex or reported
+by the human. Correctness and focused security read-only reviews are running
+without test execution or file edits. Keep progress at 4/12 until review is
+resolved. The later human-run test command, not this inspection, establishes
+whether the cases actually pass.
+
+
+Instruction 5/12 completed: the saved 35-case test set and three runtime/adapter
+files passed scoped static correctness and focused security reviews without
+actionable findings. Both reviewers obeyed the no-test/no-probe instruction.
+The manual now explains the stronger live execution contract, its venv launch
+path requirement, per-stream byte tails, explicit empty allowlist, known local
+runner limits, and 35 cases versus the older five-test checkpoint. No source
+changes were needed after review. Progress: 5/12 implemented/reviewed; no claim
+of automated test success is made.
+
+Instruction 6/12 issued: the human runs .venv/bin/python -m pytest
+tests/test_shell.py -q from the repository root. Expected 35 passed, including
+a real one-second timeout case. Await the full reported output before passing
+the stage-specific test gate or starting accumulated checks. Codex has not
+run these tests or executed new child-process probes.
+
+
+Instruction 6/12 completed by the human: .venv/bin/python -m pytest
+tests/test_shell.py -q reported 35 passed in 1.68s. The stage-specific test
+gate passes for the tested local controls and adapter cases; it does not
+prove OS isolation or coverage of all possible commands. Progress: 6/12.
+
+Instruction 7/12 issued: run .venv/bin/python -m pytest -q from the repository
+root. Expected 127 cases: 92 prior cases plus 35 shell cases. This checks
+regressions across earlier harness contracts, not just the new runtime.
+Await the human's reported output; Codex does not run the exercise.
+
+
+Instruction 7/12 completed by the human: .venv/bin/python -m pytest -q
+reported 127 passed in 2.09s. All 92 earlier cases and 35 shell cases pass;
+this is tested compatibility, not general proof of command safety. Progress
+is 7/12 validated.
+
+Instruction 8/12 issued: inspect process launch sites and shell settings with
+rg -n -C 10 'subprocess\.run|shell\s*=' src/khosiness --glob '*.py'. The command
+shows invocation context rather than only asserting an absent literal. Expect
+LocalSandbox subprocess.run using an argv list and shell=False; no shell=True
+should appear. This is source inspection of the current implementation, not
+proof of OS isolation or that permitted programs cannot start other processes.
+Await the human's output before passing the audit. No code edit is required.
+
+
+Instruction 8/12 completed: the human's rg output shows LocalSandbox's
+subprocess.run using argv, cwd, stdin=DEVNULL, temporary stdout/stderr files,
+request timeout, shell=False, check=False, and explicit PATH/PYTHONUNBUFFERED.
+No shell=True appears. This passes the source-audit gate, not an OS-isolation
+claim. Progress: 8/12 validated.
+
+Instruction 9/12 preparation issued: create /tmp/khosiness_shell_trace.py
+with deterministic FakeModel proposals and the real loop/context/registry/
+shell/local-runtime/event-store stack. Use a temporary workspace and logs
+outside the project. Inspect success, nonzero exit, timeout, rejected cwd,
+and rejected executable through full-result observations, next-call context,
+outcome event payloads, and final state. The scripted final text ends each
+run even after failures; it is not success-criteria verification. Await saved
+before giving execution. Codex has not created or run this exercise script.
+
+
+Instruction 9/12 preparation saved and inspected: the human's temporary trace
+script matches the supplied five-case real-loop exercise. Issue execution
+from the project root using .venv/bin/python /tmp/khosiness_shell_trace.py.
+Expected one successful tool outcome, four failed tool outcomes, next-call
+observation messages, and two-step finished states due to fixed final text.
+Logs remain under the printed temporary trace directory. This is a scripted
+model integration trace, not autonomous reasoning or task-success verification.
+Await complete output; progress remains 8/12. Codex has not run the script.
+
+
+Instruction 9/12 completed by the human: five-path loop trace output from
+/tmp/khosiness-shell-trace-rsmomy0a inspected. Success returned exit_code=0,
+hello stdout and tool_completed. Nonzero returned exit_code=7 and tool_failed.
+Timeout returned exit_code=None, timed_out=True, duration_ms=1002 and tool_failed.
+Outside cwd and unconfigured executable returned the intended PermissionError
+failed ToolResults with empty metadata. All results were stored in observations
+and selected into the following model call. Outcome payloads contained only
+name and ok. Every run finished at step 2 after accepting fixed final text,
+not after task-success verification. No assertion errors were reported.
+Progress: 9/12 validated.
+
+Instruction 10/12 understanding gate begins: ask whether shell=False plus
+an in-workspace cwd prevents an allowed Python program reading outside the
+workspace, and request the reason. This checks the boundary between process
+launch controls and OS-enforced confinement. Do not supply the answer or
+pass understanding from the preceding explanations. Await the human's own
+reasoning, one question at a time. No code edit or execution is required.
+
+
+Instruction 10/12 understanding, confinement question: correct independent
+answer. The human explained shell=False prevents shell parsing, cwd sets a
+starting directory, and neither prevents permitted Python reading an outside
+absolute path. They explicitly identified the lack of OS filesystem isolation.
+
+Continue instruction 10 with one output-boundary question: does the 20,000-byte
+per-stream returned-output limit bound all child output or temporary-file disk
+usage, and what is actually bounded by _read_tail? Request two or three
+sentences about capture versus returned data. Do not credit the supplied code
+or earlier explanation as an answer. Progress remains 9/12; no edits or commands
+are needed for this understanding check.
+
+
+Instruction 10/12 understanding, output question: correct independent answer.
+The human explained that child output and temporary-file disk usage can exceed
+20,000 bytes per stream, while _read_tail reads only each final bounded tail
+into Python memory and reports total byte counts. This accurately separates
+capture resources from returned evidence.
+
+Continue the same gate with one process-lifetime question: does timed_out=True
+prove that every descendant stopped, and what does the current subprocess.run
+timeout handle? Ask for two sentences; no code or command is required. Progress
+remains 9/12 until the complete understanding gate passes.
+
+
+Instruction 10/12 completed: the human independently explained that timed_out
+signals handling of the direct child and does not prove descendant cleanup.
+Together with correct confinement and output-resource answers, the runtime's
+central enforcement mechanisms and limits are understood. Earlier actual
+trace discussion established result/state/event/context distinctions. Stage
+understanding passes. Progress: 10/12 validated.
+
+Instruction 11/12 staging issued: include sandbox/base.py, sandbox/local.py,
+tools/shell.py, tests/test_shell.py, AGENTS.md, CURRENT_STATE.md, SHA256SUMS,
+STAGE_TRACKER.md, and the Step 8 manual page. These nine files are the complete
+current pending set: implementation, tests, the stronger-live-contract manual
+note, the requested what/why/how teaching rule, state, and checksum records.
+The index was empty. Explicit file paths avoid generated or unrelated files.
+Await the human's staging result before issuing staged scope/content checks.
+Do not stage or commit on the human's behalf; progress stays 10/12 until the
+index validation gate passes. Keep development on main.
+
+
+Instruction 11/12 staging report: interpret the human's dode as done for the
+issued staging command. Do not infer actual index scope from that alone.
+Issue git --no-pager diff --cached --stat from the repository root and await
+the reported nine-file summary. Progress remains 10/12 validated. Further
+tracker notes are working-tree updates until refreshed before commit.
+
+
+Instruction 11/12 index scope report: the human's no-pager cached stat shows
+exactly the intended nine files, 876 insertions and 12 deletions. Inspection
+confirms there are no unstaged differences in the three runtime/adapter files
+or tests/test_shell.py, so their staged versions match the versions inspected
+and exercised. The staged AGENTS and current-state diff records the requested
+teaching rule and actual stage results, not unimplemented capabilities.
+
+Issue git diff --cached --check to the human. This checks patch formatting
+and conflict markers, not Python semantics; the automated and trace gates
+already cover tested behavior. Await output before passing instruction 11.
+Progress remains 10/12. Refresh tracker/status/checksum records before the
+final commit so the saved progress snapshot includes closeout preparation.
+
+
+Instruction 11/12 completed: the human reports git diff --cached --check
+returned no output. The staged nine-file scope, tested implementation/test
+snapshot, and patch formatting gates pass. Progress: 11/12 validated.
+
+Instruction 12/12 preparation issued: refresh CURRENT_STATE.md, SHA256SUMS,
+and STAGE_TRACKER.md in the index with explicit git add paths. These records
+were updated after initial staging to include the successful index checks.
+The remaining six files stay as staged. Await done before the commit command;
+do not append routine records between refresh and commit. Actual commit,
+verification of saved files, and stage closeout remain pending. The human
+performs Git operations. Stay on main and stop before Step 9 after closeout.

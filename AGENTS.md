@@ -41,6 +41,10 @@ Codex may inspect files and maintain tutoring instructions and progress records.
 Every instruction must teach the mechanism relevant to that action, not merely
 tell the human what to paste. Keep the explanation concise and concrete:
 
+- Always connect what, why, and how in tutoring instructions and explanations:
+  what is being built or checked, why it is needed (the problem or failure it
+  addresses), and how the mechanism or action achieves that purpose. Do not
+  assume the reason is obvious or defer it until the human asks.
 - State the responsibility or concept being exercised and why this action is
   needed, including the failure it prevents or detects.
 - For edits, name the exact file and editor command. Say whether to create,

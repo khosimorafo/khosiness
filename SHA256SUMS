@@ -1,7 +1,7 @@
-894170245b077be68ce9d670184c858002a0710d921447e90f82e4d8b6e2a66a  ./AGENTS.md
+c70908f786f67c5ef3c312550bf6615976893da0931f90b2881ca177d2035eb5  ./AGENTS.md
 d792fc3fb70c158425be2623a89f081d61f73cb79ab062468ffc36dd712dabf3  ./CODEX_HANDOFF_README.md
 91baae22480864acf443cdd92ce94a3123fd3526b0e2127f50f9879cd34df086  ./CODEX_SEED_PROMPT.md
-95a3ecd60c7cd5ccd8883e036ab9d7df6589bec82b83198ae5a6e8a4fe4b3be2  ./CURRENT_STATE.md
+fb36342ec6d1a69b4e587a519ebbe9804388a4debf8f2cdfdcf2ba36e373d512  ./CURRENT_STATE.md
 063263cfd10f708f69d5de6fc41435817baed011bf114853ddd570b8a9268880  ./HANDOFF_MANIFEST.md
 0e4495513ded742d32c9c2230a8cdcf60b09341a40af703d5ea5f18d5cdb5b0f  ./PROJECT_HISTORY.md
 b340d26f75d6b29880aea3c535f08dc537b8bb9c95c758bfaa7b77b65792fdf8  ./docs/manual/README.md
@@ -18,7 +18,7 @@ f61bafe60f38b3a92b6f571b048c2814047507cb03951c4dca102f9339282d55  ./docs/manual/
 39be9d9971de43a946ce35606dc52673d7770fbb52689a780eac62c9421b1a10  ./docs/manual/pages/step-05-tool-system.html
 52a7bab10344eaa2dc0dea0849e7e99ace7eec1d980884f1622914b2a6203045  ./docs/manual/pages/step-06-context-engineering.html
 c723559c3b9496d33f079ed146acfca1e6d3c05eb66c97ba3f49ff17f3ccece3  ./docs/manual/pages/step-07-repository-navigation.html
-d37aec1853e02cc4ab1e2258a05a5928689772df1cc5b51a54aa413e3e6125e4  ./docs/manual/pages/step-08-shell-sandbox.html
+f26b3f1f98b9d1056ec79be6d76b81a7a576be70574bad6aa214288d47a4b269  ./docs/manual/pages/step-08-shell-sandbox.html
 112b291601062a7b6a3af390b2c053e73f1531668be0d919a1ba39cd411f76a1  ./docs/manual/pages/step-09-policy-approvals.html
 3a137186d51556f640fb29d5fa850824ade561e436e5e4a0fc7c1ac330c2e0d6  ./docs/manual/pages/step-10-state-recovery.html
 f24364c1fe3f1894c77c75414c064d067de4fcaeae744d6854a504519f1d963e  ./docs/manual/pages/step-11-memory.html

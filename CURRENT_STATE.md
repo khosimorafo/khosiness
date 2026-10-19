@@ -62,18 +62,30 @@ and the staged progress record. The final closeout record is a subsequent
 documentation update; separate manual/animation/tutor work remains outside
 this stage commit.
 The human requested Step 8 — Shell Execution and Sandbox. It is active at
-1/12 validated. The human created the sandbox directory; execution runtime
-files are not implemented yet. The human performs the
+11/12 validated. The human saved the contract, local runner,
+shell adapter, and 35 shell/runtime test cases, checked request validation,
+and ran a successful process probe preserving the venv. Static correctness
+and security reviews found no actionable issues. The human ran all 35 shell
+cases successfully in 1.68s and all 127 accumulated cases in 2.09s.
+The human source audit confirmed argv launching with shell=False and explicit
+stdin/environment/timeout controls. The human inspected five real loop traces:
+success, nonzero exit, timeout, rejected cwd, and rejected executable.
+The understanding gate passed: launch controls versus OS isolation, returned
+tails versus disk output, and direct-child versus descendant cleanup.
+The nine-file staged scope, tested implementation snapshot, and formatting
+checks passed. Progress-record refresh, commit verification, and closeout
+remain pending.
+The human performs the
 implementation and commands; Codex supplies one precise teaching instruction
 at a time. Step 9 onward remains pending.
 Use the tracker for subsequent instruction results and understanding checks.
 
 Use STAGE_TRACKER.md for the canonical instruction and validation record.
 The manual and animations are reference material, not completed exercises.
-The restarted project and documentation were published to GitHub as master.
-The human has requested consolidation onto main and removal of master.
-Develop directly on main; preserve the current tested project, the prior remote
-history, and its MIT license. Unfinished Step 8 base.py remains uncommitted.
+The restarted project and documentation are published on main at b1ddbcb.
+Both prior histories and the MIT license are preserved. Master was removed
+locally and remotely. Develop directly on main, tracking origin/main.
+Step 8 implementation and its supporting records are staged for local commit.
 
 Planned/runtime identity: khosiness; CLI: kness; source: src/khosiness/.
 

@@ -4,7 +4,12 @@ from .base import ModelResponse
 
 
 class CallableProviderAdapter:
-    """Wrap a transport that returns a provider-neutral dictionary."""
+    """A thin adapter around any provider-specific transport function.
+
+    The transport is responsible for talking to the provider SDK and returning
+    a dictionary that conforms to ModelResponse. Keeping the SDK-specific
+    conversion here prevents provider objects from leaking into the harness.
+    """
 
     def __init__(
         self,

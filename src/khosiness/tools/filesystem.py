@@ -18,21 +18,13 @@ class PathArguments(BaseModel):
 
 
 class ListArguments(PathArguments):
-    max_items: int = Field(
-        default=MAX_ENTRIES,
-        ge=1,
-        le=MAX_ENTRIES,
-    )
+    max_items: int = Field(default=MAX_ENTRIES, ge=1, le=MAX_ENTRIES)
 
 
 class ReadArguments(PathArguments):
     start_line: int = Field(default=1, ge=1)
     end_line: int | None = Field(default=None, ge=1)
-    max_lines: int = Field(
-        default=MAX_READ_LINES,
-        ge=1,
-        le=MAX_READ_LINES,
-    )
+    max_lines: int = Field(default=MAX_READ_LINES, ge=1, le=MAX_READ_LINES)
 
     @model_validator(mode="after")
     def ordered_range(self):
@@ -43,11 +35,7 @@ class ReadArguments(PathArguments):
 
 class SearchArguments(PathArguments):
     query: str = Field(min_length=1)
-    max_matches: int = Field(
-        default=MAX_MATCHES,
-        ge=1,
-        le=MAX_MATCHES,
-    )
+    max_matches: int = Field(default=MAX_MATCHES, ge=1, le=MAX_MATCHES)
 
 
 def safe_path(workspace: Path, relative_path: str) -> Path:
@@ -92,14 +80,14 @@ class ListDirectoryTool(Tool):
         if not path.is_dir():
             raise ValueError(f"not a directory: {args.path}")
 
-        # Select a bounded subset, then sort it.
-        # Directory order is unspecified.
+        # Select a bounded subset, then sort it. Directory order is unspecified.
         items = list(islice(path.iterdir(), args.max_items + 1))
         entries = sorted(
             item.name + ("/" if not item.is_symlink() and item.is_dir() else "")
             for item in items[:args.max_items]
         )
         text = "\n".join(entries)
+
         return ToolResult(
             ok=True,
             content=text[:MAX_OUTPUT_CHARS],
@@ -143,22 +131,21 @@ class ReadFileTool(Tool):
             source = lines[number - 1]
             separator_chars = 1 if numbered else 0
             remaining = MAX_OUTPUT_CHARS - output_chars - separator_chars
-            # Keep the full citation prefix and at least one source character
-            # for a nonempty line. A blank source line needs only its prefix.
+            # Do not emit a citation prefix without room for its source text.
             if remaining < len(prefix) + bool(source):
                 break
-            line = prefix + source
-            rendered = line[:remaining]
+            rendered = (prefix + source)[:remaining]
             numbered.append(rendered)
             output_chars += separator_chars + len(rendered)
             returned_end = number
-            if len(rendered) < len(line):
+            if len(rendered) < len(prefix) + len(source):
                 partial_line = True
                 break
 
         truncated = requested_end >= args.start_line and (
             returned_end is None or returned_end < requested_end or partial_line
         )
+
         return ToolResult(
             ok=True,
             content="\n".join(numbered),
@@ -178,7 +165,7 @@ class SearchFilesTool(Tool):
     name = "search_files"
     description = (
         "Search UTF-8 files with literal text; return path, line and text. "
-        "max_matches is 1–100; rendered output is capped at 20,000 characters. "
+        "max_matches is 1–100; output is capped at 20,000 characters. "
         "truncated means the result may be incomplete."
     )
 
@@ -211,9 +198,13 @@ class SearchFilesTool(Tool):
 
         for path in root.rglob("*"):
             # Validate every discovered target, including symlink files.
-            resolved = safe_path(self.workspace, str(path.relative_to(self.workspace)))
+            resolved = safe_path(
+                self.workspace,
+                str(path.relative_to(self.workspace)),
+            )
             if not resolved.is_file():
                 continue
+
             try:
                 lines = read_text_bounded(resolved).splitlines()
             except UnicodeDecodeError:
@@ -227,7 +218,7 @@ class SearchFilesTool(Tool):
                     remaining = MAX_OUTPUT_CHARS - output_chars - separator_chars
                     if remaining < len(prefix) + 1:
                         return finish(truncated=True)
-                    selected_text = line[:remaining - len(prefix)]
+                    selected_text = line[: remaining - len(prefix)]
                     partial_match = len(selected_text) < len(line)
                     matches.append(
                         {"path": relative, "line": number, "text": selected_text}
